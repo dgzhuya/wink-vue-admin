@@ -5,8 +5,8 @@ import { nodeParser } from './parser'
 import { translate } from './gen'
 import { setConfigPath } from './config'
 
-const path = resolve('/Users/pinktu/Desktop/develop/wink-vue-admin/sources/model.txt')
-setConfigPath({ outDir: './' })
+const path = resolve(__dirname, '../../../sources/model.txt')
+setConfigPath({ outDir: '../api/src/' })
 const source = readFileSync(path).toString()
 const result = analyse(source)
 if (!result.error) {
