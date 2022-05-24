@@ -1,0 +1,38 @@
+{
+	"name": "wink-vue-admin",
+	"version": "1.0.0",
+	"description": "vue+nestjs开发的后台管理系统",
+	"scripts": {
+		"commit": "git add --all&&cz"
+	},
+	"keywords": [
+		"vue",
+		"nestjs"
+	],
+	"author": "pinktu",
+	"license": "ISC",
+	"devDependencies": {
+		"@commitlint/cli": "^16.2.3",
+		"@commitlint/config-conventional": "^16.2.1",
+		"@typescript-eslint/eslint-plugin": "^5.20.0",
+		"@typescript-eslint/parser": "^5.20.0",
+		"commitizen": "^4.2.4",
+		"cz-git": "^1.2.5",
+		"eslint": "^8.14.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-config-standard": "^17.0.0",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-n": "^15.2.0",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-prettier": "^4.0.0",
+		"eslint-plugin-promise": "^6.0.0",
+		"esno": "^0.14.1",
+		"prettier": "^2.6.2",
+		"typescript": "^4.6.3"
+	},
+	"config": {
+		"commitizen": {
+			"path": "node_modules/cz-git"
+		}
+	}
+}
