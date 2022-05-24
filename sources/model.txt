@@ -1,0 +1,21 @@
+#name: "hello"
+// api or database
+#way: "database"
+#model {
+	id: @id @number
+	name: @dto @string
+	score: @dto @number
+	isMale: @dto @boolean @nullable
+}
+
+#dto {
+	name: @string
+}
+
+#api {
+	@get
+	@post
+	@delete
+	@update
+	@all
+}
