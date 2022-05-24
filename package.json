@@ -3,7 +3,8 @@
 	"version": "1.0.0",
 	"description": "vue+nestjs开发的后台管理系统",
 	"scripts": {
-		"commit": "git add --all&&cz"
+		"commit": "git add --all&&cz",
+		"format": "prettier --write \"packages/**/*.ts\" \"test/**/*.ts\""
 	},
 	"keywords": [
 		"vue",
