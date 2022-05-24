@@ -1,0 +1,8 @@
+export enum NodeType {
+	PROGRAM,
+	EXPR,
+	ASSIGN_STMT,
+	VARIABLE,
+	SCALAR,
+	BLOCK
+}
