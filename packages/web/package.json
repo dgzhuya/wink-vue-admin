@@ -1,5 +1,5 @@
 {
-	"name": "admin-web",
+	"name": "@wink/web",
 	"version": "1.0.0",
 	"private": true,
 	"description": "",
