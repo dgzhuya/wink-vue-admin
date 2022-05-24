@@ -1,7 +1,7 @@
 import { ASTNode } from './ASTNode'
 import { NodeType } from './NodeType'
 import { Factor } from './Factor'
-import { TokenIterator } from '@/utils/TokenIterator'
+import { TokenIterator } from '../utils/TokenIterator'
 
 export class Expr extends ASTNode {
 	constructor() {

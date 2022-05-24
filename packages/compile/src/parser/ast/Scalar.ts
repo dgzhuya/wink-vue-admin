@@ -1,6 +1,6 @@
 import { NodeType } from './NodeType'
-import { Token } from '@/gen/lexer/Token'
 import { ASTNode } from './ASTNode'
+import { Token } from '@/lexer/Token'
 
 export class Scalar extends ASTNode {
 	constructor(token: Token) {

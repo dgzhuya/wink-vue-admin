@@ -1,7 +1,9 @@
 import { ObjectLiteralExpression, Project, PropertyAssignment } from 'ts-morph'
 import { getConfigPath } from '@/config'
+import { upperCase } from '@/gen/util/upperCase'
 
-export const editAppModule = () => {
+export const editAppModule = (moduleName: string) => {
+	const upperModuleName = upperCase(moduleName)
 	const path = getConfigPath().appModulePath
 	const project = new Project()
 	project.addSourceFileAtPath(path)
@@ -10,12 +12,12 @@ export const editAppModule = () => {
 	const appModuleClass = sourceFile.getClass('AppModule')
 	sourceFile.addImportDeclarations([
 		{
-			namedImports: ['HelloModule'],
-			moduleSpecifier: './hello.module'
+			namedImports: [`${upperModuleName}Module`],
+			moduleSpecifier: `./${moduleName}/${moduleName}.module`
 		},
 		{
-			namedImports: ['HelloController'],
-			moduleSpecifier: './hello.controller'
+			namedImports: [`${upperModuleName}Controller`],
+			moduleSpecifier: `./${moduleName}/${moduleName}.controller`
 		}
 	])
 
@@ -33,7 +35,7 @@ export const editAppModule = () => {
 						if (structure) {
 							const initializer = structure.initializer.toString()
 							propertyAssignment.setInitializer(
-								`${initializer.slice(0, initializer.length - 1)}, HelloModule]`
+								`${initializer.slice(0, initializer.length - 1)}, ${upperModuleName}Module]`
 							)
 						}
 					}
@@ -44,7 +46,7 @@ export const editAppModule = () => {
 		if (configureMethod) {
 			const bodyText = configureMethod.getBodyText()
 			if (bodyText) {
-				configureMethod.setBodyText(`${bodyText.slice(0, bodyText.length - 1)}, HelloController)`)
+				configureMethod.setBodyText(`${bodyText.slice(0, bodyText.length - 1)}, ${upperModuleName}Controller)`)
 			}
 		}
 	}

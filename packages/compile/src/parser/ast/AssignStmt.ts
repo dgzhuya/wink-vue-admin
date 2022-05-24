@@ -2,10 +2,10 @@ import { ASTNode } from './ASTNode'
 import { NodeType } from './NodeType'
 import { Factor } from './Factor'
 import { Expr } from './Expr'
-import { TokenIterator } from '@/utils/TokenIterator'
 import { Block } from './Block'
-import { Translate } from '@/utils/Types'
 import { isScalar } from '@/lexer/Keyword'
+import { TokenIterator } from '../utils/TokenIterator'
+import { Translate } from '../utils/Types'
 
 export class AssignStmt extends ASTNode {
 	constructor() {

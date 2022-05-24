@@ -17,7 +17,7 @@ export const translate = (astNode: ASTNode) => {
 	genEntity(moduleName, astNode)
 	genModule(moduleName)
 	genService(moduleName, astNode)
-	editAppModule()
+	editAppModule(moduleName)
 }
 
 const getModuleName = (node: ASTNode) => {

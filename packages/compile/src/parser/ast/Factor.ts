@@ -1,7 +1,7 @@
+import { TokenIterator } from '../utils/TokenIterator'
 import { ASTNode } from './ASTNode'
 import { Scalar } from './Scalar'
 import { Variable } from './Variable'
-import { TokenIterator } from '@/utils/TokenIterator'
 
 export class Factor extends ASTNode {
 	static parser(it: TokenIterator) {
