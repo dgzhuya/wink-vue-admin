@@ -33,7 +33,7 @@
 
 2. 使用 dsl 生成模块
 
--   进入 packages/compile/test 文件夹中
+-   打开 packages/compile/test/gen.spec.ts 文件
 -   修改生成路径配置
 
 ```ts
@@ -51,4 +51,8 @@ if (!result.error) {
 }
 ```
 
--   点击运行生成代码
+-   运行 jest 生成代码
+
+```shell
+pnpm jest test/gen.spec.ts -t 'gen module'
+```
