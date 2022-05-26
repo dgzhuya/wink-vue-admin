@@ -6,7 +6,7 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 
 it('gen module', () => {
-	const path = resolve(__dirname, '../../../sources/model.txt')
+	const path = resolve(__dirname, '../../../sources/model.wks')
 	setConfigPath({ outDir: '../api/src/', appModulePath: '../api/src/app.module.ts' })
 	const source = readFileSync(path).toString()
 	const result = analyse(source)

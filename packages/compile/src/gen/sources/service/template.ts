@@ -21,7 +21,7 @@ export const serviceCreateSource = (moduleName: string, upperModuleName: string)
 `
 
 export const serviceAllSource = (moduleName: string) => `
-	finaAll() {
+	findAll() {
 		return this.${moduleName}Repository.find()
 	}
 `
