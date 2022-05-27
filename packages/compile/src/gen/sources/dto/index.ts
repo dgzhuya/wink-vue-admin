@@ -8,25 +8,23 @@ import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 
 export const genDTO = (moduleName: string, astNode: ASTNode) => {
-	const modelNode = astNode.findByKey('#model')
+	const modelNode = astNode.findByKey('#dto')
 	if (modelNode !== null) {
-		const assignValueElement = (modelNode as AssignStmt).getAssignValue()['#model'] as Translate
+		const assignValueElement = (modelNode as AssignStmt).getAssignValue()['#dto'] as Translate
 
 		const upperModuleName = upperCase(moduleName)
 		const dtoList = Object.keys(assignValueElement)
 			.map(key => {
 				const elements = assignValueElement[key] as string[]
 				const genDtoField = (type: string) => '\t' + `readonly ${key}: ${type}`
-				if (elements.includes('@dto')) {
-					if (elements.includes('@string')) {
-						return genDtoField('string')
-					}
-					if (elements.includes('@number')) {
-						return genDtoField('number')
-					}
-					if (elements.includes('@boolean')) {
-						return genDtoField('boolean')
-					}
+				if (elements.includes('@string')) {
+					return genDtoField('string')
+				}
+				if (elements.includes('@number')) {
+					return genDtoField('number')
+				}
+				if (elements.includes('@boolean')) {
+					return genDtoField('boolean')
 				}
 				return ''
 			})

@@ -1,18 +1,6 @@
 const keywords = ['#name', '#way', '#model', '#dto', '#api']
 
-const Scalar = [
-	'@id',
-	'@number',
-	'@boolean',
-	'@nullable',
-	'@dto',
-	'@string',
-	'@get',
-	'@post',
-	'@delete',
-	'@update',
-	'@all'
-]
+const Scalar = ['@id', '@number', '@boolean', '@nullable', '@string', '@get', '@post', '@delete', '@update', '@all']
 
 export const isKeyWord = (word: string) => keywords.includes(word)
 

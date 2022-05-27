@@ -3,13 +3,15 @@
 #way: "database"
 #model {
 	id: @id @number
-	name: @dto @string
-	score: @dto @number
-	isMale: @dto @boolean @nullable
+	name: @string
+	score: @number
+	isMale: @boolean @nullable
 }
 
 #dto {
 	name: @string
+	score: @number
+	isMale: @boolean
 }
 
 #api {
