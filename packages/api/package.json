@@ -4,7 +4,7 @@
 	"description": "",
 	"author": "",
 	"private": true,
-	"license": "UNLICENSED",
+	"license": "MIT",
 	"scripts": {
 		"prebuild": "rimraf dist",
 		"build": "nest build",
@@ -26,6 +26,7 @@
 		"@nestjs/mapped-types": "*",
 		"@nestjs/platform-express": "^8.0.0",
 		"@nestjs/typeorm": "^8.0.3",
+		"@wink/compile": "workspace:^1.0.0",
 		"bcryptjs": "^2.4.3",
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.13.2",
@@ -81,3 +82,4 @@
 		"testEnvironment": "node"
 	}
 }
+
