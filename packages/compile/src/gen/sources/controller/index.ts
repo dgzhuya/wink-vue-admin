@@ -8,12 +8,11 @@ import {
 	controllerSource,
 	controllerUpdateSource
 } from './template'
-import { upperCase } from '@/gen/util/upperCase'
 import { write2File } from '@/gen/util/fileUtil'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 
-export const genController = (moduleName: string, astNode: ASTNode) => {
+export const genController = (moduleName: string, upperModuleName: string, astNode: ASTNode) => {
 	const apiNode = astNode.findByKey('#api')
 	if (apiNode !== null) {
 		const reqMethodSet = new Set()
@@ -24,7 +23,6 @@ export const genController = (moduleName: string, astNode: ASTNode) => {
 			getOne: '',
 			getAll: ''
 		}
-		const upperModuleName = upperCase(moduleName)
 		const assignValueElement = (apiNode as AssignStmt).getAssignValue()['#api'] as Translate
 		if (assignValueElement['@get']) {
 			dynamicConfig.getOne = controllerGetSource(moduleName)

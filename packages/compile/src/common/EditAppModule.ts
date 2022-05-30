@@ -1,9 +1,7 @@
 import { ObjectLiteralExpression, Project, PropertyAssignment } from 'ts-morph'
 import { getConfigPath } from '@/config'
-import { upperCase } from '@/gen/util/upperCase'
 
-export const editAppModule = (moduleName: string) => {
-	const upperModuleName = upperCase(moduleName)
+export const editAppModule = (moduleName: string, upperModuleName: string) => {
 	const path = getConfigPath().appModulePath
 	const project = new Project()
 	project.addSourceFileAtPath(path)

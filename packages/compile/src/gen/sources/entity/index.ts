@@ -1,5 +1,4 @@
 import { ASTNode } from '@/parser/ast/ASTNode'
-import { upperCase } from '@/gen/util/upperCase'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
 import { join } from 'path'
 import { createDir, write2File } from '@/gen/util/fileUtil'
@@ -7,7 +6,7 @@ import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 import { EntitySource } from './template'
 
-export const genEntity = (moduleName: string, astNode: ASTNode) => {
+export const genEntity = (moduleName: string, upperModuleName: string, astNode: ASTNode) => {
 	const modelNode = astNode.findByKey('#model')
 	if (modelNode !== null) {
 		const assignValueElement = (modelNode as AssignStmt).getAssignValue()['#model'] as Translate
@@ -39,7 +38,6 @@ export const genEntity = (moduleName: string, astNode: ASTNode) => {
 				)
 			})
 			.join('\n')
-		const upperModuleName = upperCase(moduleName)
 		const entityStr = renderStrByTemplate(EntitySource, { upperModuleName, columnList })
 		const entityPath = join(moduleName, 'entities')
 		createDir(entityPath)

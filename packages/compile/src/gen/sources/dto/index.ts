@@ -1,18 +1,16 @@
 import { ASTNode } from '@/parser/ast/ASTNode'
 import { CreateDtoSource, UpdateDtoSource } from './template'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
-import { upperCase } from '@/gen/util/upperCase'
 import { createDir, write2File } from '@/gen/util/fileUtil'
 import { join } from 'path'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 
-export const genDTO = (moduleName: string, astNode: ASTNode) => {
+export const genDTO = (moduleName: string, upperModuleName: string, astNode: ASTNode) => {
 	const modelNode = astNode.findByKey('#dto')
 	if (modelNode !== null) {
 		const assignValueElement = (modelNode as AssignStmt).getAssignValue()['#dto'] as Translate
 
-		const upperModuleName = upperCase(moduleName)
 		const dtoList = Object.keys(assignValueElement)
 			.map(key => {
 				const elements = assignValueElement[key] as string[]

@@ -1,6 +1,5 @@
 import { write2File } from '@/gen/util/fileUtil'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
-import { upperCase } from '@/gen/util/upperCase'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { ASTNode } from '@/parser/ast/ASTNode'
 import { Translate } from '@/parser/utils/Types'
@@ -13,7 +12,7 @@ import {
 	serviceUpdateSource
 } from './template'
 
-export const genService = (moduleName: string, astNode: ASTNode) => {
+export const genService = (moduleName: string, upperModuleName: string, astNode: ASTNode) => {
 	const apiNode = astNode.findByKey('#api')
 	if (apiNode !== null) {
 		const dynamicConfig = {
@@ -23,7 +22,6 @@ export const genService = (moduleName: string, astNode: ASTNode) => {
 			getOne: '',
 			getAll: ''
 		}
-		const upperModuleName = upperCase(moduleName)
 		const assignValueElement = (apiNode as AssignStmt).getAssignValue()['#api'] as Translate
 		if (assignValueElement['@get']) {
 			dynamicConfig.getOne = serviceGetSource(moduleName)
