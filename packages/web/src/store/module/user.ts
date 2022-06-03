@@ -20,7 +20,7 @@ export const useUser = defineStore('userInfo', {
 	},
 	getters: {
 		getLoading: state => state.loading,
-		hasUserInfo: state => state.user !== null,
+		hasUserInfo: state => state.user.id !== undefined,
 		info: state => state.user,
 		getToken: state => state.token,
 		getPermissions: state => state.premissions
