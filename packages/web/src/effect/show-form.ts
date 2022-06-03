@@ -20,9 +20,9 @@ export const showFormEffect = <T, K>(activeItem: Ref<T | null>, fetchFunc: () =>
 	}
 
 	const closeHandler = (refresh: boolean) => {
+		console.log('refresh:', refresh)
 		showModel.value = false
 		if (refresh) {
-			console.log('refresh:', refresh)
 			fetchFunc()
 		}
 	}

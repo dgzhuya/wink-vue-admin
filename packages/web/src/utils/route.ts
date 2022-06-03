@@ -42,3 +42,22 @@ export function generateMenus(routes: RouteRecordRaw[]) {
 	})
 	return result
 }
+
+export const filterPermissionRouters = (routes: RouteRecordRaw[], permissions: string[]) => {
+	const result: RouteRecordRaw[] = []
+	for (let i = 0; i < routes.length; i++) {
+		const route = routes[i]
+		let childrenRoute: RouteRecordRaw[] = []
+		if (route.children) {
+			childrenRoute = filterPermissionRouters(route.children, permissions)
+		}
+		if (typeof route.name === 'string' && permissions.includes(route.name)) {
+			result.push(route)
+		}
+		if (childrenRoute.length > 0) {
+			route.children = childrenRoute
+			result.push(route)
+		}
+	}
+	return result
+}

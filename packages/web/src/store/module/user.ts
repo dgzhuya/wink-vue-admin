@@ -14,6 +14,7 @@ export const useUser = defineStore('userInfo', {
 		return {
 			user: getItem(USER_KEY) as StoreUserInfo,
 			loading: false,
+			premissions: [] as string[],
 			token: getItem(TOKEN_KEY)
 		}
 	},
@@ -21,7 +22,8 @@ export const useUser = defineStore('userInfo', {
 		getLoading: state => state.loading,
 		hasUserInfo: state => state.user !== null,
 		info: state => state.user,
-		getToken: state => state.token
+		getToken: state => state.token,
+		getPermissions: state => state.premissions
 	},
 	actions: {
 		loginout() {
@@ -36,6 +38,7 @@ export const useUser = defineStore('userInfo', {
 			const res = await getUserInfo()
 			setItem(USER_KEY, res)
 			this.$state.user = res
+			if (res.permissions) this.$state.premissions = res.permissions
 		},
 		async login(formEl: FormInstance | undefined, userInfo: LoginParams) {
 			if (!formEl) return

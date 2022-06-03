@@ -21,7 +21,7 @@
 				shape="square"
 				src="https://m.imooc.com/static/wap/static/common/img/logo-small@2x.png"
 			></el-avatar>
-			<h1 class="logo-title" v-if="app.sideBarStatus">imooc-admin</h1>
+			<h1 class="logo-title" v-if="app.sideBarStatus">wink-admin</h1>
 		</div>
 		<el-scrollbar>
 			<sidebar-menu></sidebar-menu>

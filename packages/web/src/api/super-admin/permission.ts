@@ -17,6 +17,13 @@ export const createPermission = (data: CreatePermissionDto) => {
 	})
 }
 
+export const deletePermission = (pid: number) => {
+	return request({
+		url: `/permission/${pid}`,
+		method: 'delete'
+	})
+}
+
 export const updatePermission = (data: Partial<PermissionDto>, pid: number) => {
 	return request({
 		url: `/permission/${pid}`,

@@ -45,14 +45,7 @@ const routes: RouteRecordRaw[] = [
 
 const router = createRouter({
 	history: createWebHistory(),
-	routes: [
-		...routes,
-		SuperAdminRoute,
-		{
-			path: '/:pathMath(.*)',
-			redirect: '/404'
-		}
-	]
+	routes
 })
 
 export default router

@@ -47,3 +47,10 @@ export const setUserRoles = (uid: number, roles: number[]) => {
 		}
 	})
 }
+
+export const deleteUser = (uid: number) => {
+	return request({
+		url: `/user/${uid}`,
+		method: 'delete'
+	})
+}

@@ -47,3 +47,10 @@ export const updateRole = (data: Partial<RoleDto>, rid: number) => {
 		data
 	})
 }
+
+export const deleteRole = (rid: number) => {
+	return request({
+		url: `/role/${rid}`,
+		method: 'delete'
+	})
+}
