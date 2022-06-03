@@ -53,11 +53,11 @@ export const filterPermissionRouters = (routes: RouteRecordRaw[], permissions: s
 			if (childrenRoute.length > 0) {
 				route.children = childrenRoute
 				result.push(route)
-			} else if (typeof route.name === 'string' && permissions.indexOf(route.name) !== -1) {
+			} else if (typeof route.name === 'string' && permissions.includes(route.name)) {
 				result.push(route)
 			}
 		} else {
-			if (typeof route.name === 'string' && permissions.indexOf(route.name) !== -1) {
+			if (typeof route.name === 'string' && permissions.includes(route.name)) {
 				result.push(route)
 			}
 		}

@@ -30,4 +30,6 @@ export interface TagItem {
 	fullPath: string
 }
 
-export type StoreUserInfo = Partial<UserModel>
+export interface StoreUserInfo extends Partial<UserModel> {
+	permissions?: string[]
+}

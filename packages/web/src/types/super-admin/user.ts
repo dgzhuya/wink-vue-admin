@@ -14,7 +14,7 @@ export interface UserModel extends BaseModel, UserDto {
 	id: number
 	majorId?: number
 	roles: RoleSimple[]
-	permissions: string[]
+	roleIds: number[]
 }
 
 export interface CreateUserDto extends UserDto {

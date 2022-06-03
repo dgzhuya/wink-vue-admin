@@ -44,28 +44,25 @@
 	const confirmClick = async () => {
 		if (treeSelectDom.value) {
 			const keys = treeSelectDom.value.getCheckedKeys()
-			console.log('keys:', keys)
 			await setRolePermission(activeRid.value, keys)
 		}
 		cancelClick()
 	}
 </script>
 <template>
-	<el-drawer @closed="cancelClick()" :model-value="show">
+	<el-drawer @closed="cancelClick()" :model-value="show" direction="rtl">
 		<template #header>
 			<h4>设置角色权限</h4>
 		</template>
 		<template #default>
-			<div>
-				<el-tree-v2
-					ref="treeSelectDom"
-					:props="{ value: 'id', label: 'title', children: 'children' }"
-					:data="premissionTree"
-					check-on-click-node
-					check-strictly
-					show-checkbox
-				></el-tree-v2>
-			</div>
+			<el-tree-v2
+				ref="treeSelectDom"
+				:props="{ value: 'id', label: 'title', children: 'children' }"
+				:data="premissionTree"
+				check-on-click-node
+				show-checkbox
+				check-strictly
+			></el-tree-v2>
 		</template>
 		<template #footer>
 			<div style="flex: auto">

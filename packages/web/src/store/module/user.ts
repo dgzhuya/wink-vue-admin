@@ -5,8 +5,6 @@ import { FormInstance } from 'element-plus'
 import { getItem, removeItem, setItem } from '@/utils/store'
 import router from '@/router'
 import { StoreUserInfo } from '@/types'
-import { filterPermissionRouters } from '@/utils/route'
-import { asyncRoutes } from '@/router/module'
 
 const TOKEN_KEY = 'token'
 

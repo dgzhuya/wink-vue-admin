@@ -1,7 +1,7 @@
 <template>
 	<div class="user-manage-container">
-		<el-card class="header">
-			<el-button @click="showHandler()" type="primary">添加用户</el-button>
+		<el-card v-permission="['admin_user_add']" class="header">
+			<el-button v-permission="['admin_user_add']" @click="showHandler()" type="primary">添加用户</el-button>
 		</el-card>
 		<el-card>
 			<el-table :data="tableData" border style="width: 100%; margin-bottom: 10px">
@@ -36,10 +36,21 @@
 						{{ dateHandler(row.createTime) }}
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" fixed="right" width="260">
+				<el-table-column
+					v-permission="['admin_user_update', 'admin_user_delete']"
+					label="操作"
+					fixed="right"
+					width="260"
+				>
 					<template #default="{ row }">
-						<el-button type="primary" @click="showHandler(row)" size="small">编辑</el-button>
-						<el-button type="danger" size="small">删除</el-button>
+						<el-button
+							v-permission="['admin_user_update']"
+							type="primary"
+							@click="showHandler(row)"
+							size="small"
+							>编辑</el-button
+						>
+						<el-button v-permission="['admin_user_delete']" type="danger" size="small">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
