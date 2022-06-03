@@ -93,7 +93,7 @@ export class SysService {
 
 		return {
 			...filter(user, key => key !== 'password'),
-			majorId: uid,
+			majorId: rid,
 			permissions,
 			roles
 		}
