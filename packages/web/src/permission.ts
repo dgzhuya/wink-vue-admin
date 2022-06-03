@@ -9,21 +9,21 @@ router.beforeEach(async (to, form, next) => {
 	const app = useApp()
 	document.title = `${to.meta.title}`
 	if (user.getToken) {
+		if (!user.hasUserInfo) {
+			await user.fetchUserInfo()
+			const permissions = user.getPermissions
+			const permissionsRoutes = filterPermissionRouters(asyncRoutes, permissions)
+			permissionsRoutes.forEach(route => router.addRoute(route))
+			router.addRoute({
+				path: '/:pathMath(.*)',
+				name: '404',
+				redirect: '/404'
+			})
+			return next(to.path)
+		}
 		if (to.meta.noAuth) {
 			next('/')
 		} else {
-			if (!user.hasUserInfo) {
-				await user.fetchUserInfo()
-				const permissions = user.getPermissions
-				const permissionsRoutes = filterPermissionRouters(asyncRoutes, permissions)
-				permissionsRoutes.forEach(route => router.addRoute(route))
-				router.addRoute({
-					path: '/:pathMath(.*)',
-					name: '404',
-					redirect: '/404'
-				})
-				return next(to.path)
-			}
 			if (!to.meta.noAuth) {
 				app.addTagView({ path: to.path, fullPath: to.fullPath, title: to.meta.title })
 			}

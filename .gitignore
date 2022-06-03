@@ -9,3 +9,5 @@ pnpm-lock.yaml
 .pnpm-*
 example/
 *.db
+auto-imports.d.ts
+components.d.ts
