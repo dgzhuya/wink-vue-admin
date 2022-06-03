@@ -5,40 +5,41 @@ import { FormInstance } from 'element-plus'
 import { getItem, removeItem, setItem } from '@/utils/store'
 import router from '@/router'
 import { StoreUserInfo } from '@/types'
+import { filterPermissionRouters } from '@/utils/route'
+import { asyncRoutes } from '@/router/module'
 
-const USER_KEY = 'user'
 const TOKEN_KEY = 'token'
 
 export const useUser = defineStore('userInfo', {
 	state: () => {
 		return {
-			user: getItem(USER_KEY) as StoreUserInfo,
+			user: {} as StoreUserInfo,
 			loading: false,
-			premissions: [] as string[],
 			token: getItem(TOKEN_KEY)
 		}
 	},
 	getters: {
 		getLoading: state => state.loading,
-		hasUserInfo: state => state.user.id !== undefined,
+		hasUserInfo: state => state.user && state.user.id !== undefined,
 		info: state => state.user,
 		getToken: state => state.token,
-		getPermissions: state => state.premissions
+		getPermissions: state => (state.user.permissions ? state.user.permissions : [])
 	},
 	actions: {
 		loginout() {
 			this.$state.token = ''
 			router.push('/login').then(() => {
+				if (this.$state.user.permissions) {
+					this.$state.user.permissions.forEach(route => router.hasRoute(route) && router.removeRoute(route))
+				}
+				router.removeRoute('404')
 				this.$state.user = {}
 				removeItem(TOKEN_KEY)
-				removeItem(USER_KEY)
 			})
 		},
 		async fetchUserInfo() {
 			const res = await getUserInfo()
-			setItem(USER_KEY, res)
 			this.$state.user = res
-			if (res.permissions) this.$state.premissions = res.permissions
 		},
 		async login(formEl: FormInstance | undefined, userInfo: LoginParams) {
 			if (!formEl) return

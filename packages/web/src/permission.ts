@@ -19,8 +19,10 @@ router.beforeEach(async (to, form, next) => {
 				permissionsRoutes.forEach(route => router.addRoute(route))
 				router.addRoute({
 					path: '/:pathMath(.*)',
+					name: '404',
 					redirect: '/404'
 				})
+				return next(to.path)
 			}
 			if (!to.meta.noAuth) {
 				app.addTagView({ path: to.path, fullPath: to.fullPath, title: to.meta.title })

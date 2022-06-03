@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router'
 export const SuperAdminRoute: RouteRecordRaw = {
 	path: '/super-admin',
 	component: () => import('@/layout/index.vue'),
+	name: 'SuperAdmin',
 	meta: {
 		title: '系统管理',
 		icon: 'personnel'

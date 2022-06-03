@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { SuperAdminRoute } from './module/super-admin'
 
 const routes: RouteRecordRaw[] = [
 	{

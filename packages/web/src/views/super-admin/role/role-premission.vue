@@ -51,7 +51,7 @@
 	}
 </script>
 <template>
-	<el-drawer @closed="cancelClick()" :model-value="show" direction="rtl">
+	<el-drawer @closed="cancelClick()" :model-value="show">
 		<template #header>
 			<h4>设置角色权限</h4>
 		</template>
