@@ -17,6 +17,6 @@ export const writeWebFile = (fileName: string, source: string, prefixPath = '') 
 
 export const createWebDir = (dirPath: string) => {
 	if (!isWebExit(dirPath)) {
-		mkdirSync(resolve(getConfigPath().outDir, dirPath))
+		mkdirSync(resolve(getConfigPath().outVueDir, dirPath))
 	}
 }

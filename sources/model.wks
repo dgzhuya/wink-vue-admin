@@ -1,17 +1,17 @@
-#name: "hello"
+#name: "api"
 // api or database
 #way: "database"
 #model {
 	id: @id @number
-	name: @string
-	score: @number
-	isMale: @boolean @nullable
+	path: @string
+	title: @string
+	description: @string @nullable
 }
 
 #dto {
-	name: @string
-	score: @number
-	isMale: @boolean
+	path: @string
+	title: @string
+	description: @string
 }
 
 #api {
