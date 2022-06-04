@@ -21,3 +21,16 @@
 	@update
 	@all
 }
+
+#router {
+	path: ''
+	
+}
+
+#table {
+
+}
+
+#form {
+
+}
