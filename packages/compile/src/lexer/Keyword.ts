@@ -1,4 +1,4 @@
-const keywords = ['#name', '#way', '#model', '#dto', '#api']
+const keywords = ['#name', '#way', '#model', '#dto', '#api', '#table', '#form', '#router']
 
 const Scalar = ['@id', '@number', '@boolean', '@nullable', '@string', '@get', '@post', '@delete', '@update', '@all']
 

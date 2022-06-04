@@ -8,7 +8,7 @@ import {
 	controllerSource,
 	controllerUpdateSource
 } from './template'
-import { write2File } from '@/gen/util/fileUtil'
+import { writeNestFile } from '@/gen/sources/util/fileUtil'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 
@@ -55,6 +55,6 @@ export const genController = (moduleName: string, upperModuleName: string, astNo
 			...dynamicConfig,
 			reqMethods: reqMethodSet.size > 0 ? ', ' + Array.from(reqMethodSet).join(' ,') : ''
 		})
-		write2File(`${moduleName}.controller.ts`, controllerStr, moduleName)
+		writeNestFile(`${moduleName}.controller.ts`, controllerStr, moduleName)
 	}
 }

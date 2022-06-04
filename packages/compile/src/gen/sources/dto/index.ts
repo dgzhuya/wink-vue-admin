@@ -1,7 +1,7 @@
 import { ASTNode } from '@/parser/ast/ASTNode'
 import { CreateDtoSource, UpdateDtoSource } from './template'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
-import { createDir, write2File } from '@/gen/util/fileUtil'
+import { createNestDir, writeNestFile } from '@/gen/sources/util/fileUtil'
 import { join } from 'path'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
@@ -35,8 +35,8 @@ export const genDTO = (moduleName: string, upperModuleName: string, astNode: AST
 
 		const updateDTOStr = renderStrByTemplate(UpdateDtoSource, { upperModuleName, moduleName })
 		const dtoPath = join(moduleName, 'dto')
-		createDir(dtoPath)
-		write2File(`create-${moduleName}.dto.ts`, createDTOStr, dtoPath)
-		write2File(`update-${moduleName}.dto.ts`, updateDTOStr, dtoPath)
+		createNestDir(dtoPath)
+		writeNestFile(`create-${moduleName}.dto.ts`, createDTOStr, dtoPath)
+		writeNestFile(`update-${moduleName}.dto.ts`, updateDTOStr, dtoPath)
 	}
 }

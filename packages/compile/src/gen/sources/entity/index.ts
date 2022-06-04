@@ -1,7 +1,7 @@
 import { ASTNode } from '@/parser/ast/ASTNode'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
 import { join } from 'path'
-import { createDir, write2File } from '@/gen/util/fileUtil'
+import { createNestDir, writeNestFile } from '@/gen/sources/util/fileUtil'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 import { EntitySource } from './template'
@@ -40,7 +40,7 @@ export const genEntity = (moduleName: string, upperModuleName: string, astNode: 
 			.join('\n')
 		const entityStr = renderStrByTemplate(EntitySource, { upperModuleName, columnList })
 		const entityPath = join(moduleName, 'entities')
-		createDir(entityPath)
-		write2File(`${moduleName}.entity.ts`, entityStr, entityPath)
+		createNestDir(entityPath)
+		writeNestFile(`${moduleName}.entity.ts`, entityStr, entityPath)
 	}
 }

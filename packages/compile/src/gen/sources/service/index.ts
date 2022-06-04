@@ -1,4 +1,4 @@
-import { write2File } from '@/gen/util/fileUtil'
+import { writeNestFile } from '@/gen/sources/util/fileUtil'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { ASTNode } from '@/parser/ast/ASTNode'
@@ -39,6 +39,6 @@ export const genService = (moduleName: string, upperModuleName: string, astNode:
 			dynamicConfig.create = serviceCreateSource(moduleName, upperModuleName)
 		}
 		const serviceStr = renderStrByTemplate(serviceSource, { moduleName, upperModuleName, ...dynamicConfig })
-		write2File(`${moduleName}.service.ts`, serviceStr, moduleName)
+		writeNestFile(`${moduleName}.service.ts`, serviceStr, moduleName)
 	}
 }

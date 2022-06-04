@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "src/index.ts",
 	"scripts": {
-		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
+		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+		"test": "esno src/main.ts"
 	},
 	"author": "pinktu",
 	"devDependencies": {

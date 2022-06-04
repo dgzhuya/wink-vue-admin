@@ -23,14 +23,24 @@
 }
 
 #router {
-	path: ''
-	
+	parentPath: 'super-admin'
+	parentTitle: '系统管理'
+	parentIcon: 'personnel'
+	path: 'api'
+	title: 'API管理'
+	icon: 'api'
+	name: 'AdminAPI'
 }
 
 #table {
-
+	id: @number "id"
+	name: @string "API名称"
+	url: @string "路径"
+	description: @string "接口描述"
 }
 
 #form {
-
+	name: @string "API名称"
+	url: @string "路径"
+	description: @string "接口描述"
 }
