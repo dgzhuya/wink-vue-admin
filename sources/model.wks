@@ -6,6 +6,7 @@
 	path: @string
 	title: @string
 	description: @string @nullable
+	base: @DateEntity
 }
 
 #dto {

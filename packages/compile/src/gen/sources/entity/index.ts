@@ -11,10 +11,20 @@ export const genEntity = (moduleName: string, upperModuleName: string, astNode: 
 	if (modelNode !== null) {
 		const assignValueElement = (modelNode as AssignStmt).getAssignValue()['#model'] as Translate
 
+		const baseEntityStr = {
+			baseEntityImport: '',
+			extendsBaseEntity: ''
+		}
+
 		const columnList = Object.keys(assignValueElement)
 			.map(key => {
-				const genDtoField = (type: string) => `\n\t${key}: ${type}\n`
 				const elements = assignValueElement[key] as string[]
+				if (key === 'base' && elements.length === 1 && elements[0] === '@DateEntity') {
+					baseEntityStr.baseEntityImport = `import { BaseEntity } from 'src/common/entities/base.entity'\n`
+					baseEntityStr.extendsBaseEntity = `extends BaseEntity `
+					return ''
+				}
+				const genDtoField = (type: string) => `\n\t${key}: ${type}\n`
 				const columnSet = new Set()
 				let fieldResult = ''
 				let primaryStr = ''
@@ -37,8 +47,9 @@ export const genEntity = (moduleName: string, upperModuleName: string, astNode: 
 					primaryStr + `\t@Column(${columnList.length > 0 ? `{${columnList.join(', ')}}` : ''})` + fieldResult
 				)
 			})
+			.filter(r => r !== '')
 			.join('\n')
-		const entityStr = renderStrByTemplate(EntitySource, { upperModuleName, columnList })
+		const entityStr = renderStrByTemplate(EntitySource, { upperModuleName, columnList, ...baseEntityStr })
 		const entityPath = join(moduleName, 'entities')
 		createNestDir(entityPath)
 		writeNestFile(`${moduleName}.entity.ts`, entityStr, entityPath)
