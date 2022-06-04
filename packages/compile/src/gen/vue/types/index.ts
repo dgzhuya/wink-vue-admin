@@ -1,10 +1,10 @@
 import { ASTNode } from '@/parser/ast/ASTNode'
 import { RouterConfig } from '@/gen/vue'
 import { join } from 'path'
-import { createWebDir } from '@/gen/vue/util/fileUtil'
+import { createWebDir, writeWebFile } from '@/gen/vue/util/fileUtil'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
-import { tableTypeStr } from '@/gen/vue/types/template'
+import { formTypeStr, tableTypeStr } from '@/gen/vue/types/template'
 
 export const genPluginTypes = (
 	moduleName: string,
@@ -42,7 +42,29 @@ export const genPluginTypes = (
 	}
 	const formNode = astNode.findByKey('#form')
 	if (formNode) {
-		console.log(formNode)
+		const formFields = (formNode as AssignStmt).getAssignValue()['#form'] as Translate
+		const formStr = Object.keys(formFields)
+			.map(key => {
+				const genModelField = (type: string) => '\t' + `${key}: ${type}`
+				const element = formFields[key] as string[]
+				if (element.includes('@number')) {
+					return genModelField('number')
+				}
+				if (element.includes('@string')) {
+					return genModelField('string')
+				}
+				if (element.includes('@boolean')) {
+					return genModelField('boolean')
+				}
+				return ''
+			})
+			.filter(i => i !== '')
+			.join('\n')
+		typeSourceStr.form = formTypeStr(upperModuleName, formStr)
 	}
-	console.log(typeSourceStr)
+	if (typeSourceStr.form || typeSourceStr.table) {
+		const { form, table } = typeSourceStr
+		const lineBreak = form ? '\n' : ''
+		writeWebFile(`${moduleName}.ts`, `${form}${lineBreak}${table}`, typesDir)
+	}
 }
