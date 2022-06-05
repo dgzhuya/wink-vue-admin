@@ -1,7 +1,9 @@
 <template>
 	<div class="user-manage-container">
-		<el-card class="header">
-			<el-button type="primary" @click="showExtraHandler(-1)">添加权限</el-button>
+		<el-card v-permission="['super-admin_permission_add']" class="header">
+			<el-button v-permission="['super-admin_permission_add']" type="primary" @click="showExtraHandler(-1)"
+				>添加权限</el-button
+			>
 		</el-card>
 		<el-card>
 			<el-table
@@ -27,11 +29,38 @@
 						{{ dateHandler(row.updateTime) }}
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" fixed="right" width="260">
+				<el-table-column
+					v-permission="[
+						'super-admin_permission_update',
+						'super-admin_permission_add',
+						'super-admin_permission_delete'
+					]"
+					label="操作"
+					fixed="right"
+					width="260"
+				>
 					<template #default="{ row }">
-						<el-button type="primary" @click="showExtraHandler(-1, row)" size="small">编辑</el-button>
-						<el-button type="success" @click="showExtraHandler(row.id)" size="small">添加</el-button>
-						<el-button type="danger" @click="deletePermission(row.id)" size="small">删除</el-button>
+						<el-button
+							type="primary"
+							v-permission="['super-admin_permission_update']"
+							@click="showExtraHandler(-1, row)"
+							size="small"
+							>编辑</el-button
+						>
+						<el-button
+							type="success"
+							v-permission="['super-admin_permission_add']"
+							@click="showExtraHandler(row.id)"
+							size="small"
+							>添加</el-button
+						>
+						<el-button
+							type="danger"
+							v-permission="['super-admin_permission_delete']"
+							@click="deletePermission(row.id)"
+							size="small"
+							>删除</el-button
+						>
 					</template>
 				</el-table-column>
 			</el-table>
