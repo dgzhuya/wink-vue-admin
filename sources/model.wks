@@ -38,6 +38,8 @@
 	name: @string @comment("API名称")
 	url: @string @comment("路径")
 	description: @string @comment("接口描述")
+	createTime: @string @date @comment("创建时间")
+	updateTime: @string @date @comment("修改时间")
 }
 
 #form {

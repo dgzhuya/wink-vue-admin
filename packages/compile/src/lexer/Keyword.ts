@@ -12,7 +12,8 @@ const Scalar = [
 	'@update',
 	'@all',
 	'@DateEntity',
-	'@comment'
+	'@comment',
+	'@date'
 ]
 
 export const isKeyWord = (word: string) => keywords.includes(word)

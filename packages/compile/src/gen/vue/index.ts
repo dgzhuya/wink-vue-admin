@@ -2,6 +2,7 @@ import { ASTNode } from '@/parser/ast/ASTNode'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 import { genPluginTypes } from '@/gen/vue/types'
+import { genPluginList } from '@/gen/vue/list'
 
 export interface RouterConfig {
 	parentPath: string
@@ -16,6 +17,7 @@ export interface RouterConfig {
 export const genVueCode = (moduleName: string, upperModuleName: string, astNode: ASTNode) => {
 	const routerConfig = getParentInfo(astNode)
 	genPluginTypes(moduleName, upperModuleName, routerConfig, astNode)
+	genPluginList(moduleName, upperModuleName, routerConfig, astNode)
 }
 
 const getParentInfo = (astNode: ASTNode) => {
