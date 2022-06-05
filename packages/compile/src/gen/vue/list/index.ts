@@ -10,6 +10,7 @@ import { Translate } from '@/parser/utils/Types'
 export const genPluginList = (
 	moduleName: string,
 	upperModuleName: string,
+	moduleComment: string,
 	routerConfig: RouterConfig,
 	astNode: ASTNode
 ) => {
@@ -47,7 +48,7 @@ export const genPluginList = (
 		const listVueStr = renderStrByTemplate(listSource, {
 			moduleName,
 			upperModuleName,
-			title: routerConfig.title,
+			moduleComment,
 			parentPath: routerConfig.parentPath,
 			tableFieldStr
 		})

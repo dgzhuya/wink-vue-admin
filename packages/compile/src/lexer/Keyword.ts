@@ -1,4 +1,4 @@
-const keywords = ['#name', '#way', '#model', '#dto', '#api', '#table', '#form', '#router']
+const keywords = ['#name', '#way', '#model', '#dto', '#api', '#table', '#form', '#router', '#comment']
 
 const Scalar = [
 	'@id',

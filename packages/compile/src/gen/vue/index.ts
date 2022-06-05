@@ -16,8 +16,9 @@ export interface RouterConfig {
 
 export const genVueCode = (moduleName: string, upperModuleName: string, astNode: ASTNode) => {
 	const routerConfig = getParentInfo(astNode)
+	const moduleComment = getModuleComment(astNode)
 	genPluginTypes(moduleName, upperModuleName, routerConfig, astNode)
-	genPluginList(moduleName, upperModuleName, routerConfig, astNode)
+	genPluginList(moduleName, upperModuleName, moduleComment, routerConfig, astNode)
 }
 
 const getParentInfo = (astNode: ASTNode) => {
@@ -56,4 +57,15 @@ const getParentInfo = (astNode: ASTNode) => {
 		}
 	}
 	return result
+}
+
+const getModuleComment = (astNode: ASTNode) => {
+	const moduleNode = astNode.findByKey('#comment')
+	if (moduleNode) {
+		const exprValue = (moduleNode as AssignStmt).getAssignValue()
+		if (exprValue['#comment']) {
+			return (exprValue['#comment'] as string[])[0]
+		}
+	}
+	return '测试'
 }

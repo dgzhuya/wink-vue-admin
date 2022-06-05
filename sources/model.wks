@@ -1,5 +1,6 @@
 #name: "api"
 // api or database
+#comment: "API" 
 #way: "database"
 #model {
 	id: @id @number

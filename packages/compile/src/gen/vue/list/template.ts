@@ -1,17 +1,37 @@
 export const listSource = `<template>
 	<div class="%moduleName%-container">
-		<el-card class="header">
-			<el-button @click="showHandler()" type="primary">添加%title%</el-button>
+		<el-card v-permission="['%parentPath%_%moduleName%_add']" class="header">
+			<el-button v-permission="['%parentPath%_%moduleName%_add']" @click="showHandler()" type="primary"
+				>添加%moduleComment%</el-button
+			>
 		</el-card>
 		<el-card>
 			<el-table :data="tableData" border style="margin-bottom: 10px">
-%tableFieldStr%				<el-table-column label="操作" fixed="right" width="260">
+%tableFieldStr%				<el-table-column
+					v-permission="['%parentPath%_%moduleName%_update', '%parentPath%_%moduleName%_delete']"
+					label="操作"
+					fixed="right"
+					width="260"
+				>
 					<template #default="{ row }">
-						<el-button type="primary" @click="showHandler(row)" size="small">编辑</el-button>
-						<el-button type="danger" size="small">删除</el-button>
+						<el-button
+							v-permission="['%parentPath%_%moduleName%_update']"
+							type="primary"
+							@click="showHandler(row)"
+							size="small"
+							>编辑</el-button
+						>
+						<el-button
+							v-permission="['%parentPath%_%moduleName%_delete']"
+							@click="delete%upperModuleName%(row.id)"
+							type="danger"
+							size="small"
+							>删除</el-button
+						>
 					</template>
 				</el-table-column>
 			</el-table>
+
 			<el-pagination
 				class="pagination"
 				@size-change="sizeHandler"
@@ -24,25 +44,27 @@ export const listSource = `<template>
 			>
 			</el-pagination>
 		</el-card>
-		<%moduleName%-form :%moduleName%="%moduleName%Active" :show-form="showModel" @close="closeHandler"></%moduleName%-form>
+		<%moduleName%-form @close="closeHandler" :%moduleName%="%moduleName%Active" :show-form="showModel"></%moduleName%-form>
 	</div>
 </template>
 
 <script lang="ts" setup>
-	import { get%upperModuleName%List } from '@/api/%parentPath%/%moduleName%'
-	import { pageEffect } from '@/effect/page'
-	import { %upperModuleName%Model } from '@/types/%parentPath%/%moduleName%'
-	import { dateHandler } from '@/utils/format'
-	import { showFormEffect } from '@/effect/show-form'
+	import { get%upperModuleName%List, set%upperModuleName%Roles, delete%upperModuleName% } from '@/api/%parentPath%/%moduleName%'
 	import %upperModuleName%Form from './%moduleName%-form.vue'
+	import { pageEffect } from '@/effect/page'
+	import { dateHandler } from '@/utils/format'
+	import { %upperModuleName%Model } from '@/types/%parentPath%/%moduleName%'
+	import { showFormEffect } from '@/effect/show-form'
 
+	const %moduleName%Active = ref<%upperModuleName%Model | null>(null)
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(get%upperModuleName%List)
+
+	const { showHandler, showModel, closeHandler } = showFormEffect(%moduleName%Active, fetchHandler)
+	const allRoles = ref<RoleSimple[]>([])
+
 	onMounted(async () => {
 		await fetchHandler()
 	})
-
-	const %moduleName%Active = ref<%upperModuleName%Model | null>(null)
-	const { showHandler, showModel, closeHandler } = showFormEffect(%moduleName%Active, fetchHandler)
 </script>
 
 <style lang="scss" scoped>
