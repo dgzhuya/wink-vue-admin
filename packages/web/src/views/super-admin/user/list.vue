@@ -50,7 +50,13 @@
 							size="small"
 							>编辑</el-button
 						>
-						<el-button v-permission="['admin_user_delete']" type="danger" size="small">删除</el-button>
+						<el-button
+							v-permission="['admin_user_delete']"
+							@click="deleteUser(row.id)"
+							type="danger"
+							size="small"
+							>删除</el-button
+						>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -72,7 +78,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { getUserList, setUserRoles } from '@/api/super-admin/user'
+	import { getUserList, setUserRoles, deleteUser } from '@/api/super-admin/user'
 	import UserForm from './user-form.vue'
 	import SvgIcon from '@/components/SvgIcon/index.vue'
 	import { pageEffect } from '@/effect/page'

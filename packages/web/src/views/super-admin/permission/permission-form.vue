@@ -29,7 +29,7 @@
 	const permissionFormEmit = defineEmits<{ (e: 'close', refresh: boolean): void }>()
 
 	const closeHandler = () => {
-		permissionFormEmit('close', true)
+		permissionFormEmit('close', false)
 	}
 
 	const updateUser = async () => {

@@ -6,6 +6,7 @@
 		<el-card>
 			<el-table
 				row-key="id"
+				ref="tableDOM"
 				lazy
 				:load="loadChildren"
 				:data="tableData"
@@ -30,7 +31,7 @@
 					<template #default="{ row }">
 						<el-button type="primary" @click="showExtraHandler(-1, row)" size="small">编辑</el-button>
 						<el-button type="success" @click="showExtraHandler(row.id)" size="small">添加</el-button>
-						<el-button type="danger" size="small">删除</el-button>
+						<el-button type="danger" @click="deletePermission(row.id)" size="small">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -50,13 +51,13 @@
 			:parent-id="parentId"
 			:permission="permissionActive"
 			:show-form="showModel"
-			@close="closeHandler"
+			@close="tableCloseHandler"
 		></permission-form>
 	</div>
 </template>
 
 <script lang="ts" setup>
-	import { getPermissionList, getPermissionsByParent } from '@/api/super-admin/permission'
+	import { getPermissionList, getPermissionsByParent, deletePermission } from '@/api/super-admin/permission'
 	import { pageEffect } from '@/effect/page'
 	import { showFormEffect } from '@/effect/show-form'
 	import { PermissionModel } from '@/types/super-admin/permission'
@@ -79,6 +80,27 @@
 	const parentId = ref(-1)
 	const permissionActive = ref<PermissionModel | null>(null)
 	const { showExtraHandler, closeHandler, showModel } = showFormEffect(permissionActive, fetchHandler, parentId)
+	const tableDOM = ref()
+	const tableCloseHandler = (refresh: boolean) => {
+		if (refresh && tableDOM.value) {
+			if ((permissionActive.value !== null && permissionActive.value.parentId) || parentId.value !== -1) {
+				const { store } = tableDOM.value
+				console.log('store:', store.states)
+				if (parentId.value !== -1) {
+					tableDOM.value.toggleRowExpansion({ id: parentId.value }, false)
+					store.states.treeData.value[parentId.value].loaded = false
+				} else if (permissionActive.value !== null && permissionActive.value.parentId) {
+					tableDOM.value.toggleRowExpansion({ id: permissionActive.value.parentId }, false)
+					store.states.treeData.value[permissionActive.value.parentId].loaded = false
+				}
+				closeHandler(false)
+			} else {
+				closeHandler(refresh)
+			}
+		} else {
+			closeHandler(refresh)
+		}
+	}
 </script>
 
 <style lang="scss" scoped>

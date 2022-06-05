@@ -24,7 +24,7 @@
 						<el-button type="success" @click="openPermissionHandler(row.id)" size="small"
 							>设置权限</el-button
 						>
-						<el-button type="danger" size="small">删除</el-button>
+						<el-button type="danger" @click="deleteRole(row.id)" size="small">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { getRoleList } from '@/api/super-admin/role'
+	import { getRoleList, deleteRole } from '@/api/super-admin/role'
 	import { pageEffect } from '@/effect/page'
 	import { RoleModel } from '@/types/super-admin/role'
 	import { dateHandler } from '@/utils/format'
