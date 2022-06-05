@@ -34,14 +34,14 @@
 }
 
 #table {
-	id: @number "id"
-	name: @string "API名称"
-	url: @string "路径"
-	description: @string "接口描述"
+	id: @number @comment("id")
+	name: @string @comment("API名称")
+	url: @string @comment("路径")
+	description: @string @comment("接口描述")
 }
 
 #form {
-	name: @string "API名称"
-	url: @string "路径"
-	description: @string "接口描述"
+	name: @string @comment("API名称")
+	url: @string @comment("路径")
+	description: @string @comment("接口描述")
 }

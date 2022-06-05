@@ -25,7 +25,7 @@ export const analyse = (source: string): ResultWarp<Token[]> => {
 			}
 		}
 
-		if (word === '{' || word === '}') {
+		if (word === '{' || word === '}' || word === '(' || word === ')') {
 			tokens.push(new Token(TokenKind.BRACKET, word))
 			continue
 		}

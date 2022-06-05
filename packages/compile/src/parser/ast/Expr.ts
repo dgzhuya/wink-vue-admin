@@ -2,6 +2,7 @@ import { ASTNode } from './ASTNode'
 import { NodeType } from './NodeType'
 import { Factor } from './Factor'
 import { TokenIterator } from '../utils/TokenIterator'
+import { CallExpr } from '@/parser/ast/CallExpr'
 
 export class Expr extends ASTNode {
 	constructor() {
@@ -13,8 +14,17 @@ export class Expr extends ASTNode {
 		while (it.hasNext()) {
 			const factorNode = Factor.parser(it)
 			expr.addChild(factorNode)
-			const lexeme = it.peek()
-			if (!lexeme.isScalar()) {
+			it.next()
+			let lookahead = it.peek()
+			it.putBack()
+			if (lookahead.getValue() === '(') {
+				const callExpr = CallExpr.parser(it)
+				expr.addChild(callExpr)
+			}
+			const lexeme = it.next()
+			lookahead = it.peek()
+			it.putBack()
+			if (!lexeme.isScalar() || !lookahead.isScalar()) {
 				break
 			}
 		}
@@ -22,6 +32,8 @@ export class Expr extends ASTNode {
 	}
 
 	getChildVal() {
-		return this.children.map(child => child.value)
+		return this.children.map(child =>
+			child.type === NodeType.CALL_EXPR ? (child as CallExpr).getCallVal() : child.value
+		)
 	}
 }

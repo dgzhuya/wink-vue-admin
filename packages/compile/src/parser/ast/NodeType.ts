@@ -4,5 +4,6 @@ export enum NodeType {
 	ASSIGN_STMT,
 	VARIABLE,
 	SCALAR,
-	BLOCK
+	BLOCK,
+	CALL_EXPR
 }
