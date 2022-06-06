@@ -4,7 +4,7 @@ import { join } from 'path'
 import { createWebDir, writeWebFile } from '@/gen/vue/util/fileUtil'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
-import { formTypeStr, tableTypeStr } from '@/gen/vue/types/template'
+import { dtoSource, modelSource } from '@/gen/vue/types/template'
 
 export const genPluginTypes = (
 	moduleName: string,
@@ -14,9 +14,9 @@ export const genPluginTypes = (
 ) => {
 	const typesDir = join('types', routerConfig.parentPath)
 	createWebDir(typesDir)
-	const typeSourceStr = {
-		table: '',
-		form: ''
+	const modelTypeSource = {
+		model: '',
+		dto: ''
 	}
 	const tableNode = astNode.findByKey('#table')
 	if (tableNode) {
@@ -38,14 +38,14 @@ export const genPluginTypes = (
 			})
 			.filter(i => i !== '')
 			.join('\n')
-		typeSourceStr.table = tableTypeStr(upperModuleName, modelStr)
+		modelTypeSource.model = modelSource(upperModuleName, modelStr)
 	}
 	const formNode = astNode.findByKey('#form')
 	if (formNode) {
 		const formFields = (formNode as AssignStmt).getAssignValue()['#form'] as Translate
 		const formStr = Object.keys(formFields)
 			.map(key => {
-				const genModelField = (type: string) => '\t' + `${key}: ${type}`
+				const genModelField = (type: string) => '\t' + `${key}?: ${type}`
 				const element = formFields[key] as string[]
 				if (element.includes('@number')) {
 					return genModelField('number')
@@ -60,10 +60,10 @@ export const genPluginTypes = (
 			})
 			.filter(i => i !== '')
 			.join('\n')
-		typeSourceStr.form = formTypeStr(upperModuleName, formStr)
+		modelTypeSource.dto = dtoSource(upperModuleName, formStr)
 	}
-	if (typeSourceStr.form || typeSourceStr.table) {
-		const { form, table } = typeSourceStr
+	if (modelTypeSource.dto || modelTypeSource.model) {
+		const { dto: form, model: table } = modelTypeSource
 		const lineBreak = form ? '\n' : ''
 		writeWebFile(`${moduleName}.ts`, `${form}${lineBreak}${table}`, typesDir)
 	}
