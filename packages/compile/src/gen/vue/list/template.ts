@@ -1,4 +1,23 @@
-export const listSource = `<template>
+export const listSource = `<script lang="ts" setup>
+import { get%upperModuleName%List, set%upperModuleName%Roles, delete%upperModuleName% } from '@/api/%parentPath%/%moduleName%'
+import %upperModuleName%Form from './%moduleName%-form.vue'
+import { pageEffect } from '@/effect/page'
+import { dateHandler } from '@/utils/format'
+import { %upperModuleName%Model } from '@/types/%parentPath%/%moduleName%'
+import { showFormEffect } from '@/effect/show-form'
+import { deleteEffect } from '@/effect/delete'
+
+const %moduleName%Active = ref<%upperModuleName%Model | null>(null)
+const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(get%upperModuleName%List)
+
+const { showHandler, showModel, closeHandler } = showFormEffect(%moduleName%Active, fetchHandler)
+const { deleteHandler } = deleteEffect(delete%upperModuleName%, fetchHandler, '此%moduleComment%')
+onMounted(async () => {
+	await fetchHandler()
+})
+</script>
+
+<template>
 	<div class="%moduleName%-container">
 		<el-card v-permission="['%parentPath%_%moduleName%_add']" class="header">
 			<el-button v-permission="['%parentPath%_%moduleName%_add']" @click="showHandler()" type="primary"
@@ -47,25 +66,6 @@ export const listSource = `<template>
 		<%moduleName%-form @close="closeHandler" :%moduleName%="%moduleName%Active" :show-form="showModel"></%moduleName%-form>
 	</div>
 </template>
-
-<script lang="ts" setup>
-	import { get%upperModuleName%List, set%upperModuleName%Roles, delete%upperModuleName% } from '@/api/%parentPath%/%moduleName%'
-	import %upperModuleName%Form from './%moduleName%-form.vue'
-	import { pageEffect } from '@/effect/page'
-	import { dateHandler } from '@/utils/format'
-	import { %upperModuleName%Model } from '@/types/%parentPath%/%moduleName%'
-	import { showFormEffect } from '@/effect/show-form'
-	import { deleteEffect } from '@/effect/delete'
-
-	const %moduleName%Active = ref<%upperModuleName%Model | null>(null)
-	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(get%upperModuleName%List)
-
-	const { showHandler, showModel, closeHandler } = showFormEffect(%moduleName%Active, fetchHandler)
-	const { deleteHandler } = deleteEffect(delete%upperModuleName%, fetchHandler, '此%moduleComment%')
-	onMounted(async () => {
-		await fetchHandler()
-	})
-</script>
 
 <style lang="scss" scoped>
 	.%moduleName%-container {
