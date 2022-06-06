@@ -75,9 +75,8 @@
 	<el-dialog
 		:model-value="showForm"
 		:title="userId === -1 ? '添加用户' : '编辑用户'"
-		width="50%"
 		@close="closeHandler()"
-		custom-class="user-form-container"
+		custom-class="form-container"
 		lock-scroll
 	>
 		<el-form ref="formRef" :model="userInfo" label-width="120px" class="form-detail">

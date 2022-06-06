@@ -1,12 +1,48 @@
+<script lang="ts" setup>
+	import { getUserList, setUserRoles, deleteUser } from '@/api/super-admin/user'
+	import UserForm from './user-form.vue'
+	import SvgIcon from '@/components/SvgIcon/index.vue'
+	import { pageEffect } from '@/effect/page'
+	import { dateHandler } from '@/utils/format'
+	import { UserModel } from '@/types/super-admin/user'
+	import { showFormEffect } from '@/effect/show-form'
+	import { RoleSimple } from '@/types/super-admin/role'
+	import { getAllRoles } from '@/api/super-admin/role'
+	import { deleteEffect } from '@/effect/delete'
+
+	const userActive = ref<UserModel | null>(null)
+	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getUserList)
+
+	const { showHandler, showModel, closeHandler } = showFormEffect(userActive, fetchHandler)
+	const allRoles = ref<RoleSimple[]>([])
+
+	const { deleteHandler } = deleteEffect(deleteUser, fetchHandler, '此用户')
+	onMounted(async () => {
+		await fetchHandler()
+		allRoles.value = await getAllRoles()
+	})
+
+	const changeUserRole = async (user: UserModel) => {
+		try {
+			await setUserRoles(user.id, user.roleIds)
+			await fetchHandler()
+		} catch (error) {
+			setTimeout(() => {
+				user.roleIds = user.roles.map(role => role.id)
+			}, 1100)
+		}
+	}
+</script>
+
 <template>
-	<div class="user-manage-container">
-		<el-card v-permission="['super-admin_user_add']" class="header">
+	<div class="list-container">
+		<el-card v-permission="['super-admin_user_add']" class="list-header">
 			<el-button v-permission="['super-admin_user_add']" @click="showHandler()" type="primary"
 				>添加用户</el-button
 			>
 		</el-card>
 		<el-card>
-			<el-table :data="tableData" border style="width: 100%; margin-bottom: 10px">
+			<el-table :data="tableData" border class="list-table-container">
 				<el-table-column label="#" type="index" />
 				<el-table-column prop="username" label="用户名"> </el-table-column>
 				<el-table-column label="性别" :width="80" align="center">
@@ -79,53 +115,6 @@
 	</div>
 </template>
 
-<script lang="ts" setup>
-	import { getUserList, setUserRoles, deleteUser } from '@/api/super-admin/user'
-	import UserForm from './user-form.vue'
-	import SvgIcon from '@/components/SvgIcon/index.vue'
-	import { pageEffect } from '@/effect/page'
-	import { dateHandler } from '@/utils/format'
-	import { UserModel } from '@/types/super-admin/user'
-	import { showFormEffect } from '@/effect/show-form'
-	import { RoleSimple } from '@/types/super-admin/role'
-	import { getAllRoles } from '@/api/super-admin/role'
-	import { deleteEffect } from '@/effect/delete'
-
-	const userActive = ref<UserModel | null>(null)
-	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getUserList)
-
-	const { showHandler, showModel, closeHandler } = showFormEffect(userActive, fetchHandler)
-	const allRoles = ref<RoleSimple[]>([])
-
-	const { deleteHandler } = deleteEffect(deleteUser, fetchHandler, '此用户')
-	onMounted(async () => {
-		await fetchHandler()
-		allRoles.value = await getAllRoles()
-	})
-
-	const changeUserRole = async (user: UserModel) => {
-		try {
-			await setUserRoles(user.id, user.roleIds)
-			await fetchHandler()
-		} catch (error) {
-			setTimeout(() => {
-				user.roleIds = user.roles.map(role => role.id)
-			}, 1100)
-		}
-	}
-</script>
-
 <style lang="scss" scoped>
-	.user-manage-container {
-		.header {
-			margin-bottom: 22px;
-			text-align: right;
-		}
-
-		.avatar-icon {
-			width: 40px;
-			height: 40px;
-			border-radius: 10px;
-		}
-	}
+	@import '@/style/table.scss';
 </style>

@@ -1,12 +1,12 @@
 <template>
-	<div class="user-manage-container">
-		<el-card v-permission="['super-admin_role_add']" class="header">
+	<div class="list-container">
+		<el-card v-permission="['super-admin_role_add']" class="list-header">
 			<el-button @click="showHandler()" v-permission="['super-admin_role_add']" type="primary"
 				>添加角色</el-button
 			>
 		</el-card>
 		<el-card>
-			<el-table :data="tableData" border style="width: 100%; margin-bottom: 10px">
+			<el-table :data="tableData" border style="list-table-container">
 				<el-table-column label="#" type="index" />
 				<el-table-column prop="title" :width="80" label="标题"> </el-table-column>
 				<el-table-column prop="description" label="描述"> </el-table-column>
@@ -95,16 +95,5 @@
 </script>
 
 <style lang="scss" scoped>
-	.user-manage-container {
-		.header {
-			margin-bottom: 22px;
-			text-align: right;
-		}
-
-		.avatar-icon {
-			width: 40px;
-			height: 40px;
-			border-radius: 10px;
-		}
-	}
+	@import '@/style/table.scss';
 </style>

@@ -1,6 +1,55 @@
+<script lang="ts" setup>
+	import { getPermissionList, getPermissionsByParent, deletePermission } from '@/api/super-admin/permission'
+	import { deleteEffect } from '@/effect/delete'
+	import { pageEffect } from '@/effect/page'
+	import { showFormEffect } from '@/effect/show-form'
+	import { PermissionModel } from '@/types/super-admin/permission'
+	import { dateHandler } from '@/utils/format'
+	import PermissionForm from './permission-form.vue'
+
+	const loadChildren = async (
+		row: PermissionModel,
+		treeNode: unknown,
+		resolve: (date: PermissionModel[]) => void
+	) => {
+		resolve(await getPermissionsByParent(row.id))
+	}
+
+	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getPermissionList)
+	const { deleteHandler } = deleteEffect(deletePermission, fetchHandler, '此权限')
+	onMounted(async () => {
+		await fetchHandler()
+	})
+
+	const parentId = ref(-1)
+	const permissionActive = ref<PermissionModel | null>(null)
+	const { showExtraHandler, closeHandler, showModel } = showFormEffect(permissionActive, fetchHandler, parentId)
+	const tableDOM = ref()
+	const tableCloseHandler = (refresh: boolean) => {
+		if (refresh && tableDOM.value) {
+			if ((permissionActive.value !== null && permissionActive.value.parentId) || parentId.value !== -1) {
+				const { store } = tableDOM.value
+				console.log('store:', store.states)
+				if (parentId.value !== -1) {
+					tableDOM.value.toggleRowExpansion({ id: parentId.value }, false)
+					store.states.treeData.value[parentId.value].loaded = false
+				} else if (permissionActive.value !== null && permissionActive.value.parentId) {
+					tableDOM.value.toggleRowExpansion({ id: permissionActive.value.parentId }, false)
+					store.states.treeData.value[permissionActive.value.parentId].loaded = false
+				}
+				closeHandler(false)
+			} else {
+				closeHandler(refresh)
+			}
+		} else {
+			closeHandler(refresh)
+		}
+	}
+</script>
+
 <template>
-	<div class="user-manage-container">
-		<el-card v-permission="['super-admin_permission_add']" class="header">
+	<div class="list-container">
+		<el-card v-permission="['super-admin_permission_add']" class="list-header">
 			<el-button v-permission="['super-admin_permission_add']" type="primary" @click="showExtraHandler(-1)"
 				>添加权限</el-button
 			>
@@ -85,66 +134,6 @@
 	</div>
 </template>
 
-<script lang="ts" setup>
-	import { getPermissionList, getPermissionsByParent, deletePermission } from '@/api/super-admin/permission'
-	import { deleteEffect } from '@/effect/delete'
-	import { pageEffect } from '@/effect/page'
-	import { showFormEffect } from '@/effect/show-form'
-	import { PermissionModel } from '@/types/super-admin/permission'
-	import { dateHandler } from '@/utils/format'
-	import PermissionForm from './permission-form.vue'
-
-	const loadChildren = async (
-		row: PermissionModel,
-		treeNode: unknown,
-		resolve: (date: PermissionModel[]) => void
-	) => {
-		resolve(await getPermissionsByParent(row.id))
-	}
-
-	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getPermissionList)
-	const { deleteHandler } = deleteEffect(deletePermission, fetchHandler, '此权限')
-	onMounted(async () => {
-		await fetchHandler()
-	})
-
-	const parentId = ref(-1)
-	const permissionActive = ref<PermissionModel | null>(null)
-	const { showExtraHandler, closeHandler, showModel } = showFormEffect(permissionActive, fetchHandler, parentId)
-	const tableDOM = ref()
-	const tableCloseHandler = (refresh: boolean) => {
-		if (refresh && tableDOM.value) {
-			if ((permissionActive.value !== null && permissionActive.value.parentId) || parentId.value !== -1) {
-				const { store } = tableDOM.value
-				console.log('store:', store.states)
-				if (parentId.value !== -1) {
-					tableDOM.value.toggleRowExpansion({ id: parentId.value }, false)
-					store.states.treeData.value[parentId.value].loaded = false
-				} else if (permissionActive.value !== null && permissionActive.value.parentId) {
-					tableDOM.value.toggleRowExpansion({ id: permissionActive.value.parentId }, false)
-					store.states.treeData.value[permissionActive.value.parentId].loaded = false
-				}
-				closeHandler(false)
-			} else {
-				closeHandler(refresh)
-			}
-		} else {
-			closeHandler(refresh)
-		}
-	}
-</script>
-
 <style lang="scss" scoped>
-	.user-manage-container {
-		.header {
-			margin-bottom: 22px;
-			text-align: right;
-		}
-
-		.avatar-icon {
-			width: 40px;
-			height: 40px;
-			border-radius: 10px;
-		}
-	}
+	@import '@/style/table.scss';
 </style>

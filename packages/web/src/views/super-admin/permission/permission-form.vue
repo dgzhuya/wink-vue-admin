@@ -64,16 +64,17 @@
 		permissionFormEmit('close', true)
 	}
 </script>
+
 <template>
 	<el-dialog
 		:model-value="showForm"
 		:title="props.permission === null ? '添加权限' : '编辑权限'"
 		width="50%"
 		@close="closeHandler()"
-		custom-class="permission-form-container"
+		custom-class="form-container"
 		lock-scroll
 	>
-		<el-form ref="formRef" :model="permissionInfo" label-width="120px" class="permission-detail">
+		<el-form ref="formRef" :model="permissionInfo" label-width="120px" class="form-detail">
 			<el-form-item label="标题">
 				<el-input v-model="permissionInfo.title" />
 			</el-form-item>
@@ -85,26 +86,14 @@
 			</el-form-item>
 		</el-form>
 		<template #footer>
-			<div class="user-form-footer">
+			<div class="form-footer">
 				<el-button @click="updateUser()" type="primary">保存</el-button>
 				<el-button @click="closeHandler()" type="info">取消</el-button>
 			</div>
 		</template>
 	</el-dialog>
 </template>
-<style lang="scss" scoped>
-	.permission-form-container {
-		position: relative;
-	}
-	.permission-detail {
-		text-align: center;
-		width: 70%;
-		margin: 0 auto;
-	}
 
-	.user-form-footer {
-		width: 100%;
-		display: flex;
-		justify-content: center;
-	}
+<style lang="scss" scoped>
+	@import '@/style/form.scss';
 </style>
