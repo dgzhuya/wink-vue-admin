@@ -2,8 +2,8 @@ import { BaseModel } from '.'
 import { RoleSimple } from './role'
 
 export interface UserDto {
-	username: string
-	nickname: string
+	username?: string
+	nickname?: string
 	gender?: number
 	avatar?: string
 	mobile?: number

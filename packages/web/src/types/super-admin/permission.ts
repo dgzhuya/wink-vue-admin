@@ -17,9 +17,9 @@ export interface PermissionModel extends PermissionSimple, BaseModel {
 }
 
 export interface PermissionDto {
-	title: string
+	title?: string
 	key?: string
-	description: string
+	description?: string
 }
 
 export interface CreatePermissionDto extends PermissionDto {

@@ -3,30 +3,19 @@
 	import { UserDto, UserModel } from '@/types/super-admin/user'
 	import { updateUserInfo, createUser, setUserMajorRole } from '@/api/super-admin/user'
 	import { toast } from '@/utils/toast'
+	import { pickerKeyVal } from '@/utils/pickerKeyVal'
 
 	const props = defineProps<{ user: UserModel | null; showForm: boolean }>()
-	const userInfo = ref<Partial<UserDto>>({})
-	const createPassword = ref('')
 	const userId = ref(-1)
-	const resetUser = () => {
-		userId.value = -1
-		userInfo.value = {}
-	}
+	const userInfo = ref<UserDto>({})
+	const createPassword = ref('')
 
 	watchEffect(async () => {
+		userId.value = -1
+		userInfo.value = {}
 		if (props.user !== null) {
-			resetUser()
 			userId.value = props.user.id
-			userInfo.value = {
-				nickname: props.user.nickname,
-				username: props.user.username,
-				avatar: props.user.avatar,
-				address: props.user.address,
-				gender: props.user.gender,
-				mobile: props.user.mobile
-			}
-		} else {
-			resetUser()
+			userInfo.value = pickerKeyVal(props.user, 'nickname', 'username', 'avatar', 'address', 'gender', 'mobile')
 		}
 	})
 
@@ -55,17 +44,15 @@
 				return
 			}
 			if (!userInfo.value.nickname) {
-				toast('别名不能为空')
+				toast('用户昵称不能为空')
 				return
 			}
+
 			await createUser({
 				...userInfo.value,
-				username: userInfo.value.username,
-				password: createPassword.value,
-				nickname: userInfo.value.nickname
+				password: createPassword.value
 			})
-		}
-		if (props.user) {
+		} else {
 			await updateUserInfo(userInfo.value, props.user.id)
 		}
 		userFormEmit('close', true)
@@ -74,7 +61,7 @@
 <template>
 	<el-dialog
 		:model-value="showForm"
-		:title="userId === -1 ? '添加用户' : '编辑用户'"
+		:title="props.user === null ? '添加用户' : '编辑用户'"
 		@close="closeHandler()"
 		custom-class="form-container"
 		lock-scroll

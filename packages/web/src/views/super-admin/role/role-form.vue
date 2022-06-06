@@ -2,24 +2,18 @@
 	import { RoleDto, RoleModel } from '@/types/super-admin/role'
 	import { updateRole, createRole } from '@/api/super-admin/role'
 	import { toast } from '@/utils/toast'
+	import { pickerKeyVal } from '@/utils/pickerKeyVal'
 
 	const props = defineProps<{ role: RoleModel | null; showForm: boolean }>()
 	const roleId = ref(-1)
-	const roleInfo = ref<Partial<RoleDto>>({})
-	const resetRole = () => {
-		roleInfo.value = {}
-		roleId.value = -1
-	}
-
-	const isAdd = computed(() => props.role === null)
+	const roleInfo = ref<RoleDto>({})
 
 	watchEffect(async () => {
+		roleInfo.value = {}
+		roleId.value = -1
 		if (props.role !== null) {
-			resetRole()
-			roleInfo.value = { title: props.role.title, description: props.role.description }
+			roleInfo.value = pickerKeyVal(props.role, 'title', 'description')
 			roleId.value = props.role.id
-		} else {
-			resetRole()
 		}
 	})
 
@@ -39,20 +33,17 @@
 				toast('角色描述不能为空')
 				return
 			}
-			await createRole({ title: roleInfo.value.title, description: roleInfo.value.description })
-		}
-		if (props.role) {
+			await createRole(roleInfo.value)
+		} else {
 			await updateRole(roleInfo.value, props.role.id)
 		}
-		resetRole()
 		roleFormEmit('close', true)
 	}
 </script>
 <template>
 	<el-dialog
 		:model-value="showForm"
-		:title="isAdd ? '添加角色' : '编辑角色'"
-		width="50%"
+		:title="props.role ? '添加角色' : '编辑角色'"
 		@close="closeHandler()"
 		custom-class="form-container"
 		lock-scroll

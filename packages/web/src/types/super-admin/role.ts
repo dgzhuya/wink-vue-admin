@@ -10,6 +10,6 @@ export interface RoleModel extends RoleSimple, BaseModel {
 }
 
 export interface RoleDto {
-	title: string
-	description: string
+	title?: string
+	description?: string
 }

@@ -2,27 +2,18 @@
 	import { CreatePermissionDto, PermissionDto, PermissionModel } from '@/types/super-admin/permission'
 	import { updatePermission, createPermission } from '@/api/super-admin/permission'
 	import { toast } from '@/utils/toast'
+	import { pickerKeyVal } from '@/utils/pickerKeyVal'
 
 	const props = defineProps<{ permission: PermissionModel | null; showForm: boolean; parentId: number }>()
 	const permissionId = ref(-1)
-	const permissionInfo = ref<Partial<PermissionDto>>({})
-	const resetPermission = () => {
-		permissionInfo.value = {}
-		permissionId.value = -1
-	}
+	const permissionInfo = ref<PermissionDto>({})
 
 	watchEffect(async () => {
+		permissionInfo.value = {}
+		permissionId.value = -1
 		if (props.permission !== null) {
-			resetPermission()
 			permissionId.value = props.permission.id
-			permissionInfo.value = {
-				title: props.permission.title,
-				description: props.permission.description,
-				key: props.permission.key
-			}
-			permissionId.value = props.permission.id
-		} else {
-			resetPermission()
+			permissionInfo.value = pickerKeyVal(props.permission, 'title', 'description', 'key')
 		}
 	})
 
@@ -35,32 +26,27 @@
 	const updateUser = async () => {
 		if (props.permission === null) {
 			if (!permissionInfo.value.title) {
-				toast('用户名不能为空')
+				toast('权限名不能为空')
 				return
 			}
 			if (!permissionInfo.value.description) {
-				toast('角色描述不能为空')
+				toast('权限描述不能为空')
 				return
 			}
-			const createPermissionDto: CreatePermissionDto = {
-				title: permissionInfo.value.title,
-				description: permissionInfo.value.description
+			if (!permissionInfo.value.key) {
+				toast('权限关键字不能为空')
+				return
 			}
 
-			if (permissionInfo.value.key !== '' && permissionInfo.value.key !== undefined) {
-				createPermissionDto.key = permissionInfo.value.key
-			}
+			const createPermissionDto: CreatePermissionDto = permissionInfo.value
 
 			if (props.parentId !== -1) {
 				createPermissionDto.parentId = props.parentId
 			}
-
 			await createPermission(createPermissionDto)
-		}
-		if (props.permission) {
+		} else {
 			await updatePermission(permissionInfo.value, props.permission.id)
 		}
-		resetPermission()
 		permissionFormEmit('close', true)
 	}
 </script>
@@ -69,7 +55,6 @@
 	<el-dialog
 		:model-value="showForm"
 		:title="props.permission === null ? '添加权限' : '编辑权限'"
-		width="50%"
 		@close="closeHandler()"
 		custom-class="form-container"
 		lock-scroll
