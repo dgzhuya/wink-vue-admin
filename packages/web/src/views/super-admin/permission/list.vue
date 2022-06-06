@@ -57,7 +57,7 @@
 						<el-button
 							type="danger"
 							v-permission="['super-admin_permission_delete']"
-							@click="deletePermission(row.id)"
+							@click="deleteHandler(row.id)"
 							size="small"
 							>删除</el-button
 						>
@@ -87,6 +87,7 @@
 
 <script lang="ts" setup>
 	import { getPermissionList, getPermissionsByParent, deletePermission } from '@/api/super-admin/permission'
+	import { deleteEffect } from '@/effect/delete'
 	import { pageEffect } from '@/effect/page'
 	import { showFormEffect } from '@/effect/show-form'
 	import { PermissionModel } from '@/types/super-admin/permission'
@@ -102,6 +103,7 @@
 	}
 
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getPermissionList)
+	const { deleteHandler } = deleteEffect(deletePermission, fetchHandler, '此权限')
 	onMounted(async () => {
 		await fetchHandler()
 	})

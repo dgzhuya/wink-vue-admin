@@ -44,7 +44,7 @@
 						<el-button
 							v-permission="['super-admin_role_delete']"
 							type="danger"
-							@click="deleteRole(row.id)"
+							@click="deleteHandler(row.id)"
 							size="small"
 							>删除</el-button
 						>
@@ -76,6 +76,7 @@
 	import { showFormEffect } from '@/effect/show-form'
 	import RoleForm from './role-form.vue'
 	import RolePremission from './role-premission.vue'
+	import { deleteEffect } from '@/effect/delete'
 
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getRoleList)
 	onMounted(async () => {
@@ -84,7 +85,7 @@
 
 	const roleActive = ref<RoleModel | null>(null)
 	const { showHandler, showModel, closeHandler } = showFormEffect(roleActive, fetchHandler)
-
+	const { deleteHandler } = deleteEffect(deleteRole, fetchHandler, '此角色')
 	const showPermissions = ref(false)
 	const activeRid = ref(0)
 	const openPermissionHandler = (rid: number) => {

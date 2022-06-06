@@ -54,7 +54,7 @@
 						>
 						<el-button
 							v-permission="['super-admin_user_delete']"
-							@click="deleteUser(row.id)"
+							@click="deleteHandler(row.id)"
 							type="danger"
 							size="small"
 							>删除</el-button
@@ -89,6 +89,7 @@
 	import { showFormEffect } from '@/effect/show-form'
 	import { RoleSimple } from '@/types/super-admin/role'
 	import { getAllRoles } from '@/api/super-admin/role'
+	import { deleteEffect } from '@/effect/delete'
 
 	const userActive = ref<UserModel | null>(null)
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getUserList)
@@ -96,6 +97,7 @@
 	const { showHandler, showModel, closeHandler } = showFormEffect(userActive, fetchHandler)
 	const allRoles = ref<RoleSimple[]>([])
 
+	const { deleteHandler } = deleteEffect(deleteUser, fetchHandler, '此用户')
 	onMounted(async () => {
 		await fetchHandler()
 		allRoles.value = await getAllRoles()
