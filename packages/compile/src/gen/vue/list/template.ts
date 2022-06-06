@@ -23,7 +23,7 @@ export const listSource = `<template>
 						>
 						<el-button
 							v-permission="['%parentPath%_%moduleName%_delete']"
-							@click="delete%upperModuleName%(row.id)"
+							@click="deleteHandler(row.id)"
 							type="danger"
 							size="small"
 							>删除</el-button
@@ -60,8 +60,7 @@ export const listSource = `<template>
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(get%upperModuleName%List)
 
 	const { showHandler, showModel, closeHandler } = showFormEffect(%moduleName%Active, fetchHandler)
-	const allRoles = ref<RoleSimple[]>([])
-
+	const { deleteHandler } = deleteEffect(delete%upperModuleName%, fetchHandler, '此%moduleComment%')
 	onMounted(async () => {
 		await fetchHandler()
 	})
