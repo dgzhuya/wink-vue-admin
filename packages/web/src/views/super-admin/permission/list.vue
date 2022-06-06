@@ -62,7 +62,7 @@
 				:load="loadChildren"
 				:data="tableData"
 				border
-				style="width: 100%; margin-bottom: 10px"
+				class="list-table-container"
 			>
 				<el-table-column prop="id" label="ID" :min-width="80" />
 				<el-table-column prop="title" :width="180" label="标题"> </el-table-column>

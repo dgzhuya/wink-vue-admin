@@ -6,7 +6,7 @@
 			>
 		</el-card>
 		<el-card>
-			<el-table :data="tableData" border style="list-table-container">
+			<el-table :data="tableData" border class="list-table-container">
 				<el-table-column label="#" type="index" />
 				<el-table-column prop="title" :width="80" label="标题"> </el-table-column>
 				<el-table-column prop="description" label="描述"> </el-table-column>
