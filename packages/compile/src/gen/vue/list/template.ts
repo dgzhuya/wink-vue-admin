@@ -18,14 +18,14 @@ onMounted(async () => {
 </script>
 
 <template>
-	<div class="%moduleName%-container">
-		<el-card v-permission="['%parentPath%_%moduleName%_add']" class="header">
+	<div class="list-container">
+		<el-card v-permission="['%parentPath%_%moduleName%_add']" class="list-header">
 			<el-button v-permission="['%parentPath%_%moduleName%_add']" @click="showHandler()" type="primary"
 				>添加%moduleComment%</el-button
 			>
 		</el-card>
 		<el-card>
-			<el-table :data="tableData" border style="margin-bottom: 10px">
+			<el-table :data="tableData" border class="list-table-container">
 %tableFieldStr%				<el-table-column
 					v-permission="['%parentPath%_%moduleName%_update', '%parentPath%_%moduleName%_delete']"
 					label="操作"
@@ -68,17 +68,6 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
-	.%moduleName%-container {
-		.header {
-			margin-bottom: 22px;
-			text-align: right;
-		}
-
-		.avatar-icon {
-			width: 40px;
-			height: 40px;
-			border-radius: 10px;
-		}
-	}
+	@import '@/style/table.scss';
 </style>
 `
