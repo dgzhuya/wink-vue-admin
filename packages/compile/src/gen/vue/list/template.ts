@@ -55,6 +55,7 @@ export const listSource = `<template>
 	import { dateHandler } from '@/utils/format'
 	import { %upperModuleName%Model } from '@/types/%parentPath%/%moduleName%'
 	import { showFormEffect } from '@/effect/show-form'
+	import { deleteEffect } from '@/effect/delete'
 
 	const %moduleName%Active = ref<%upperModuleName%Model | null>(null)
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(get%upperModuleName%List)
