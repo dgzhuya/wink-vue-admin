@@ -1,0 +1,25 @@
+.form-form-container {
+	position: relative;
+}
+
+.form-detail {
+	text-align: center;
+	width: 70%;
+	margin: 0 auto;
+
+	.form-avatar {
+		cursor: pointer;
+		width: 50px;
+		height: 50px;
+		box-sizing: border-box;
+		border-radius: 10px;
+		font-size: 50px;
+		margin-bottom: 10px;
+	}
+}
+
+.form-form-footer {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}

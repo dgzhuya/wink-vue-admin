@@ -80,9 +80,9 @@
 		custom-class="user-form-container"
 		lock-scroll
 	>
-		<el-form ref="formRef" :model="userInfo" label-width="120px" class="user-detail">
+		<el-form ref="formRef" :model="userInfo" label-width="120px" class="form-detail">
 			<el-tooltip content="点击上传用户头像" effect="light" placement="top">
-				<svg-icon :icon="userInfo.avatar" @click="uploadIcon()" class-name="user-avatar"></svg-icon>
+				<svg-icon :icon="userInfo.avatar" @click="uploadIcon()" class-name="form-avatar"></svg-icon>
 			</el-tooltip>
 			<el-form-item label="用户名">
 				<el-input v-model="userInfo.username" />
@@ -112,7 +112,7 @@
 			</el-form-item>
 		</el-form>
 		<template #footer>
-			<div class="user-form-footer">
+			<div class="form-form-footer">
 				<el-button @click="updateUser()" type="primary">保存</el-button>
 				<el-button @click="closeHandler()" type="info">取消</el-button>
 			</div>
@@ -120,28 +120,5 @@
 	</el-dialog>
 </template>
 <style lang="scss" scoped>
-	.user-form-container {
-		position: relative;
-	}
-	.user-detail {
-		text-align: center;
-		width: 70%;
-		margin: 0 auto;
-
-		.user-avatar {
-			cursor: pointer;
-			width: 50px;
-			height: 50px;
-			box-sizing: border-box;
-			border-radius: 10px;
-			font-size: 50px;
-			margin-bottom: 10px;
-		}
-	}
-
-	.user-form-footer {
-		width: 100%;
-		display: flex;
-		justify-content: center;
-	}
+	@import '@/style/form.scss';
 </style>
