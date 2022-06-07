@@ -1,6 +1,6 @@
 export const formSource = `<script lang="ts" setup>
-	import { %upperModuleName%Dto, %upperModuleName%Model } from '@/types/super-admin/%moduleName%'
-	import { update%upperModuleName%, create%upperModuleName% } from '@/api/super-admin/%moduleName%'
+	import { %upperModuleName%Dto, %upperModuleName%Model } from '@/types/%parentPath%/%moduleName%'
+	import { update%upperModuleName%, create%upperModuleName% } from '@/api/%parentPath%/%moduleName%'
 	import { toast } from '@/utils/toast'
 	import { pickerKeyVal } from '@/utils/pickerKeyVal'
 

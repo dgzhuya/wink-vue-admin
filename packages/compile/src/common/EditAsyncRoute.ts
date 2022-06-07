@@ -1,8 +1,9 @@
+import { getConfigPath } from '@/config'
 import { resolve } from 'path'
 import { Project, SyntaxKind } from 'ts-morph'
 
 export const editAsyncRoute = (filePath: string, prefixModuleName: string, handleType: 'add' | 'remove' = 'add') => {
-	const path = resolve(__dirname, '../example/asyncRoute.ts')
+	const path = resolve(getConfigPath().outVueDir, 'router/module/index.ts')
 	const project = new Project()
 
 	project.addSourceFileAtPath(path)

@@ -14,8 +14,8 @@ export const genPluginForm = (
 	routerConfig: RouterConfig,
 	astNode: ASTNode
 ) => {
-	const listDir = join('views', routerConfig.parentPath)
-	createWebDir(listDir)
+	const formDir = join('views', routerConfig.parentPath)
+	createWebDir(formDir)
 
 	const formNode = astNode.findByKey('#form')
 	if (formNode) {
@@ -60,8 +60,9 @@ export const genPluginForm = (
 			moduleName,
 			moduleForm,
 			moduleComment,
-			createCondition
+			createCondition,
+			parentPath: routerConfig.parentPath
 		})
-		writeWebFile(`${moduleName}-form.vue`, formSourceStr, listDir)
+		writeWebFile(`${moduleName}-form.vue`, formSourceStr, formDir)
 	}
 }

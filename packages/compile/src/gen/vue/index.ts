@@ -4,11 +4,14 @@ import { Translate } from '@/parser/utils/Types'
 import { genPluginTypes } from '@/gen/vue/types'
 import { genPluginList } from '@/gen/vue/list'
 import { genPluginForm } from '@/gen/vue/form'
+import { genPluginAPI } from './api'
+import { genPluginRouter } from './router'
 
 export interface RouterConfig {
 	parentPath: string
 	parentTitle: string
 	parentIcon: string
+	parentName: string
 	path: string
 	title: string
 	icon: string
@@ -21,6 +24,8 @@ export const genVueCode = (moduleName: string, upperModuleName: string, astNode:
 	genPluginTypes(moduleName, upperModuleName, routerConfig, astNode)
 	genPluginList(moduleName, upperModuleName, moduleComment, routerConfig, astNode)
 	genPluginForm(moduleName, upperModuleName, moduleComment, routerConfig, astNode)
+	genPluginAPI(moduleName, upperModuleName, routerConfig)
+	genPluginRouter(moduleName, routerConfig)
 }
 
 const getParentInfo = (astNode: ASTNode) => {
@@ -28,6 +33,7 @@ const getParentInfo = (astNode: ASTNode) => {
 		parentPath: '',
 		parentTitle: '',
 		parentIcon: '',
+		parentName: '',
 		path: '',
 		title: '',
 		icon: '',
@@ -44,6 +50,9 @@ const getParentInfo = (astNode: ASTNode) => {
 		}
 		if (exprVal.parentIcon) {
 			result.parentIcon = (exprVal.parentIcon as string[])[0]
+		}
+		if (exprVal.parentName) {
+			result.parentName = (exprVal.parentName as string[])[0]
 		}
 		if (exprVal.path) {
 			result.path = (exprVal.path as string[])[0]
