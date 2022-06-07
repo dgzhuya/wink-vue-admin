@@ -13,14 +13,12 @@ export class PluginService {
 	constructor(@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>) {}
 
 	create(file: Express.Multer.File) {
-		console.log(file)
 		const { originalname, buffer } = file
 		const staticDir = join(__dirname, '../../static')
 		if (!existsSync(staticDir)) {
 			mkdirSync(staticDir)
 		}
-		console.log(join(__dirname, staticDir, originalname))
-		writeFileSync(join(__dirname, '../../static', originalname), buffer)
+		writeFileSync(join(__dirname, staticDir, originalname), buffer)
 	}
 
 	async findAll(skip: number, take: number, search?: string) {
