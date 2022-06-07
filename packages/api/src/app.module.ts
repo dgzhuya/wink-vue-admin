@@ -8,10 +8,9 @@ import { PermissionModule } from './permission/permission.module'
 import { PermissionController } from '@/permission/permission.controller'
 import { RoleController } from '@/role/role.controller'
 import { SysModule } from './sys/sys.module'
-import { ApiModule } from './api/api.module'
 
 @Module({
-	imports: [UserModule, DbModule, RoleModule, PermissionModule, SysModule, ApiModule]
+	imports: [UserModule, DbModule, RoleModule, PermissionModule, SysModule]
 })
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
