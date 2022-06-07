@@ -5,6 +5,8 @@ import { UpdatePluginDto } from './dto/update-plugin.dto'
 import { Plugin } from './entities/plugin.entity'
 import { isNotNull } from '@/common/utils/isNotNull'
 import { Express } from 'express'
+import { writeFileSync, existsSync, mkdirSync } from 'fs'
+import { join } from 'path'
 
 @Injectable()
 export class PluginService {
@@ -12,6 +14,13 @@ export class PluginService {
 
 	create(file: Express.Multer.File) {
 		console.log(file)
+		const { originalname, buffer } = file
+		const staticDir = join(__dirname, '../../static')
+		if (!existsSync(staticDir)) {
+			mkdirSync(staticDir)
+		}
+		console.log(join(__dirname, staticDir, originalname))
+		writeFileSync(join(__dirname, '../../static', originalname), buffer)
 	}
 
 	async findAll(skip: number, take: number, search?: string) {

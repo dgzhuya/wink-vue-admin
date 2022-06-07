@@ -6,6 +6,7 @@
 	import { PluginModel } from '@/types/tool/plugin'
 	import { showFormEffect } from '@/effect/show-form'
 	import { deleteEffect } from '@/effect/delete'
+	import { useUser } from '@/store/module/user'
 
 	const pluginActive = ref<PluginModel | null>(null)
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getPluginList)
@@ -15,12 +16,38 @@
 	onMounted(async () => {
 		await fetchHandler()
 	})
+
+	const uploadUrl = `${import.meta.env.VITE_BASE_URL}/plugin`
+
+	const user = useUser()
+	const uploadDOM = ref()
+	const failHandler = () => {
+		if (uploadDOM.value) {
+			uploadDOM.value.clearFiles()
+		}
+	}
+	const successHandler = () => {
+		if (uploadDOM.value) {
+			uploadDOM.value.clearFiles()
+			fetchHandler()
+		}
+	}
 </script>
 
 <template>
 	<div class="list-container">
 		<el-card v-permission="['tool_plugin_add']" class="list-header">
-			<el-button v-permission="['tool_plugin_add']" @click="showHandler()" type="primary">添加插件</el-button>
+			<el-upload
+				ref="uploadDOM"
+				:headers="{ Authorization: user.getToken }"
+				:show-file-list="false"
+				:on-success="successHandler"
+				:on-error="failHandler"
+				accept="*.wks"
+				:action="uploadUrl"
+			>
+				<el-button type="primary">添加插件</el-button>
+			</el-upload>
 		</el-card>
 		<el-card>
 			<el-table :data="tableData" border class="list-table-container">
