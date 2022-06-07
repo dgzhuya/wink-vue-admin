@@ -4,8 +4,6 @@ import { Repository } from 'typeorm'
 import { CreatePluginDto } from './dto/create-plugin.dto'
 import { UpdatePluginDto } from './dto/update-plugin.dto'
 import { Plugin } from './entities/plugin.entity'
-import { UserRole } from '@/common/entities/user-role.entity'
-import { Role } from '@/role/entities/role.entity'
 import { isNotNull } from '@/common/utils/isNotNull'
 
 @Injectable()
