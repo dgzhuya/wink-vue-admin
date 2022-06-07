@@ -5,14 +5,14 @@
 #model {
 	id: @id @number
 	url: @string
-	title: @string
+	name: @string
 	description: @string @nullable
 	base: @DateEntity
 }
 
 #dto {
 	url: @string
-	title: @string
+	name: @string
 	description: @string
 }
 
