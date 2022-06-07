@@ -2,6 +2,7 @@ export const controllerSource = `import { Controller%reqMethods% } from '@nestjs
 import { %upperModuleName%Service } from './%moduleName%.service'
 import { Create%upperModuleName%Dto } from './dto/create-%moduleName%.dto'
 import { Update%upperModuleName%Dto } from './dto/update-%moduleName%.dto'
+import { PageDto } from '@/common/dto/page.dto'
 
 @Controller('%moduleName%')
 export class %upperModuleName%Controller {
@@ -14,33 +15,29 @@ export const controllerCreateSource = (moduleName: string, upperModuleName: stri
 	@Post()
 	create(@Body() create${upperModuleName}Dto: Create${upperModuleName}Dto) {
 		return this.${moduleName}Service.create(create${upperModuleName}Dto)
-	}
-`
+	}`
 
 export const controllerAllSource = (moduleName: string) => `
 	@Get()
-	findAll() {
-		return this.${moduleName}Service.findAll()
-	}
-`
+	findAll(@Query() pageDto: PageDto) {
+		const { skip, take } = PageDto.setSkipTake(pageDto)
+		return this.${moduleName}Service.findAll(skip, take, pageDto.search)
+	}`
 
 export const controllerGetSource = (moduleName: string) => `
 	@Get(':id')
 	findOne(@Param('id') id: string) {
 		return this.${moduleName}Service.findOne(+id)
-	}
-`
+	}`
 
 export const controllerUpdateSource = (moduleName: string, upperModuleName: string) => `
 	@Patch(':id')
 	update(@Param('id') id: string, @Body() update${upperModuleName}Dto: Update${upperModuleName}Dto) {
 		return this.${moduleName}Service.update(+id, update${upperModuleName}Dto)
-	}
-`
+	}`
 
 export const controllerDeleteSource = (moduleName: string) => `
 	@Delete(':id')
 	remove(@Param('id') id: string) {
 		return this.${moduleName}Service.remove(+id)
-	}
-`
+	}`

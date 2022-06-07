@@ -4,6 +4,7 @@ import { Repository } from 'typeorm'
 import { Create%upperModuleName%Dto } from './dto/create-%moduleName%.dto'
 import { Update%upperModuleName%Dto } from './dto/update-%moduleName%.dto'
 import { %upperModuleName% } from './entities/%moduleName%.entity'
+import { isNotNull } from '@/common/utils/isNotNull'
 
 @Injectable()
 export class %upperModuleName%Service {
@@ -22,6 +23,19 @@ export const serviceCreateSource = (moduleName: string, upperModuleName: string)
 
 export const serviceAllSource = (moduleName: string) => `
 	findAll() {
+		if (isNotNull(skip) && isNotNull(take)) {
+			let queryBuilder = this.${moduleName}Repository.createQueryBuilder('${moduleName}')
+			if (search) {
+				queryBuilder = queryBuilder
+					.where('role.title like :search', { search: \`%\${search}%\` })
+					.orWhere('role.description like :search', { search: \`%\${search}%\` })
+			}
+			const [list, total] = await queryBuilder.skip(skip).take(take).getManyAndCount()
+			return {
+				list,
+				total
+			}
+		}
 		return this.${moduleName}Repository.find()
 	}
 `
