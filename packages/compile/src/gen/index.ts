@@ -3,7 +3,7 @@ import { createNestDir } from './sources/util/fileUtil'
 import { NodeType } from '@/parser/ast/NodeType'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { upperCase } from '@/gen/util/upperCase'
-// import { genNestModule } from '@/gen/sources'
+import { genNestModule } from '@/gen/sources'
 import { genVueCode } from '@/gen/vue'
 
 export const translate = (astNode: ASTNode) => {
@@ -11,7 +11,7 @@ export const translate = (astNode: ASTNode) => {
 	const upperModuleName = upperCase(moduleName)
 
 	createNestDir(moduleName)
-	// genNestModule(moduleName, upperModuleName, astNode)
+	genNestModule(moduleName, upperModuleName, astNode)
 	genVueCode(moduleName, upperModuleName, astNode)
 }
 

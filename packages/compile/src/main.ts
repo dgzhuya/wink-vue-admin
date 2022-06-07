@@ -6,7 +6,7 @@ import { nodeParser } from '@/parser'
 import { translate } from '@/gen'
 
 const path = resolve(__dirname, '../../../sources/model.wks')
-setConfigPath({ outDir: '../api/src/', appModulePath: '../api/src/app.module.ts', outVueDir: './example' })
+setConfigPath({ outDir: '../api/src/', appModulePath: '../api/src/app.module.ts', outVueDir: '../web/src/' })
 const source = readFileSync(path).toString()
 const result = analyse(source)
 if (!result.error) {
