@@ -6,7 +6,7 @@ import { %upperModuleName% } from './entities/%moduleName%.entity'
 
 
 @Module({
-	imports: [TypeOrmModule.forFeature([%moduleName%])],
+	imports: [TypeOrmModule.forFeature([%upperModuleName%])],
 	controllers: [%upperModuleName%Controller],
 	providers: [%upperModuleName%Service]
 })

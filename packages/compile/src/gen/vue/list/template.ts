@@ -1,5 +1,5 @@
 export const listSource = `<script lang="ts" setup>
-import { get%upperModuleName%List, set%upperModuleName%Roles, delete%upperModuleName% } from '@/api/%parentPath%/%moduleName%'
+import { get%upperModuleName%List, delete%upperModuleName% } from '@/api/%parentPath%/%moduleName%'
 import %upperModuleName%Form from './%moduleName%-form.vue'
 import { pageEffect } from '@/effect/page'
 import { dateHandler } from '@/utils/format'

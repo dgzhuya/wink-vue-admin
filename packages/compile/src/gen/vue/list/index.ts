@@ -14,7 +14,8 @@ export const genPluginList = (
 	routerConfig: RouterConfig,
 	astNode: ASTNode
 ) => {
-	const listDir = join('views', routerConfig.parentPath)
+	createWebDir(join('views', routerConfig.parentPath))
+	const listDir = join('views', routerConfig.parentPath, moduleName)
 	createWebDir(listDir)
 
 	const tableNode = astNode.findByKey('#table')
