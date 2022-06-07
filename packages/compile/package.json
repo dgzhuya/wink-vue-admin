@@ -2,7 +2,7 @@
 	"name": "@wink/compile",
 	"version": "1.0.0",
 	"description": "",
-	"main": "dist/index.ts",
+	"main": "dist/index.js",
 	"files": [
 		"dist"
 	],
