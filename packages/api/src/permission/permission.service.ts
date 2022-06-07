@@ -16,6 +16,12 @@ export class PermissionService {
 
 	async create(createPermissionDto: CreatePermissionDto) {
 		const permission = new Permission(createPermissionDto)
+		if (permission.key) {
+			const keyCount = await this.permissionRepository.count({ where: { key: permission.key } })
+			if (keyCount > 0) {
+				throw new BadParamsException('40018')
+			}
+		}
 		if (createPermissionDto.parentId) {
 			const parentPermission = await this.permissionRepository.findOne(createPermissionDto.parentId)
 			if (!parentPermission) {
