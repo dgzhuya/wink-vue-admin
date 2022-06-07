@@ -71,3 +71,14 @@ onMounted(async () => {
 	@import '@/style/table.scss';
 </style>
 `
+
+export const genTableField = (key: string, comment: string) =>
+	'\t'.repeat(4) + `<el-table-column prop="${key}" label="${comment}"> </el-table-column>\n`
+
+export const genDateField = (key: string, comment: string) => `${'\t'.repeat(
+	4
+)}<el-table-column label="${comment}" :width="180">
+					<template #default="{ row }">
+						{{ dateHandler(row.${key}) }}
+					</template>
+				</el-table-column>\n`

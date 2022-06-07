@@ -3,6 +3,7 @@ import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 import { genPluginTypes } from '@/gen/vue/types'
 import { genPluginList } from '@/gen/vue/list'
+import { genPluginForm } from '@/gen/vue/form'
 
 export interface RouterConfig {
 	parentPath: string
@@ -19,6 +20,7 @@ export const genVueCode = (moduleName: string, upperModuleName: string, astNode:
 	const moduleComment = getModuleComment(astNode)
 	genPluginTypes(moduleName, upperModuleName, routerConfig, astNode)
 	genPluginList(moduleName, upperModuleName, moduleComment, routerConfig, astNode)
+	genPluginForm(moduleName, upperModuleName, moduleComment, routerConfig, astNode)
 }
 
 const getParentInfo = (astNode: ASTNode) => {

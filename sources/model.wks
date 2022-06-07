@@ -46,5 +46,5 @@
 #form {
 	name: @string @comment("API名称")
 	url: @string @comment("路径")
-	description: @string @comment("接口描述")
+	description: @string @textarea @comment("接口描述")
 }
