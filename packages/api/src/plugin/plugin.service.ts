@@ -15,6 +15,7 @@ import {
 	getModuleDescription,
 	getRouterInfo
 } from '@wink/compile'
+import { BadParamsException } from '@/common/exception/bad-params-exception'
 
 @Injectable()
 export class PluginService {
@@ -26,7 +27,9 @@ export class PluginService {
 		if (!existsSync(staticDir)) {
 			mkdirSync(staticDir)
 		}
-		const astNode = await nodeParser(analyse(buffer.toString()))
+		const { data, error } = analyse(buffer.toString())
+		if (error) throw new BadParamsException('40019')
+		const astNode = await nodeParser(data)
 		const comment = getModuleComment(astNode)
 		const name = getModuleName(astNode)
 		const description = getModuleDescription(astNode)
