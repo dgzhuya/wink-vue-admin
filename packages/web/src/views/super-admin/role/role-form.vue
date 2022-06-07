@@ -9,8 +9,6 @@
 	const roleInfo = ref<RoleDto>({})
 
 	watchEffect(async () => {
-		roleInfo.value = {}
-		roleId.value = -1
 		if (props.role !== null) {
 			roleInfo.value = pickerKeyVal(props.role, 'title', 'description')
 			roleId.value = props.role.id
@@ -19,8 +17,12 @@
 
 	const roleFormEmit = defineEmits<{ (e: 'close', refresh: boolean): void }>()
 
-	const closeHandler = () => {
-		roleFormEmit('close', false)
+	const closeHandler = (refresh = false) => {
+		roleFormEmit('close', refresh)
+		setTimeout(() => {
+			roleInfo.value = {}
+			roleId.value = -1
+		}, 100)
 	}
 
 	const updateUser = async () => {
@@ -37,7 +39,7 @@
 		} else {
 			await updateRole(roleInfo.value, props.role.id)
 		}
-		roleFormEmit('close', true)
+		closeHandler(true)
 	}
 </script>
 <template>

@@ -9,8 +9,6 @@
 	const permissionInfo = ref<PermissionDto>({})
 
 	watchEffect(async () => {
-		permissionInfo.value = {}
-		permissionId.value = -1
 		if (props.permission !== null) {
 			permissionId.value = props.permission.id
 			permissionInfo.value = pickerKeyVal(props.permission, 'title', 'description', 'key')
@@ -19,8 +17,12 @@
 
 	const permissionFormEmit = defineEmits<{ (e: 'close', refresh: boolean): void }>()
 
-	const closeHandler = () => {
-		permissionFormEmit('close', false)
+	const closeHandler = (refresh = false) => {
+		permissionFormEmit('close', refresh)
+		setTimeout(() => {
+			permissionInfo.value = {}
+			permissionId.value = -1
+		}, 100)
 	}
 
 	const updateUser = async () => {
@@ -47,7 +49,7 @@
 		} else {
 			await updatePermission(permissionInfo.value, props.permission.id)
 		}
-		permissionFormEmit('close', true)
+		closeHandler(true)
 	}
 </script>
 

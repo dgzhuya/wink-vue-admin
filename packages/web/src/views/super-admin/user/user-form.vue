@@ -11,8 +11,6 @@
 	const createPassword = ref('')
 
 	watchEffect(async () => {
-		userId.value = -1
-		userInfo.value = {}
 		if (props.user !== null) {
 			userId.value = props.user.id
 			userInfo.value = pickerKeyVal(props.user, 'nickname', 'username', 'avatar', 'address', 'gender', 'mobile')
@@ -29,8 +27,12 @@
 		if (props.user !== null) await setUserMajorRole(props.user.id, rid)
 	}
 
-	const closeHandler = () => {
-		userFormEmit('close', false)
+	const closeHandler = (refresh = false) => {
+		userFormEmit('close', refresh)
+		setTimeout(() => {
+			userId.value = -1
+			userInfo.value = {}
+		}, 100)
 	}
 
 	const updateUser = async () => {
@@ -55,7 +57,7 @@
 		} else {
 			await updateUserInfo(userInfo.value, props.user.id)
 		}
-		userFormEmit('close', true)
+		closeHandler(true)
 	}
 </script>
 <template>

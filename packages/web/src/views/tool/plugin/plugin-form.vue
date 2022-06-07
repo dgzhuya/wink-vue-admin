@@ -9,8 +9,6 @@
 	const pluginInfo = ref<PluginDto>({})
 
 	watchEffect(async () => {
-		pluginInfo.value = {}
-		pluginId.value = -1
 		if (props.plugin !== null) {
 			pluginInfo.value = pickerKeyVal(props.plugin, 'name', 'description', 'url')
 			pluginId.value = props.plugin.id
@@ -19,8 +17,12 @@
 
 	const pluginFormEmit = defineEmits<{ (e: 'close', refresh: boolean): void }>()
 
-	const closeHandler = () => {
-		pluginFormEmit('close', false)
+	const closeHandler = (refresh = false) => {
+		pluginFormEmit('close', refresh)
+		setTimeout(() => {
+			pluginInfo.value = {}
+			pluginId.value = -1
+		}, 100)
 	}
 
 	const updateUser = async () => {
@@ -41,7 +43,7 @@
 		} else {
 			await updatePlugin(pluginInfo.value, props.plugin.id)
 		}
-		pluginFormEmit('close', true)
+		closeHandler(true)
 	}
 </script>
 <template>

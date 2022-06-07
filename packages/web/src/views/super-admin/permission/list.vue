@@ -16,7 +16,7 @@
 	}
 
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getPermissionList)
-	const { deleteHandler } = deleteEffect(deletePermission, fetchHandler, '此权限')
+	const { deleteHandler } = deleteEffect(deletePermission, async () => tableCloseHandler(true), '此权限')
 	onMounted(async () => {
 		await fetchHandler()
 	})
@@ -29,15 +29,29 @@
 		if (refresh && tableDOM.value) {
 			if ((permissionActive.value !== null && permissionActive.value.parentId) || parentId.value !== -1) {
 				const { store } = tableDOM.value
-				console.log('store:', store.states)
 				if (parentId.value !== -1) {
-					tableDOM.value.toggleRowExpansion({ id: parentId.value }, false)
-					store.states.treeData.value[parentId.value].loaded = false
+					if (tableData.value && tableData.value.map(t => t.id).includes(parentId.value)) {
+						closeHandler(refresh)
+					} else if (store.states.treeData.value[parentId.value]) {
+						tableDOM.value.toggleRowExpansion({ id: parentId.value }, false)
+						store.states.treeData.value[parentId.value].loaded = false
+						closeHandler(false)
+					} else {
+						const keys = Object.keys(store.states.treeData.value)
+						for (let i = 0; i < keys.length; i++) {
+							const key = keys[i]
+							if (store.states.treeData.value[key].children.includes(`${parentId.value}`)) {
+								tableDOM.value.toggleRowExpansion({ id: key }, false)
+								store.states.treeData.value[key].loaded = false
+							}
+						}
+						closeHandler(false)
+					}
 				} else if (permissionActive.value !== null && permissionActive.value.parentId) {
 					tableDOM.value.toggleRowExpansion({ id: permissionActive.value.parentId }, false)
 					store.states.treeData.value[permissionActive.value.parentId].loaded = false
+					closeHandler(false)
 				}
-				closeHandler(false)
 			} else {
 				closeHandler(refresh)
 			}

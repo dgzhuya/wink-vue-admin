@@ -14,6 +14,7 @@ export interface PermissionModel extends PermissionSimple, BaseModel {
 	description?: string
 	parentId?: number
 	children?: PermissionModel[]
+	hasChildren?: boolean
 }
 
 export interface PermissionDto {
