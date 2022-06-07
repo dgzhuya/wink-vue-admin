@@ -1,3 +1,5 @@
+import { editAsyncRoute } from '@/common/EditAsyncRoute'
+import { editVueRouter } from '@/common/EditRouter'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
 import { join } from 'path'
 import { RouterConfig } from '..'
@@ -8,12 +10,17 @@ export const genPluginRouter = (moduleName: string, routerConfig: RouterConfig) 
 	const routerDir = join('router', 'module')
 	const routerFile = join(routerDir, `${routerConfig.parentPath}.ts`)
 	if (isWebExit(routerFile)) {
-		console.log(routerFile)
+		editVueRouter(routerConfig.parentPath, {
+			viewPath: `${routerConfig.parentPath}/${routerConfig.path}`,
+			...routerConfig,
+			path: `/${routerConfig.parentPath}/${routerConfig.path}`
+		})
 	} else {
 		const routerSourceStr = renderStrByTemplate(routerSource, {
 			moduleName,
 			...routerConfig
 		})
-		writeWebFile(`${moduleName}.ts`, routerSourceStr, routerDir)
+		editAsyncRoute(routerConfig.parentPath, `${routerConfig.parentName}Route`)
+		writeWebFile(`${routerConfig.parentPath}.ts`, routerSourceStr, routerDir)
 	}
 }
