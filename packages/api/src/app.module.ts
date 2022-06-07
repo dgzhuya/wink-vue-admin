@@ -10,9 +10,21 @@ import { RoleController } from '@/role/role.controller'
 import { SysModule } from './sys/sys.module'
 import { PluginModule } from './plugin/plugin.module'
 import { PluginController } from './plugin/plugin.controller'
+import { ServeStaticModule } from '@nestjs/serve-static'
+import { join } from 'path'
 
 @Module({
-	imports: [UserModule, DbModule, RoleModule, PermissionModule, SysModule, PluginModule]
+	imports: [
+		ServeStaticModule.forRoot({
+			rootPath: join(__dirname, '..', 'static')
+		}),
+		UserModule,
+		DbModule,
+		RoleModule,
+		PermissionModule,
+		SysModule,
+		PluginModule
+	]
 })
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {

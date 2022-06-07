@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { CreatePluginDto } from './dto/create-plugin.dto'
 import { UpdatePluginDto } from './dto/update-plugin.dto'
 import { Plugin } from './entities/plugin.entity'
 import { isNotNull } from '@/common/utils/isNotNull'
+import { Express } from 'express'
 
 @Injectable()
 export class PluginService {
 	constructor(@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>) {}
 
-	create(createPluginDto: CreatePluginDto) {
-		return this.pluginRepository.save(createPluginDto)
+	create(file: Express.Multer.File) {
+		console.log(file)
 	}
 
 	async findAll(skip: number, take: number, search?: string) {

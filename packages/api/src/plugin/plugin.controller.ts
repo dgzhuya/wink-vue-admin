@@ -1,16 +1,18 @@
-import { Controller, Get, Param, Delete, Body, Patch, Post, Query } from '@nestjs/common'
+import { Controller, Get, Param, Delete, Body, Patch, Post, Query, UseInterceptors, UploadedFile } from '@nestjs/common'
 import { PluginService } from './plugin.service'
-import { CreatePluginDto } from './dto/create-plugin.dto'
 import { UpdatePluginDto } from './dto/update-plugin.dto'
 import { PageDto } from '@/common/dto/page.dto'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { Express } from 'express'
 
 @Controller('plugin')
 export class PluginController {
 	constructor(private readonly pluginService: PluginService) {}
 
 	@Post()
-	create(@Body() createPluginDto: CreatePluginDto) {
-		return this.pluginService.create(createPluginDto)
+	@UseInterceptors(FileInterceptor('file'))
+	create(@UploadedFile() file: Express.Multer.File) {
+		return this.pluginService.create(file)
 	}
 
 	@Get()
