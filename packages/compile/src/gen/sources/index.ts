@@ -5,8 +5,10 @@ import { genEntity } from '@/gen/sources/entity'
 import { genModule } from '@/gen/sources/module'
 import { genService } from '@/gen/sources/service'
 import { editAppModule } from '@/common/EditAppModule'
+import { createNestDir } from './util/fileUtil'
 
 export const genNestModule = (moduleName: string, upperModuleName: string, astNode: ASTNode) => {
+	createNestDir(moduleName)
 	genController(moduleName, upperModuleName, astNode)
 	genDTO(moduleName, upperModuleName, astNode)
 	genEntity(moduleName, upperModuleName, astNode)

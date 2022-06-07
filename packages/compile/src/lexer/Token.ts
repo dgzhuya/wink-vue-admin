@@ -1,6 +1,6 @@
 import { TokenKind } from './TokenKind'
-import { PeekIterator } from '../common/PeekIterator'
-import { AlphabetHelper } from '../common/AlphabetHelper'
+import { PeekIterator } from '@/common/PeekIterator'
+import { AlphabetHelper } from '@/common/AlphabetHelper'
 import { isKeyWord, isScalar } from './Keyword'
 
 export class Token {

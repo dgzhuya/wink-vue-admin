@@ -24,7 +24,7 @@ export class Expr extends ASTNode {
 			const lexeme = it.next()
 			lookahead = it.peek()
 			it.putBack()
-			if (!lexeme.isScalar() || !lookahead.isScalar()) {
+			if (!lexeme.isFactor() || !lookahead.isFactor()) {
 				break
 			}
 		}

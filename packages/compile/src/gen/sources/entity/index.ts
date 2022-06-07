@@ -37,14 +37,15 @@ export const genEntity = (moduleName: string, upperModuleName: string, astNode: 
 					fieldResult += genDtoField('number')
 				} else if (elements.includes('@boolean')) {
 					fieldResult += genDtoField('boolean')
-				} else if (elements.includes('@id')) {
+				}
+				if (elements.includes('@id')) {
 					primaryStr = '\t@PrimaryGeneratedColumn()\n'
 					columnSet.add('primary: true')
 				}
 				const columnList = Array.from(columnSet)
-				return (
+				const result =
 					primaryStr + `\t@Column(${columnList.length > 0 ? `{${columnList.join(', ')}}` : ''})` + fieldResult
-				)
+				return result
 			})
 			.filter(r => r !== '')
 			.join('\n')
