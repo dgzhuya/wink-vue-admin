@@ -6,7 +6,7 @@ export const ToolRoute: RouteRecordRaw = {
 	name: 'Tool',
 	meta: {
 		title: '工具管理',
-		icon: 'personnel'
+		icon: 'tool'
 	},
 	redirect: '/tool/plugin',
 	children: [
