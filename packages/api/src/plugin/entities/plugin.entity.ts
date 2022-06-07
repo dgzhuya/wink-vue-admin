@@ -11,7 +11,7 @@ export class Plugin extends BaseEntity {
 	url: string
 
 	@Column()
-	title: string
+	name: string
 
 	@Column({ nullable: true })
 	description: string

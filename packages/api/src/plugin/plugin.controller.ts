@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Delete, Body, Patch, Post } from '@nestjs/common'
+import { Controller, Get, Param, Delete, Body, Patch, Post, Query } from '@nestjs/common'
 import { PluginService } from './plugin.service'
 import { CreatePluginDto } from './dto/create-plugin.dto'
 import { UpdatePluginDto } from './dto/update-plugin.dto'
+import { PageDto } from '@/common/dto/page.dto'
 
 @Controller('plugin')
 export class PluginController {
@@ -13,8 +14,9 @@ export class PluginController {
 	}
 
 	@Get()
-	findAll() {
-		return this.pluginService.findAll()
+	findAll(@Query() pageDto: PageDto) {
+		const { skip, take } = PageDto.setSkipTake(pageDto)
+		return this.pluginService.findAll(skip, take, pageDto.search)
 	}
 
 	@Get(':id')
