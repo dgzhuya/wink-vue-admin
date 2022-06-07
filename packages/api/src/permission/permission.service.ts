@@ -15,24 +15,23 @@ export class PermissionService {
 	) {}
 
 	async create(createPermissionDto: CreatePermissionDto) {
-		const permission = new Permission(createPermissionDto)
-		if (permission.key) {
-			const keyCount = await this.permissionRepository.count({ where: { key: permission.key } })
+		if (createPermissionDto.key) {
+			const keyCount = await this.permissionRepository.count({ where: { key: createPermissionDto.key } })
 			if (keyCount > 0) {
 				throw new BadParamsException('40018')
 			}
 		}
+		let parentPermission: Permission | null = null
 		if (createPermissionDto.parentId) {
-			const parentPermission = await this.permissionRepository.findOne(createPermissionDto.parentId)
+			parentPermission = await this.permissionRepository.findOne(createPermissionDto.parentId)
 			if (!parentPermission) {
 				throw new BadParamsException('40002')
 			}
 			if (!parentPermission.hasChildren) {
 				await this.permissionRepository.update(parentPermission.id, { hasChildren: true })
 			}
-			permission.parent = parentPermission
 		}
-		return this.permissionRepository.save(permission)
+		return this.permissionRepository.save({ ...createPermissionDto, parent: parentPermission })
 	}
 
 	async searchPermission(skip: number, take: number, search?: string) {
@@ -65,29 +64,10 @@ export class PermissionService {
 	}
 
 	async update(id: number, updatePermissionDto: UpdatePermissionDto) {
-		const permission = new Permission(updatePermissionDto)
 		if (updatePermissionDto.parentId) {
-			const prevPermission = await this.permissionRepository.findOne(id)
-			if (!prevPermission) {
-				throw new BadParamsException('40005')
-			}
-			if (prevPermission.parentId !== updatePermissionDto.parentId) {
-				if (prevPermission.parentId) {
-					const prevParentPermissionCount = await this.permissionRepository.count({
-						parentId: prevPermission.parentId
-					})
-					if (prevParentPermissionCount === 1) {
-						await this.permissionRepository.update(prevPermission.parentId, { hasChildren: false })
-					}
-				}
-				const parentPermission = await this.permissionRepository.findOne(updatePermissionDto.parentId)
-				if (!parentPermission) {
-					throw new BadParamsException('40002')
-				}
-				permission.parent = parentPermission
-			}
+			throw new BadParamsException('40005')
 		}
-		return this.permissionRepository.update(id, permission)
+		return this.permissionRepository.update(id, updatePermissionDto)
 	}
 
 	async remove(id: number) {

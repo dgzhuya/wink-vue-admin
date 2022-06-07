@@ -5,7 +5,7 @@ import { Exclude } from 'class-transformer'
 
 @Entity()
 export class User extends BaseEntity {
-	@Column({ length: 30, comment: '用户名', unique: true })
+	@Column({ length: 30, comment: '用户名' })
 	username: string
 
 	@Column({ comment: '昵称', length: 30, nullable: true })

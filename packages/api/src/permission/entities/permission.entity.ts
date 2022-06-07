@@ -5,28 +5,10 @@ import { UpdatePermissionDto } from '@/permission/dto/update-permission.dto'
 @Entity()
 @Tree('materialized-path')
 export class Permission extends BaseEntity {
-	constructor(permissionDto?: UpdatePermissionDto) {
-		super()
-		if (permissionDto) {
-			if (permissionDto.title) {
-				this.title = permissionDto.title
-			}
-			if (permissionDto.key) {
-				this.key = permissionDto.key
-			}
-			if (permissionDto.description) {
-				this.description = permissionDto.description
-			}
-			if (permissionDto.parentId) {
-				this.parentId = permissionDto.parentId
-			}
-		}
-	}
-
 	@Column({ comment: '权限名称', length: 100 })
 	title: string
 
-	@Column({ comment: '权限标记', length: 100, unique: true, nullable: true })
+	@Column({ comment: '权限标记', length: 100, nullable: true })
 	key: string
 
 	@Column({ comment: '角色描述', length: 200, nullable: true })
