@@ -8,12 +8,16 @@ import { PermissionModule } from './permission/permission.module'
 import { PermissionController } from '@/permission/permission.controller'
 import { RoleController } from '@/role/role.controller'
 import { SysModule } from './sys/sys.module'
+import { PluginModule } from './plugin/plugin.module'
+import { PluginController } from './plugin/plugin.controller'
 
 @Module({
-	imports: [UserModule, DbModule, RoleModule, PermissionModule, SysModule]
+	imports: [UserModule, DbModule, RoleModule, PermissionModule, SysModule, PluginModule]
 })
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(LoggerMiddleware).forRoutes(UserController, PermissionController, RoleController, SysModule)
+		consumer
+			.apply(LoggerMiddleware)
+			.forRoutes(UserController, PermissionController, RoleController, SysModule, PluginController)
 	}
 }

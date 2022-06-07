@@ -1,17 +1,17 @@
-#name: "api"
+#name: "plugin"
 // api or database
-#comment: "API" 
+#comment: "插件" 
 #way: "database"
 #model {
 	id: @id @number
-	path: @string
+	url: @string
 	title: @string
 	description: @string @nullable
 	base: @DateEntity
 }
 
 #dto {
-	path: @string
+	url: @string
 	title: @string
 	description: @string
 }
@@ -25,27 +25,27 @@
 }
 
 #router {
-	parentPath: 'super-api'
-	parentTitle: '系统管理'
-	parentName: 'SuperApi'
+	parentPath: 'tool'
+	parentTitle: '工具管理'
+	parentName: 'Tool'
 	parentIcon: 'personnel'
-	path: 'api'
-	title: 'API管理'
-	icon: 'api'
-	name: 'AdminAPI'
+	path: 'plugin'
+	title: '插件管理'
+	icon: 'plugin'
+	name: 'ToolPlugin'
 }
 
 #table {
 	id: @number @comment("id")
-	name: @string @comment("API名称")
-	url: @string @comment("路径")
-	description: @string @comment("接口描述")
+	name: @string @comment("插件名称")
+	url: @string @comment("插件URL")
+	description: @string @comment("插件描述")
 	createTime: @string @date @comment("创建时间")
 	updateTime: @string @date @comment("修改时间")
 }
 
 #form {
-	name: @string @comment("API名称")
-	url: @string @comment("路径")
-	description: @string @textarea @comment("接口描述")
+	name: @string @comment("插件名称")
+	description: @string @textarea @comment("插件描述")
+	url: @string @comment("插件URL")
 }
