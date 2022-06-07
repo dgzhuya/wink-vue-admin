@@ -7,17 +7,32 @@ import { isNotNull } from '@/common/utils/isNotNull'
 import { Express } from 'express'
 import { writeFileSync, existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
+import {
+	nodeParser,
+	analyse,
+	getModuleName,
+	getModuleComment,
+	getModuleDescription,
+	getRouterInfo
+} from '@wink/compile'
 
 @Injectable()
 export class PluginService {
 	constructor(@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>) {}
 
-	create(file: Express.Multer.File) {
+	async create(file: Express.Multer.File) {
 		const { originalname, buffer } = file
 		const staticDir = join(__dirname, '../../static')
 		if (!existsSync(staticDir)) {
 			mkdirSync(staticDir)
 		}
+		const astNode = await nodeParser(analyse(buffer.toString()))
+		const comment = getModuleComment(astNode)
+		const name = getModuleName(astNode)
+		const description = getModuleDescription(astNode)
+		const routerInfo = getRouterInfo(astNode)
+		console.log(comment, name, description, routerInfo)
+		console.log(join(__dirname, staticDir, originalname))
 		writeFileSync(join(__dirname, staticDir, originalname), buffer)
 	}
 
