@@ -1,8 +1,8 @@
 import { editAsyncRoute } from '@/common/EditAsyncRoute'
 import { editVueRouter } from '@/common/EditRouter'
+import { RouterConfig } from '@/gen/util/getInfoByAST'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
 import { join } from 'path'
-import { RouterConfig } from '..'
 import { isWebExit, writeWebFile } from '../util/fileUtil'
 import { routerSource } from './template'
 

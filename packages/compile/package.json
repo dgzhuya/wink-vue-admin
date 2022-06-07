@@ -2,7 +2,10 @@
 	"name": "@wink/compile",
 	"version": "1.0.0",
 	"description": "",
-	"main": "src/index.ts",
+	"main": "dist/index.ts",
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
 		"test": "esno src/main.ts"

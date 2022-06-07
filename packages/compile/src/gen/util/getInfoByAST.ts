@@ -1,7 +1,6 @@
 import { ASTNode } from '@/parser/ast/ASTNode'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
-import { NodeType } from '@/parser/ast/NodeType'
 
 export interface RouterConfig {
 	parentPath: string

@@ -1,10 +1,10 @@
 import { ASTNode } from '@/parser/ast/ASTNode'
-import { RouterConfig } from '@/gen/vue'
 import { join } from 'path'
 import { createWebDir, writeWebFile } from '@/gen/vue/util/fileUtil'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 import { dtoSource, modelSource } from '@/gen/vue/types/template'
+import { RouterConfig } from '@/gen/util/getInfoByAST'
 
 export const genPluginTypes = (
 	moduleName: string,

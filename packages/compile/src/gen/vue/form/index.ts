@@ -1,11 +1,11 @@
 import { ASTNode } from '@/parser/ast/ASTNode'
-import { RouterConfig } from '@/gen/vue'
 import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
 import { formSource, genFormInput, genFormTextArea, genIfCondition } from '@/gen/vue/form/template'
 import { createWebDir, writeWebFile } from '../util/fileUtil'
 import { join } from 'path'
+import { RouterConfig } from '@/gen/util/getInfoByAST'
 
 export const genPluginForm = (
 	moduleName: string,

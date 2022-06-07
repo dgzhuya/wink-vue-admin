@@ -1,8 +1,8 @@
-import { RouterConfig } from '@/gen/vue'
 import { join } from 'path'
 import { createWebDir, writeWebFile } from '../util/fileUtil'
 import { renderStrByTemplate } from '@/gen/util/renderUtil'
 import { apiSource } from './template'
+import { RouterConfig } from '@/gen/util/getInfoByAST'
 
 export const genPluginAPI = (moduleName: string, upperModuleName: string, routerConfig: RouterConfig) => {
 	const listDir = join('api', routerConfig.parentPath)
