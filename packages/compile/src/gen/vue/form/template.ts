@@ -9,8 +9,6 @@ export const formSource = `<script lang="ts" setup>
 	const %moduleName%Info = ref<%upperModuleName%Dto>({})
 
 	watchEffect(async () => {
-		%moduleName%Info.value = {}
-		%moduleName%Id.value = -1
 		if (props.%moduleName% !== null) {
 			%moduleName%Info.value = pickerKeyVal(props.%moduleName%, %moduleFormKeys%)
 			%moduleName%Id.value = props.%moduleName%.id
@@ -19,8 +17,12 @@ export const formSource = `<script lang="ts" setup>
 
 	const %moduleName%FormEmit = defineEmits<{ (e: 'close', refresh: boolean): void }>()
 
-	const closeHandler = () => {
-		%moduleName%FormEmit('close', false)
+	const closeHandler = (refresh = false) => {
+		%moduleName%FormEmit('close', refresh)
+		setTimeout(() => {
+			%moduleName%Info.value = {}
+			%moduleName%Id.value = -1
+		}, 100)
 	}
 
 	const updateUser = async () => {
@@ -29,7 +31,7 @@ export const formSource = `<script lang="ts" setup>
 		} else {
 			await update%upperModuleName%(%moduleName%Info.value, props.%moduleName%.id)
 		}
-		%moduleName%FormEmit('close', true)
+		closeHandler(true)
 	}
 </script>
 <template>
