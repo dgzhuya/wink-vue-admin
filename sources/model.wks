@@ -1,6 +1,7 @@
 #name: "plugin"
 // api or database
-#comment: "插件" 
+#comment: "插件"
+#description: "插件管理说明" 
 #way: "database"
 #model {
 	id: @id @number
