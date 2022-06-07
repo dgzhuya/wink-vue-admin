@@ -37,8 +37,7 @@ export const genEntity = (moduleName: string, upperModuleName: string, astNode: 
 					fieldResult += genDtoField('number')
 				} else if (elements.includes('@boolean')) {
 					fieldResult += genDtoField('boolean')
-				}
-				if (elements.includes('@id')) {
+				} else if (elements.includes('@id')) {
 					primaryStr = '\t@PrimaryGeneratedColumn()\n'
 					columnSet.add('primary: true')
 				}
