@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { Role } from './entities/role.entity'
@@ -46,7 +46,7 @@ export class RoleService {
 	}
 
 	async findOne(id: number) {
-		return await this.roleRepository.findOne(id)
+		return await this.roleRepository.findOneBy({ id })
 	}
 
 	update(id: number, updateRoleDto: UpdateRoleDto) {
@@ -87,7 +87,7 @@ export class RoleService {
 		if (permissions.length === 0) {
 			throw new BadParamsException('40010')
 		} else {
-			const ridCount = await this.roleRepository.count({ id: rid })
+			const ridCount = await this.roleRepository.count({ where: { id: rid } })
 			if (ridCount === 0) {
 				throw new BadParamsException('40001')
 			}
@@ -120,7 +120,7 @@ export class RoleService {
 			if (insertPermissions.length > 0) {
 				await this.rolePermissionRepository.createQueryBuilder().insert().values(insertPermissions).execute()
 			}
-			return this.permissionRepository.findByIds(permissions, { select: ['id', 'title'] })
+			return this.permissionRepository.find({ where: { id: In(permissions) }, select: ['id', 'title'] })
 		}
 	}
 }

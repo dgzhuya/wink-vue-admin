@@ -26,7 +26,7 @@
 		"@nestjs/mapped-types": "*",
 		"@nestjs/platform-express": "^8.4.5",
 		"@nestjs/serve-static": "^2.2.2",
-		"@nestjs/typeorm": "^8.0.4",
+		"@nestjs/typeorm": "8.1.2",
 		"@wink/compile": "workspace:^1.0.0",
 		"bcryptjs": "^2.4.3",
 		"class-transformer": "^0.5.1",
@@ -37,7 +37,7 @@
 		"rimraf": "^3.0.2",
 		"rxjs": "^7.5.5",
 		"sqlite3": "^5.0.8",
-		"typeorm": "~0.2.45"
+		"typeorm": "^0.3.6"
 	},
 	"devDependencies": {
 		"@nestjs/cli": "^8.2.6",

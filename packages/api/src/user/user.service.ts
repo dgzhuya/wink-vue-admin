@@ -19,7 +19,7 @@ export class UserService {
 	) {}
 
 	async create(createUserDto: CreateUserDto) {
-		const count = await this.userRepository.count({ username: createUserDto.username })
+		const count = await this.userRepository.countBy({ username: createUserDto.username })
 		if (count !== 0) {
 			throw new BadParamsException('40009')
 		}
@@ -54,7 +54,7 @@ export class UserService {
 	}
 
 	async findOne(id: number) {
-		return await this.userRepository.findOne(id)
+		return await this.userRepository.findOneBy({ id })
 	}
 
 	update(id: number, updateUserDto: UpdateUserDto) {
@@ -80,7 +80,7 @@ export class UserService {
 		if (roles.length === 0) {
 			throw new BadParamsException('40010')
 		} else {
-			const uidCount = await this.userRepository.count({ id: uid })
+			const uidCount = await this.userRepository.countBy({ id: uid })
 			if (uidCount === 0) {
 				throw new BadParamsException('40006')
 			}
@@ -91,7 +91,7 @@ export class UserService {
 			if (ridsCount !== roles.length) {
 				throw new BadParamsException('40001')
 			}
-			const userRoles = await this.userRoleRepository.find({ userId: uid })
+			const userRoles = await this.userRoleRepository.findBy({ userId: uid })
 
 			const majorRole = userRoles.filter(ur => ur.isMajor)
 			if (majorRole.length > 0 && !roles.includes(majorRole[0].roleId)) {
@@ -114,15 +114,15 @@ export class UserService {
 	}
 
 	async setMajorRole({ uid, rid }: UserRoleDto) {
-		const uidCount = await this.userRepository.count({ id: uid })
+		const uidCount = await this.userRepository.countBy({ id: uid })
 		if (uidCount === 0) {
 			throw new BadParamsException('40006')
 		}
-		const ridCount = await this.roleRepository.count({ id: rid })
+		const ridCount = await this.roleRepository.countBy({ id: rid })
 		if (ridCount === 0) {
 			throw new BadParamsException('40001')
 		}
-		const curUserRoles = await this.userRoleRepository.find({ userId: uid })
+		const curUserRoles = await this.userRoleRepository.findBy({ userId: uid })
 		if (curUserRoles.length === 0) {
 			throw new BadParamsException('40004')
 		}

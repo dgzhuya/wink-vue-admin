@@ -3,7 +3,7 @@ import { compareSync } from 'bcryptjs'
 import { LoginUserDto } from '@/sys/dto/login-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from '@/user/entities/user.entity'
-import { IsNull, Not, Repository } from 'typeorm'
+import { In, IsNull, Not, Repository } from 'typeorm'
 import { sign } from 'jsonwebtoken'
 import { JwtSalt } from '@/config/jwt-config'
 import { Role } from '@/role/entities/role.entity'
@@ -24,7 +24,7 @@ export class SysService {
 	) {}
 
 	async login(loginDto: LoginUserDto) {
-		const user = await this.userRepository.findOne({ username: loginDto.username })
+		const user = await this.userRepository.findOneBy({ username: loginDto.username })
 		if (user === undefined) {
 			throw new BadParamsException('40006')
 		}
@@ -54,10 +54,11 @@ export class SysService {
 			where: { roleId: rid },
 			select: ['permissionId']
 		})
-		const permissionsResult = await this.permissionRepository.findByIds(
-			rolePermissions.map(p => p.permissionId),
-			{ select: ['key'], where: { key: Not(IsNull()) }, order: { createTime: 'DESC' } }
-		)
+		const permissionsResult = await this.permissionRepository.find({
+			select: ['key'],
+			where: { key: Not(IsNull()), id: In(rolePermissions.map(p => p.permissionId)) },
+			order: { createTime: 'DESC' }
+		})
 		return {
 			permission: permissionsResult.map(pr => pr.key),
 			token: sign({ uid: `${uid}`, rid: `${rid}` }, JwtSalt, {
@@ -67,16 +68,16 @@ export class SysService {
 	}
 
 	async getProfile(uid: number, rid: number) {
-		const user = await this.userRepository.findOne({ id: uid })
+		const user = await this.userRepository.findOneBy({ id: uid })
 		let permissions = []
 		let roles: Role[] = []
 
 		const userRoles = await this.userRoleRepository.find({ where: { userId: uid } })
 		if (userRoles.length > 0) {
-			roles = await this.roleRepository.findByIds(
-				userRoles.map(ur => ur.roleId),
-				{ select: ['title', 'id'] }
-			)
+			roles = await this.roleRepository.find({
+				select: ['title', 'id'],
+				where: { id: In(userRoles.map(ur => ur.roleId)) }
+			})
 		}
 
 		const userMajorPermissions = await this.rolePermissionRepository.find({
@@ -84,10 +85,11 @@ export class SysService {
 			select: ['permissionId']
 		})
 		if (userMajorPermissions.length > 0) {
-			const permissionResult = await this.permissionRepository.findByIds(
-				userMajorPermissions.map(p => p.permissionId),
-				{ select: ['key'], where: { key: Not(IsNull()) }, order: { createTime: 'DESC' } }
-			)
+			const permissionResult = await this.permissionRepository.find({
+				select: ['key'],
+				where: { key: Not(IsNull()), id: In(userMajorPermissions.map(p => p.permissionId)) },
+				order: { createTime: 'DESC' }
+			})
 			permissions = permissionResult.map(pr => pr.key)
 		}
 

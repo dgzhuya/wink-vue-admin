@@ -1,9 +1,7 @@
-import { Column, Entity, Tree, TreeChildren, TreeParent } from 'typeorm'
+import { Column, Entity } from 'typeorm'
 import { BaseEntity } from '@/common/entities/base.entity'
-import { UpdatePermissionDto } from '@/permission/dto/update-permission.dto'
 
 @Entity()
-@Tree('materialized-path')
 export class Permission extends BaseEntity {
 	@Column({ comment: '权限名称', length: 100 })
 	title: string
@@ -19,10 +17,4 @@ export class Permission extends BaseEntity {
 
 	@Column({ comment: '是否拥有子元素', default: false })
 	hasChildren: boolean
-
-	@TreeParent()
-	parent: Permission
-
-	@TreeChildren()
-	children: Permission[]
 }

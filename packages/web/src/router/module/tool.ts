@@ -8,8 +8,8 @@ export const ToolRoute: RouteRecordRaw = {
 		title: '工具管理',
 		icon: 'tool'
 	},
-    redirect:  '/tool/plugin',
-    children: [
+	redirect: '/tool/plugin',
+	children: [
 		{
 			path: '/tool/plugin',
 			component: () => import('@/views/tool/plugin/list.vue'),

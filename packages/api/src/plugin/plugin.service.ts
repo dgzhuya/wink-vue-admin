@@ -57,7 +57,7 @@ export class PluginService {
 	}
 
 	findOne(id: number) {
-		return this.pluginRepository.findOne(id)
+		return this.pluginRepository.findOneBy({ id })
 	}
 
 	update(id: number, updatePluginDto: UpdatePluginDto) {
