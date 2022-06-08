@@ -54,6 +54,7 @@ export class PluginService {
 		if (DefaultPluginInfo.routePaths.includes(routePath) || routerPathCount > 0)
 			throw new BadParamsException('40020')
 
+		translate(astNode)
 		const description = getModuleDescription(astNode)
 		const comment = getModuleComment(astNode)
 		await this.pluginRepository.save({
@@ -64,7 +65,6 @@ export class PluginService {
 			routeName,
 			routePath
 		})
-		await translate(astNode)
 		const permissionCount = await this.permissionRepository.countBy({ key: routerInfo.name })
 		if (permissionCount > 0) throw new BadParamsException('40023')
 		const parentPermission = await this.permissionRepository.findOneBy({ key: routerInfo.parentName })

@@ -11,7 +11,7 @@ import { join } from 'path'
 async function bootstrap() {
 	setConfigPath({
 		outVueDir: join(__dirname, '../../api/src'),
-		appModulePath: join(__dirname, '../../web/src/app.module.ts'),
+		appModulePath: join(__dirname, '../../api/src/app.module.ts'),
 		outDir: join(__dirname, '../../web/src')
 	})
 	const app = await NestFactory.create(AppModule)
