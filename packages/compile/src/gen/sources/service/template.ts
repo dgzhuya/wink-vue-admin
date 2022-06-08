@@ -22,7 +22,7 @@ export const serviceCreateSource = (moduleName: string, upperModuleName: string)
 `
 
 export const serviceAllSource = (moduleName: string) => `
-	findAll(skip: number, take: number, search?: string) {
+	async findAll(skip: number, take: number, search?: string) {
 		if (isNotNull(skip) && isNotNull(take)) {
 			let queryBuilder = this.${moduleName}Repository.createQueryBuilder('${moduleName}')
 			if (search) {
