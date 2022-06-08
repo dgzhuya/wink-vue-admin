@@ -88,6 +88,10 @@ export class PermissionService {
 		if (updatePermissionDto.parentId) {
 			throw new BadParamsException('40005')
 		}
+		if (updatePermissionDto.key) {
+			const keyCount = await this.permissionRepository.countBy({ key: updatePermissionDto.key })
+			if (keyCount > 0) throw new BadParamsException('40018')
+		}
 		return this.permissionRepository.update(id, updatePermissionDto)
 	}
 

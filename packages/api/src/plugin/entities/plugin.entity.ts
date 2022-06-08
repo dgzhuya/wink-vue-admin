@@ -13,6 +13,9 @@ export class Plugin extends BaseEntity {
 	@Column({ comment: '插件名' })
 	name: string
 
+	@Column({ comment: '插件唯一标识' })
+	key: string
+
 	@Column({ comment: '路由地址' })
 	routePath: string
 
