@@ -57,8 +57,8 @@ export class PermissionService {
 
 	async getPermissionTree(pid?: number) {
 		return pid
-			? this.permissionRepository.findBy({ parentId: pid })
-			: this.permissionRepository.findBy({ parentId: IsNull() })
+			? this.permissionRepository.find({ where: { parentId: pid }, select: ['id', 'title', 'hasChildren'] })
+			: this.permissionRepository.find({ where: { parentId: IsNull() }, select: ['id', 'title', 'hasChildren'] })
 	}
 
 	findOne(id: number) {
