@@ -14,7 +14,8 @@ export const genPluginForm = (
 	routerConfig: RouterConfig,
 	astNode: ASTNode
 ) => {
-	const formDir = join('views', routerConfig.parentPath)
+	createWebDir(join('views', routerConfig.parentPath))
+	const formDir = join('views', routerConfig.parentPath, moduleName)
 	createWebDir(formDir)
 
 	const formNode = astNode.findByKey('#form')
