@@ -17,7 +17,7 @@ export const genPluginRouter = (moduleName: string, config: RouterConfig) => {
 			{
 				routeIcon: config.icon,
 				routeTitle: config.title,
-				routePath: `${config.parentPath}/${config.path}`,
+				routePath: `/${config.parentPath}/${config.path}`,
 				routeName: config.name
 			},
 			HandleStatus.REMOVE
@@ -39,7 +39,7 @@ export const clearPluginRouter = (config: RouterConfig) => {
 		{
 			routeIcon: config.icon,
 			routeTitle: config.title,
-			routePath: `${config.parentPath}/${config.path}`,
+			routePath: `/${config.parentPath}/${config.path}`,
 			routeName: config.name
 		},
 		HandleStatus.REMOVE

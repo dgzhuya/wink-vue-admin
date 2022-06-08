@@ -1,16 +1,11 @@
-import { resolve } from 'path'
 import { setConfigPath } from '@/config'
-import { readFileSync } from 'fs'
-import { analyse } from '@/lexer'
-import { nodeParser } from '@/parser'
-import { translate } from '@/gen'
+import { editVueRouter } from '@/common/EditRouter'
 
-const path = resolve(__dirname, '../../../sources/model.wks')
 setConfigPath({ outDir: '../api/src/', appModulePath: '../api/src/app.module.ts', outVueDir: '../web/src/' })
-const source = readFileSync(path).toString()
-const result = analyse(source)
-if (!result.error) {
-	nodeParser(result.data).then(node => {
-		translate(node)
-	})
-}
+
+editVueRouter('tool', 'Tool', {
+	routeIcon: 'plugin',
+	routeTitle: '微信管理',
+	routePath: `/tool/wechat`,
+	routeName: 'ToolWechat'
+})

@@ -14,7 +14,7 @@ interface GenRouteConfig {
 
 const genRouterStr = (config: GenRouteConfig) => `{
 	path: '${config.routePath}',
-	component: () => import('@/views/${config.routePath}/list.vue'),
+	component: () => import('@/views${config.routePath}/list.vue'),
 	name: '${config.routeName}',
 	meta: {
 		title: '${config.routeTitle}',
@@ -39,7 +39,7 @@ export const editVueRouter = (
 	const children = obj.getPropertyOrThrow('children')
 	const routerChildren = children.getFirstChildByKindOrThrow(SyntaxKind.ArrayLiteralExpression)
 	const element = routerChildren.getElements()
-	if (config.routePath.length > 1 && handleType === HandleStatus.REMOVE) {
+	if (handleType === HandleStatus.REMOVE) {
 		for (let i = 0; i < element.length; i++) {
 			const item = element[i]
 			const str = item.getText()
@@ -47,8 +47,7 @@ export const editVueRouter = (
 				routerChildren.removeElement(i)
 			}
 		}
-	}
-	if (handleType === HandleStatus.ADD) {
+	} else {
 		routerChildren.addElement(genRouterStr(config))
 	}
 	if (routerChildren.getElements().length === 0) {
