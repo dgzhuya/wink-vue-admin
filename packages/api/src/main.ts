@@ -10,7 +10,7 @@ import { join } from 'path'
 
 async function bootstrap() {
 	setConfigPath({
-		outVueDir: join(__dirname, '../../web/src'),
+		outVueDir: join(__dirname, '../../api/src'),
 		appModulePath: join(__dirname, '../../web/src/app.module.ts'),
 		outDir: join(__dirname, '../../web/src')
 	})

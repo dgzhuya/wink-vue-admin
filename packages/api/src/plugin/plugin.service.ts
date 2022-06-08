@@ -5,7 +5,7 @@ import { UpdatePluginDto } from './dto/update-plugin.dto'
 import { Plugin } from './entities/plugin.entity'
 import { isNotNull } from '@/common/utils/isNotNull'
 import { Express } from 'express'
-import { writeFileSync, existsSync, mkdirSync, readSync, readFileSync } from 'fs'
+import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs'
 import { join } from 'path'
 import {
 	nodeParser,
@@ -64,9 +64,7 @@ export class PluginService {
 			routeName,
 			routePath
 		})
-
 		await translate(astNode)
-
 		const permissionCount = await this.permissionRepository.countBy({ key: routerInfo.name })
 		if (permissionCount > 0) throw new BadParamsException('40023')
 		const parentPermission = await this.permissionRepository.findOneBy({ key: routerInfo.parentName })
