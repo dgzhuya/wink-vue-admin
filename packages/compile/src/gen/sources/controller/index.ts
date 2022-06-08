@@ -32,6 +32,7 @@ export const genController = (moduleName: string, upperModuleName: string, astNo
 		if (assignValueElement['@all']) {
 			dynamicConfig.getAll = controllerAllSource(moduleName)
 			reqMethodSet.add('Get')
+			reqMethodSet.add('Query')
 		}
 		if (assignValueElement['@delete']) {
 			dynamicConfig.delete = controllerDeleteSource(moduleName)
