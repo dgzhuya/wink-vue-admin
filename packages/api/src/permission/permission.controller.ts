@@ -24,11 +24,6 @@ export class PermissionController {
 		return this.permissionService.getPermissionTree()
 	}
 
-	@Get('tree/:id')
-	findTreeById(@Param('id') id: string) {
-		return this.permissionService.getPermissionTree(+id)
-	}
-
 	@Get(':id/children')
 	findByParent(@Param('id') id: string) {
 		return this.permissionService.getPermissionByParent(+id)

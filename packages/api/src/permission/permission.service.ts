@@ -56,9 +56,28 @@ export class PermissionService {
 	}
 
 	async getPermissionTree(pid?: number) {
-		return pid
-			? this.permissionRepository.find({ where: { parentId: pid }, select: ['id', 'title', 'hasChildren'] })
-			: this.permissionRepository.find({ where: { parentId: IsNull() }, select: ['id', 'title', 'hasChildren'] })
+		const permissionList = pid
+			? await this.permissionRepository.find({
+					where: { parentId: pid },
+					select: ['id', 'title']
+			  })
+			: await this.permissionRepository.find({
+					where: { parentId: IsNull() },
+					select: ['id', 'title']
+			  })
+		const result = []
+		if (permissionList.length !== 0) {
+			for (let i = 0; i < permissionList.length; i++) {
+				const { id, title } = permissionList[i]
+				const children = await this.getPermissionTree(id)
+				result.push({
+					id,
+					title,
+					children
+				})
+			}
+		}
+		return result
 	}
 
 	findOne(id: number) {
