@@ -55,14 +55,6 @@ export class PluginService {
 			throw new BadParamsException('40020')
 		const description = getModuleDescription(astNode)
 		const comment = getModuleComment(astNode)
-		await this.pluginRepository.save({
-			routeName,
-			routePath,
-			name: comment,
-			key: pluginName,
-			description,
-			url: join('/static/', originalname)
-		})
 		const permissionCount = await this.permissionRepository.countBy({ key: routerInfo.name })
 		if (permissionCount > 0) throw new BadParamsException('40023')
 		const parentPermission = await this.permissionRepository.findOneBy({ key: routerInfo.parentName })
@@ -99,6 +91,14 @@ export class PluginService {
 			key: `${routerInfo.parentPath}_${routerInfo.path}_delete`
 		})
 		await writeFileSync(join(__dirname, staticDir, originalname), buffer)
+		await this.pluginRepository.save({
+			routeName,
+			routePath,
+			name: comment,
+			key: pluginName,
+			description,
+			url: join('/static/', originalname)
+		})
 		translate(astNode)
 	}
 
