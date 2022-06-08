@@ -62,14 +62,20 @@ export class PluginService {
 			await this.permissionRepository.save({
 				title: comment,
 				description,
-				parentId: parentPermission.parentId,
-				key: routerInfo.name
+				parentId: parentPermission.id,
+				key: routerInfo.name,
+				hasChildren: true
 			})
 			if (!parentPermission.hasChildren) {
 				await this.permissionRepository.update(parentPermission.id, { hasChildren: true })
 			}
 		} else {
-			await this.permissionRepository.save({ title: comment, description, key: routerInfo.name })
+			await this.permissionRepository.save({
+				title: comment,
+				description,
+				key: routerInfo.name,
+				hasChildren: true
+			})
 		}
 		const currentPermission = await this.permissionRepository.findOneBy({ key: routerInfo.name })
 		await this.permissionRepository.save({
