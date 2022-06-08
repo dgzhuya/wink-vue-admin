@@ -39,14 +39,17 @@ export const editVueRouter = (
 	const children = obj.getPropertyOrThrow('children')
 	const routerChildren = children.getFirstChildByKindOrThrow(SyntaxKind.ArrayLiteralExpression)
 	const element = routerChildren.getElements()
-	for (let i = 0; i < element.length; i++) {
-		const item = element[i]
-		const str = item.getText()
-		if (handleType === HandleStatus.ADD && !str.includes(config.routePath)) {
-			routerChildren.addElement(genRouterStr(config))
-		} else if (config.routePath.length > 1 && str.includes(config.routePath)) {
-			routerChildren.removeElement(i)
+	if (config.routePath.length > 1 && handleType === HandleStatus.REMOVE) {
+		for (let i = 0; i < element.length; i++) {
+			const item = element[i]
+			const str = item.getText()
+			if (str.includes(config.routePath)) {
+				routerChildren.removeElement(i)
+			}
 		}
+	}
+	if (handleType === HandleStatus.ADD) {
+		routerChildren.addElement(genRouterStr(config))
 	}
 	if (routerChildren.getElements().length === 0) {
 		editAsyncRoute(parentPath, parentName, HandleStatus.REMOVE)
