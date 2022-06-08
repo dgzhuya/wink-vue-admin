@@ -7,6 +7,7 @@
 	import { showFormEffect } from '@/effect/show-form'
 	import { deleteEffect } from '@/effect/delete'
 	import { useUser } from '@/store/module/user'
+	import { toast } from '@/utils/toast'
 
 	const pluginActive = ref<PluginModel | null>(null)
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getPluginList)
@@ -26,7 +27,10 @@
 			uploadDOM.value.clearFiles()
 		}
 	}
-	const successHandler = () => {
+	const successHandler = (response: any) => {
+		if (response.code !== 200) {
+			toast(response.msg)
+		}
 		if (uploadDOM.value) {
 			uploadDOM.value.clearFiles()
 			fetchHandler()
