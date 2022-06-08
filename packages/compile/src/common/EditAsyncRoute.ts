@@ -22,16 +22,16 @@ export const editAsyncRoute = (filePath: string, prefixModuleName: string, handl
 
 	const asyncRoutes = sourceFile.getVariableDeclarationOrThrow('asyncRoutes')
 
-	const array = asyncRoutes.getFirstChildByKindOrThrow(SyntaxKind.ArrayLiteralExpression)
+	const arrayLiteralExpression = asyncRoutes.getFirstChildByKindOrThrow(SyntaxKind.ArrayLiteralExpression)
 	if (handleType === 'add') {
-		array.addElement(`${prefixModuleName}`)
+		arrayLiteralExpression.addElement(`${prefixModuleName}`)
 	} else {
-		const element = array.getElements()
+		const element = arrayLiteralExpression.getElements()
 		for (let i = 0; i < element.length; i++) {
 			const item = element[i]
 			const str = item.getText()
 			if (str === prefixModuleName) {
-				array.removeElement(i)
+				arrayLiteralExpression.removeElement(i)
 			}
 		}
 	}

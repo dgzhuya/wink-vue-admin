@@ -2,8 +2,8 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"module": "ESNext",
-		"sourceMap": false,
 		"moduleResolution": "Node",
+		"sourceMap": false,
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
 		"removeComments": false,
@@ -13,5 +13,7 @@
 		"paths": {
 			"@/*": ["src/*"]
 		}
-	}
+	},
+	"include": ["src/*"],
+	"exclude": ["node_modules", "test"]
 }
