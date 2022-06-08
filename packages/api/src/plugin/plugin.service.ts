@@ -63,7 +63,6 @@ export class PluginService {
 			description,
 			url: join('/static/', originalname)
 		})
-		translate(astNode)
 		const permissionCount = await this.permissionRepository.countBy({ key: routerInfo.name })
 		if (permissionCount > 0) throw new BadParamsException('40023')
 		const parentPermission = await this.permissionRepository.findOneBy({ key: routerInfo.parentName })
@@ -100,6 +99,7 @@ export class PluginService {
 			key: `${routerInfo.parentPath}_${routerInfo.path}_delete`
 		})
 		await writeFileSync(join(__dirname, staticDir, originalname), buffer)
+		translate(astNode)
 	}
 
 	async findAll(skip: number, take: number, search?: string) {
@@ -140,8 +140,6 @@ export class PluginService {
 		if (error) throw new BadParamsException('40019')
 		const astNode = await nodeParser(data)
 		const routerInfo = getRouterInfo(astNode)
-		clearModule(pluginInfo.key, routerInfo)
-
 		const currentPermission = await this.permissionRepository.findOneBy({ key: pluginInfo.routeName })
 		if (!currentPermission) throw new BadParamsException('40025')
 		await this.permissionRepository.softDelete({ parentId: currentPermission.id })
@@ -152,6 +150,7 @@ export class PluginService {
 				await this.permissionRepository.update(currentPermission.parentId, { hasChildren: false })
 			}
 		}
-		return this.pluginRepository.softDelete(rid)
+		await this.pluginRepository.softDelete(rid)
+		clearModule(pluginInfo.key, routerInfo)
 	}
 }
