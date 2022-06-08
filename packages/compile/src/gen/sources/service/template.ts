@@ -22,7 +22,7 @@ export const serviceCreateSource = (moduleName: string, upperModuleName: string)
 `
 
 export const serviceAllSource = (moduleName: string) => `
-	findAll() {
+	findAll(skip: number, take: number, search?: string) {
 		if (isNotNull(skip) && isNotNull(take)) {
 			let queryBuilder = this.${moduleName}Repository.createQueryBuilder('${moduleName}')
 			if (search) {
@@ -42,7 +42,7 @@ export const serviceAllSource = (moduleName: string) => `
 
 export const serviceGetSource = (moduleName: string) => `
 	findOne(id: number) {
-		return this.${moduleName}Repository.findOne(id)
+		return this.${moduleName}Repository.findOneBy({ id })
 	}
 `
 
