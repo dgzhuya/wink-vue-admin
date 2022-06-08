@@ -16,6 +16,7 @@ import {
 	getRouterInfo
 } from '@wink/compile'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
+import { DefaultPluginInfo } from '@/config/plugin'
 
 @Injectable()
 export class PluginService {
@@ -30,12 +31,32 @@ export class PluginService {
 		const { data, error } = analyse(buffer.toString())
 		if (error) throw new BadParamsException('40019')
 		const astNode = await nodeParser(data)
-		const comment = getModuleComment(astNode)
-		const name = getModuleName(astNode)
-		const description = getModuleDescription(astNode)
+
+		const pluginName = getModuleName(astNode)
+		const pluginNameCount = await this.pluginRepository.countBy({ name: pluginName })
+		if (DefaultPluginInfo.pluginNames.includes(pluginName) || pluginNameCount > 0) {
+			throw new BadParamsException('40021')
+		}
 		const routerInfo = getRouterInfo(astNode)
-		console.log(comment, name, description, routerInfo)
-		console.log(join(__dirname, staticDir, originalname))
+		const routeName = routerInfo.name
+		const routeNameCount = await this.pluginRepository.countBy({ routeName })
+		if (DefaultPluginInfo.routeNames.includes(routeName) || routeNameCount > 0) {
+			throw new BadParamsException('40022')
+		}
+		const routePath = `${routerInfo.parentPath}/${routerInfo.path}`
+		const routerPathCount = await this.pluginRepository.countBy({ routePath: routePath })
+		if (DefaultPluginInfo.routePaths.includes(routePath) || routerPathCount > 0) {
+			throw new BadParamsException('40020')
+		}
+		const description = getModuleDescription(astNode)
+
+		await this.pluginRepository.save({
+			name: pluginName,
+			description,
+			url: join('/static/', originalname),
+			routeName,
+			routePath
+		})
 		writeFileSync(join(__dirname, staticDir, originalname), buffer)
 	}
 

@@ -7,12 +7,18 @@ export class Plugin extends BaseEntity {
 	@Column({ primary: true })
 	id: number
 
-	@Column()
+	@Column({ comment: '插件文件地址' })
 	url: string
 
-	@Column()
+	@Column({ comment: '插件名' })
 	name: string
 
-	@Column({ nullable: true })
+	@Column({ comment: '路由地址' })
+	routePath: string
+
+	@Column({ comment: '插件路由名称' })
+	routeName: string
+
+	@Column({ nullable: true, comment: '插件描述' })
 	description: string
 }
