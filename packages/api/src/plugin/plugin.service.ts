@@ -89,7 +89,6 @@ export class PluginService {
 			parentId: currentPermission.id,
 			key: `${routerInfo.parentPath}_${routerInfo.path}_delete`
 		})
-
 		await writeFileSync(join(__dirname, staticDir, originalname), buffer)
 	}
 
