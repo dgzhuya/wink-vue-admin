@@ -11,17 +11,12 @@ export const genPluginRouter = (moduleName: string, config: RouterConfig) => {
 	const routerDir = join('router', 'module')
 	const routerFile = join(routerDir, `${config.parentPath}.ts`)
 	if (isWebExit(routerFile)) {
-		editVueRouter(
-			config.parentPath,
-			config.parentName,
-			{
-				routeIcon: config.icon,
-				routeTitle: config.title,
-				routePath: `/${config.parentPath}/${config.path}`,
-				routeName: config.name
-			},
-			HandleStatus.REMOVE
-		)
+		editVueRouter(config.parentPath, config.parentName, {
+			routeIcon: config.icon,
+			routeTitle: config.title,
+			routePath: `/${config.parentPath}/${config.path}`,
+			routeName: config.name
+		})
 	} else {
 		const routerSourceStr = renderStrByTemplate(routerSource, {
 			moduleName,
