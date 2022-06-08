@@ -25,7 +25,7 @@ import { Permission } from '@/permission/entities/permission.entity'
 export class PluginService {
 	constructor(
 		@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>,
-		@InjectRepository(Plugin) private readonly permissionRepository: Repository<Permission>
+		@InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>
 	) {}
 
 	async create(file: Express.Multer.File) {
