@@ -20,3 +20,9 @@ export const createWebDir = (dirPath: string) => {
 		mkdirSync(resolve(getConfigPath().outVueDir, dirPath))
 	}
 }
+
+export const removeWebDir = (dirPath: string) => {
+	if (isWebExit(dirPath)) {
+		shell.rm('-rf', resolve(getConfigPath().outVueDir, dirPath))
+	}
+}

@@ -5,22 +5,43 @@ import { renderStrByTemplate } from '@/gen/util/renderUtil'
 import { join } from 'path'
 import { isWebExit, writeWebFile } from '../util/fileUtil'
 import { routerSource } from './template'
+import { HandleStatus } from '@/common/Status'
 
-export const genPluginRouter = (moduleName: string, routerConfig: RouterConfig) => {
+export const genPluginRouter = (moduleName: string, config: RouterConfig) => {
 	const routerDir = join('router', 'module')
-	const routerFile = join(routerDir, `${routerConfig.parentPath}.ts`)
+	const routerFile = join(routerDir, `${config.parentPath}.ts`)
 	if (isWebExit(routerFile)) {
-		editVueRouter(routerConfig.parentPath, {
-			viewPath: `${routerConfig.parentPath}/${routerConfig.path}`,
-			...routerConfig,
-			path: `/${routerConfig.parentPath}/${routerConfig.path}`
-		})
+		editVueRouter(
+			config.parentPath,
+			config.parentName,
+			{
+				routeIcon: config.icon,
+				routeTitle: config.title,
+				routePath: `${config.parentPath}/${config.path}`,
+				routeName: config.name
+			},
+			HandleStatus.REMOVE
+		)
 	} else {
 		const routerSourceStr = renderStrByTemplate(routerSource, {
 			moduleName,
-			...routerConfig
+			...config
 		})
-		editAsyncRoute(routerConfig.parentPath, `${routerConfig.parentName}Route`)
-		writeWebFile(`${routerConfig.parentPath}.ts`, routerSourceStr, routerDir)
+		editAsyncRoute(config.parentPath, `${config.parentName}Route`)
+		writeWebFile(`${config.parentPath}.ts`, routerSourceStr, routerDir)
 	}
+}
+
+export const clearPluginRouter = (config: RouterConfig) => {
+	editVueRouter(
+		config.parentPath,
+		config.parentName,
+		{
+			routeIcon: config.icon,
+			routeTitle: config.title,
+			routePath: `${config.parentPath}/${config.path}`,
+			routeName: config.name
+		},
+		HandleStatus.REMOVE
+	)
 }

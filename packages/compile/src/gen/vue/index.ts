@@ -1,6 +1,4 @@
 import { ASTNode } from '@/parser/ast/ASTNode'
-import { AssignStmt } from '@/parser/ast/AssignStmt'
-import { Translate } from '@/parser/utils/Types'
 import { genPluginTypes } from '@/gen/vue/types'
 import { genPluginList } from '@/gen/vue/list'
 import { genPluginForm } from '@/gen/vue/form'

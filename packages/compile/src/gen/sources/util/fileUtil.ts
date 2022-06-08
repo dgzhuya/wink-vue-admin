@@ -20,3 +20,9 @@ export const createNestDir = (dirPath: string) => {
 		mkdirSync(resolve(getConfigPath().outDir, dirPath))
 	}
 }
+
+export const removeNestDir = (dirPath: string) => {
+	if (isNestExit(dirPath)) {
+		shell.rm('-rf', resolve(getConfigPath().outDir, dirPath))
+	}
+}
