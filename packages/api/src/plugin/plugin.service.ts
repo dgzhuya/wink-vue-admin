@@ -49,27 +49,37 @@ export class PluginService {
 		if (DefaultPluginInfo.routeNames.includes(routeName) || routeNameCount > 0)
 			throw new BadParamsException('40022')
 
-		const routePath = `${routerInfo.parentPath}/${routerInfo.path}`
+		const routePath = `/${routerInfo.parentPath}/${routerInfo.path}`
 		const routerPathCount = await this.pluginRepository.countBy({ routePath: routePath })
 		if (DefaultPluginInfo.routePaths.includes(routePath) || routerPathCount > 0)
 			throw new BadParamsException('40020')
-
-		translate(astNode)
 		const description = getModuleDescription(astNode)
 		const comment = getModuleComment(astNode)
 		await this.pluginRepository.save({
+			routeName,
+			routePath,
 			name: comment,
 			key: pluginName,
 			description,
-			url: join('/static/', originalname),
-			routeName,
-			routePath
+			url: join('/static/', originalname)
 		})
+		translate(astNode)
 		const permissionCount = await this.permissionRepository.countBy({ key: routerInfo.name })
 		if (permissionCount > 0) throw new BadParamsException('40023')
 		const parentPermission = await this.permissionRepository.findOneBy({ key: routerInfo.parentName })
-		const parentId = parentPermission ? parentPermission.id : null
-		await this.permissionRepository.save({ title: comment, description, parentId, key: routerInfo.name })
+		if (parentPermission) {
+			await this.permissionRepository.save({
+				title: comment,
+				description,
+				parentId: parentPermission.parentId,
+				key: routerInfo.name
+			})
+			if (!parentPermission.hasChildren) {
+				await this.permissionRepository.update(parentPermission.id, { hasChildren: true })
+			}
+		} else {
+			await this.permissionRepository.save({ title: comment, description, key: routerInfo.name })
+		}
 		const currentPermission = await this.permissionRepository.findOneBy({ key: routerInfo.name })
 		await this.permissionRepository.save({
 			title: `添加${comment}`,
@@ -136,6 +146,12 @@ export class PluginService {
 		if (!currentPermission) throw new BadParamsException('40025')
 		await this.permissionRepository.softDelete({ parentId: currentPermission.id })
 		await this.permissionRepository.softDelete(currentPermission.id)
+		if (currentPermission.parentId) {
+			const parentCount = await this.permissionRepository.countBy({ parentId: currentPermission.parentId })
+			if (parentCount === 0) {
+				await this.permissionRepository.update(currentPermission.parentId, { hasChildren: false })
+			}
+		}
 		return this.pluginRepository.softDelete(rid)
 	}
 }
