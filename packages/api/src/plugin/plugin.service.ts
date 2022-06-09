@@ -113,9 +113,9 @@ export class PluginService {
 			url: join('/static/', originalname)
 		})
 		if (process.env.NODE_ENV === 'production') {
-			exec('esno script/build.ts', {
-				cwd: join(process.cwd(), '../../')
-			})
+			const projectPath = join(__dirname, '../../../../')
+			console.log(projectPath)
+			// exec('esno script/build.ts')
 		}
 		translate(astNode)
 	}
