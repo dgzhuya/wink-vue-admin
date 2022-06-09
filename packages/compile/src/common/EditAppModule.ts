@@ -46,7 +46,7 @@ export const editAppModule = (
 		controller.remove()
 		propertyAssignment.setInitializer(initializer.replace(new RegExp(`,*\\n*\\s*${upperModuleName}Module`), ''))
 		if (bodyText) {
-			configureMethod.setBodyText(bodyText.replace(new RegExp(`,*\\n*\\s*${upperModuleName}`), ''))
+			configureMethod.setBodyText(bodyText.replace(new RegExp(`,*\\n*\\s*${upperModuleName}Controller`), ''))
 		}
 	}
 
