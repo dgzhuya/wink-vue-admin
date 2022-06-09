@@ -25,7 +25,7 @@ export const clearModule = (moduleName: string, routerConfig: RouterConfig) => {
 	clearPluginRouter(routerConfig)
 	const webPathList = ['types', 'api']
 	webPathList.forEach(webPath => {
-		removeWebDir(join(webPath, routerConfig.parentPath))
+		removeWebDir(join(webPath, routerConfig.parentPath, `${moduleName}.ts`))
 	})
 	removeWebDir(join('views', routerConfig.parentPath, routerConfig.path))
 }
