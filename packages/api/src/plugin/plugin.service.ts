@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { UpdatePluginDto } from './dto/update-plugin.dto'
 import { Plugin } from './entities/plugin.entity'
 import { isNotNull } from '@/common/utils/isNotNull'
@@ -20,12 +20,14 @@ import {
 import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { DefaultPluginInfo } from '@/config/plugin'
 import { Permission } from '@/permission/entities/permission.entity'
+import { RolePermission } from '@/common/entities/role-permission.entity'
 
 @Injectable()
 export class PluginService {
 	constructor(
 		@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>,
-		@InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>
+		@InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
+		@InjectRepository(RolePermission) private readonly rolePermissionRepository: Repository<RolePermission>
 	) {}
 
 	async create(file: Express.Multer.File) {
@@ -148,6 +150,10 @@ export class PluginService {
 		const routerInfo = getRouterInfo(astNode)
 		const currentPermission = await this.permissionRepository.findOneBy({ key: pluginInfo.routeName })
 		if (!currentPermission) throw new BadParamsException('40025')
+		const childrenPermission = await this.permissionRepository.findBy({ parentId: currentPermission.parentId })
+		await this.rolePermissionRepository.softDelete({
+			permissionId: In([...childrenPermission.map(p => p.id), currentPermission.parentId])
+		})
 		await this.permissionRepository.softDelete({ parentId: currentPermission.id })
 		await this.permissionRepository.softDelete(currentPermission.id)
 		if (currentPermission.parentId) {
