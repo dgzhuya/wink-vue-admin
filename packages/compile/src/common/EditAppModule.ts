@@ -44,9 +44,9 @@ export const editAppModule = (
 		moduleImport.remove()
 		const controller = sourceFile.getImportDeclarationOrThrow(`./${moduleName}/${moduleName}.controller`)
 		controller.remove()
-		propertyAssignment.setInitializer(initializer.replace(`, ${upperModuleName}Module`, ''))
+		propertyAssignment.setInitializer(initializer.replace(new RegExp(`,*\\n*\\s*${upperModuleName}Module`), ''))
 		if (bodyText) {
-			configureMethod.setBodyText(bodyText.replace(`, ${upperModuleName}Controller`, ''))
+			configureMethod.setBodyText(bodyText.replace(new RegExp(`,*\\n*\\s*${upperModuleName}`), ''))
 		}
 	}
 
