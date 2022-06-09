@@ -112,12 +112,10 @@ export class PluginService {
 			description,
 			url: join('/static/', originalname)
 		})
-		if (process.env.NODE_ENV === 'production') {
-			const projectPath = join(__dirname, '../../../../')
-			console.log(projectPath)
-			// exec('esno script/build.ts')
-		}
 		translate(astNode)
+		if (process.env.NODE_ENV === 'production') {
+			exec(`node ${join(__dirname, '../../../../', 'script/build.mjs')}`)
+		}
 	}
 
 	async findAll(skip: number, take: number, search?: string) {
@@ -179,5 +177,8 @@ export class PluginService {
 		}
 		await this.pluginRepository.softDelete(rid)
 		clearModule(pluginInfo.key, routerInfo)
+		if (process.env.NODE_ENV === 'production') {
+			exec(`node ${join(__dirname, '../../../../', 'script/build.mjs')}`)
+		}
 	}
 }
