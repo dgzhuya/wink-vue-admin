@@ -113,7 +113,7 @@ export class PluginService {
 			url: join('/static/', originalname)
 		})
 		if (process.env.NODE_ENV === 'production') {
-			exec(`sh script/build.sh`, {
+			exec(`esno script/build.ts`, {
 				cwd: join(process.cwd(), '../../')
 			})
 		}
