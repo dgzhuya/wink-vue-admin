@@ -48,7 +48,7 @@
 		"@types/jest": "27.5.0",
 		"@types/jsonwebtoken": "^8.5.8",
 		"@types/multer": "^1.4.7",
-		"@types/node": "^16.11.36",
+		"@types/node": "^17.0.41",
 		"@types/supertest": "^2.0.12",
 		"@typescript-eslint/eslint-plugin": "^5.26.0",
 		"@typescript-eslint/parser": "^5.26.0",

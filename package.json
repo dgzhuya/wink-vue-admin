@@ -4,9 +4,8 @@
 	"description": "vue+nestjs开发的后台管理系统",
 	"scripts": {
 		"commit": "git add --all&&cz",
-		"format": "prettier --write \"packages/**/*.ts\" \"packages/**/*.vue\" ",
-		"build-compile": "esno script/build-compile.ts",
-		"build": "esno script/build.ts"
+		"format": "prettier --write \"packages/**/*.ts\" \"packages/**/*.vue\" \"packages/**/*.json\"",
+		"build:compile": "esno script/build-compile.ts"
 	},
 	"keywords": [
 		"vue",
@@ -21,7 +20,7 @@
 		"@rollup/plugin-commonjs": "^22.0.0",
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^13.3.0",
-		"@types/node": "^17.0.40",
+		"@types/node": "^17.0.41",
 		"@types/shelljs": "^0.8.11",
 		"@typescript-eslint/eslint-plugin": "^5.26.0",
 		"@typescript-eslint/parser": "^5.26.0",

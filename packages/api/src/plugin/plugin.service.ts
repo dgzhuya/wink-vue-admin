@@ -21,7 +21,7 @@ import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { DefaultPluginInfo } from '@/config/plugin'
 import { Permission } from '@/permission/entities/permission.entity'
 import { RolePermission } from '@/common/entities/role-permission.entity'
-import shell from 'shelljs'
+import { execSync } from 'child_process'
 
 @Injectable()
 export class PluginService {
@@ -35,9 +35,15 @@ export class PluginService {
 		this.timer = null
 	}
 
+	async runScript(file: Express.Multer.File) {
+		execSync('esno script/build.ts', {
+			cwd: join(process.cwd(), '../../')
+		})
+	}
+
 	async create(file: Express.Multer.File) {
 		const { originalname, buffer } = file
-		const staticDir = join(__dirname, '../../static')
+		const staticDir = join(process.cwd(), 'static')
 		if (!existsSync(staticDir)) {
 			mkdirSync(staticDir)
 		}
@@ -113,12 +119,9 @@ export class PluginService {
 			url: join('/static/', originalname)
 		})
 		if (process.env.NODE_ENV === 'production') {
-			if (this.timer) clearTimeout(this.timer)
-			this.timer = setTimeout(() => {
-				shell.cd('../../')
-				shell.exec('pnpm build')
-				shell.exec('pm2 restart wink-api')
-			}, 1000)
+			execSync(`sh script/build.sh`, {
+				cwd: join(process.cwd(), '../../')
+			})
 		}
 		translate(astNode)
 	}
@@ -156,7 +159,7 @@ export class PluginService {
 		const pluginInfo = await this.pluginRepository.findOneBy({ id: rid })
 		if (!pluginInfo) throw new BadParamsException('40024')
 
-		const filePath = join(__dirname, '../../', pluginInfo.url)
+		const filePath = join(process.cwd(), pluginInfo.url)
 		const { data, error } = analyse(readFileSync(filePath).toString())
 		if (error) throw new BadParamsException('40019')
 		const astNode = await nodeParser(data)

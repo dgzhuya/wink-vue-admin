@@ -12,6 +12,12 @@ export class PluginController {
 	@Post()
 	@UseInterceptors(FileInterceptor('file'))
 	create(@UploadedFile() file: Express.Multer.File) {
+		return this.pluginService.runScript(file)
+	}
+
+	@Post('upload')
+	@UseInterceptors(FileInterceptor('file'))
+	createU(@UploadedFile() file: Express.Multer.File) {
 		return this.pluginService.create(file)
 	}
 
