@@ -21,7 +21,7 @@ import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { DefaultPluginInfo } from '@/config/plugin'
 import { Permission } from '@/permission/entities/permission.entity'
 import { RolePermission } from '@/common/entities/role-permission.entity'
-import { execSync } from 'child_process'
+import { exec } from 'child_process'
 
 @Injectable()
 export class PluginService {
@@ -33,12 +33,6 @@ export class PluginService {
 		@InjectRepository(RolePermission) private readonly rolePermissionRepository: Repository<RolePermission>
 	) {
 		this.timer = null
-	}
-
-	async runScript(file: Express.Multer.File) {
-		execSync('esno script/build.ts', {
-			cwd: join(process.cwd(), '../../')
-		})
 	}
 
 	async create(file: Express.Multer.File) {
@@ -119,7 +113,7 @@ export class PluginService {
 			url: join('/static/', originalname)
 		})
 		if (process.env.NODE_ENV === 'production') {
-			execSync(`sh script/build.sh`, {
+			exec(`sh script/build.sh`, {
 				cwd: join(process.cwd(), '../../')
 			})
 		}
