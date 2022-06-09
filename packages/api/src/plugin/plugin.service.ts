@@ -21,14 +21,19 @@ import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { DefaultPluginInfo } from '@/config/plugin'
 import { Permission } from '@/permission/entities/permission.entity'
 import { RolePermission } from '@/common/entities/role-permission.entity'
+import shell from 'shelljs'
 
 @Injectable()
 export class PluginService {
+	private timer: NodeJS.Timeout | null
+
 	constructor(
 		@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>,
 		@InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
 		@InjectRepository(RolePermission) private readonly rolePermissionRepository: Repository<RolePermission>
-	) {}
+	) {
+		this.timer = null
+	}
 
 	async create(file: Express.Multer.File) {
 		const { originalname, buffer } = file
@@ -107,6 +112,14 @@ export class PluginService {
 			description,
 			url: join('/static/', originalname)
 		})
+		if (process.env.NODE_ENV === 'production') {
+			if (this.timer) clearTimeout(this.timer)
+			this.timer = setTimeout(() => {
+				shell.cd('../../')
+				shell.exec('pnpm build')
+				shell.exec('pm2 restart wink-api')
+			}, 1000)
+		}
 		translate(astNode)
 	}
 
@@ -150,9 +163,14 @@ export class PluginService {
 		const routerInfo = getRouterInfo(astNode)
 		const currentPermission = await this.permissionRepository.findOneBy({ key: pluginInfo.routeName })
 		if (!currentPermission) throw new BadParamsException('40025')
-		const childrenPermission = await this.permissionRepository.findBy({ parentId: currentPermission.parentId })
-		await this.rolePermissionRepository.softDelete({
-			permissionId: In([...childrenPermission.map(p => p.id), currentPermission.parentId])
+		const childrenPermission = await this.permissionRepository.find({
+			where: { parentId: currentPermission.id },
+			select: ['id']
+		})
+		if (!childrenPermission) throw new BadParamsException('40025')
+		const permissionIds = [...childrenPermission.map(p => p.id), currentPermission.id]
+		await this.rolePermissionRepository.delete({
+			permissionId: In(permissionIds)
 		})
 		await this.permissionRepository.softDelete({ parentId: currentPermission.id })
 		await this.permissionRepository.softDelete(currentPermission.id)
