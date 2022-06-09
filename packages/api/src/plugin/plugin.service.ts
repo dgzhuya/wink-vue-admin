@@ -116,6 +116,7 @@ export class PluginService {
 		if (process.env.NODE_ENV === 'production') {
 			exec(`node ${join(__dirname, '../../../../', 'script/build.mjs')}`)
 		}
+		exec(`node ${join(__dirname, '../../../../', 'script/format.mjs')}`)
 	}
 
 	async findAll(skip: number, take: number, search?: string) {
@@ -180,5 +181,6 @@ export class PluginService {
 		if (process.env.NODE_ENV === 'production') {
 			exec(`node ${join(__dirname, '../../../../', 'script/build.mjs')}`)
 		}
+		exec(`node ${join(__dirname, '../../../../', 'script/format.mjs')}`)
 	}
 }

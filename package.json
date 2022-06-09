@@ -6,6 +6,7 @@
 		"commit": "git add --all&&cz",
 		"format": "prettier --write \"packages/**/*.ts\" \"packages/**/*.vue\" \"packages/**/*.json\"",
 		"build": "node script/build.mjs",
+		"build:format": "node script/format.mjs",
 		"build:compile": "esno script/build-compile.ts"
 	},
 	"keywords": [
