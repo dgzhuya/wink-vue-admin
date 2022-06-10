@@ -4,7 +4,7 @@ import path from 'path'
 
 const wss = new WebSocketServer({ port: 9527 })
 
-let codePath = ''
+let codePath = 'hello'
 wss.on('connection', (ws, request) => {
 	if (codePath !== '' && request.url === `/build/${codePath}`) {
 		codePath = ''
@@ -20,10 +20,13 @@ wss.on('connection', (ws, request) => {
 		ws.send(JSON.stringify({ code: 200, msg: '项目重启成功,即将自动刷新' }))
 	}
 	ws.on('message', data => {
-		const resultData = JSON.parse(data.toString())
-		console.log('data:', resultData)
-		if (resultData && process.env.WS_KEY && resultData.key === process.env.WS_KEY && resultData.codePath) {
-			codePath = data.codePath
+		try {
+			const resultData = JSON.parse(data.toString())
+			if (resultData && process.env.WS_KEY && resultData.key === process.env.WS_KEY && resultData.codePath) {
+				codePath = data.codePath
+			}
+		} catch (error) {
+			console.log('error:', error)
 		}
 	})
 })
