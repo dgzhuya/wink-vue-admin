@@ -203,8 +203,9 @@ export class PluginService {
 				})
 
 				ws.on('message', event => {
-					if (event.data) {
-						const result = JSON.parse(event.data)
+					const data = event.toString()
+					if (data) {
+						const result = JSON.parse(data)
 						if (result.code === 200) {
 							ws.close()
 							resolve(codePath)
