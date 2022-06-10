@@ -17,7 +17,7 @@ wss.on('connection', (ws, request) => {
 		shell.exec('npm run build:prod')
 		ws.send(JSON.stringify({ code: 200, msg: '项目编译成功,开始重启' }))
 		shell.exec('pm2 restart wink-api')
-		ws.send(JSON.stringify({ code: 200, msg: '项目重启成功' }))
+		ws.send(JSON.stringify({ code: 201, msg: '项目重启成功' }))
 	}
 	ws.on('message', data => {
 		try {
