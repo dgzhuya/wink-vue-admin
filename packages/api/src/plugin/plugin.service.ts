@@ -22,10 +22,12 @@ import { DefaultPluginInfo } from '@/config/plugin'
 import { Permission } from '@/permission/entities/permission.entity'
 import { RolePermission } from '@/common/entities/role-permission.entity'
 import { exec } from 'child_process'
+import WebSocket from 'ws'
 
 @Injectable()
 export class PluginService {
 	private timer: NodeJS.Timeout | null
+	private readonly formatPath: string
 
 	constructor(
 		@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>,
@@ -33,6 +35,7 @@ export class PluginService {
 		@InjectRepository(RolePermission) private readonly rolePermissionRepository: Repository<RolePermission>
 	) {
 		this.timer = null
+		this.formatPath = join(__dirname, '../../../../', 'script/format.mjs')
 	}
 
 	async create(file: Express.Multer.File) {
@@ -60,6 +63,7 @@ export class PluginService {
 		const routerPathCount = await this.pluginRepository.countBy({ routePath: routePath })
 		if (DefaultPluginInfo.routePaths.includes(routePath) || routerPathCount > 0)
 			throw new BadParamsException('40020')
+
 		const description = getModuleDescription(astNode)
 		const comment = getModuleComment(astNode)
 		const permissionCount = await this.permissionRepository.countBy({ key: routerInfo.name })
@@ -113,10 +117,7 @@ export class PluginService {
 			url: join('/static/', originalname)
 		})
 		translate(astNode)
-		if (process.env.NODE_ENV === 'production') {
-			exec(`node ${join(__dirname, '../../../../', 'script/build.mjs')}`)
-		}
-		exec(`node ${join(__dirname, '../../../../', 'script/format.mjs')}`)
+		return this.execFileBuild()
 	}
 
 	async findAll(skip: number, take: number, search?: string) {
@@ -178,9 +179,18 @@ export class PluginService {
 		}
 		await this.pluginRepository.softDelete(rid)
 		clearModule(pluginInfo.key, routerInfo)
+		return this.execFileBuild()
+	}
+
+	private execFileBuild() {
+		exec(`node ${this.formatPath}`)
 		if (process.env.NODE_ENV === 'production') {
-			exec(`node ${join(__dirname, '../../../../', 'script/build.mjs')}`)
+			const codePath = Math.random().toString(36).slice(-6)
+			const ws = new WebSocket('ws://localhost:8081/build')
+			ws.on('open', () => {
+				ws.send({ key: process.env.WS_KEY, codePath })
+			})
+			return codePath
 		}
-		exec(`node ${join(__dirname, '../../../../', 'script/format.mjs')}`)
 	}
 }
