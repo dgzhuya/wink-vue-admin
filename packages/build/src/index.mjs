@@ -2,7 +2,7 @@ import { WebSocketServer } from 'ws'
 import shell from 'shelljs'
 import path from 'path'
 
-const wss = new WebSocketServer({ port: 8081 })
+const wss = new WebSocketServer({ port: 9527 })
 
 let codePath = ''
 wss.on('connection', (ws, request) => {
