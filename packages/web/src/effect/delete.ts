@@ -21,11 +21,12 @@ export const deleteEffect = <T>(
 				})
 				await fetchFunc()
 			})
-			.catch(() => {
-				ElMessage({
-					type: 'info',
-					message: '取消删除'
-				})
+			.catch(error => {
+				if (error === 'cancel')
+					ElMessage({
+						type: 'info',
+						message: '取消删除'
+					})
 			})
 	}
 

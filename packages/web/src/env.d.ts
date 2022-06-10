@@ -8,4 +8,5 @@ declare module '*.vue' {
 
 interface ImportMetaEnv {
 	VITE_BASE_URL: string
+	VITE_BASE_WS: string
 }

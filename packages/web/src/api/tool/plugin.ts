@@ -26,7 +26,7 @@ export const updatePlugin = (data: PluginDto, id: number) => {
 }
 
 export const deletePlugin = (id: number) => {
-	return request({
+	return request<string>({
 		url: `/plugin/${id}`,
 		method: 'delete'
 	})

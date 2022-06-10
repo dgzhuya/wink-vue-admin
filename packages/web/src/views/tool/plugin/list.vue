@@ -8,12 +8,22 @@
 	import { deleteEffect } from '@/effect/delete'
 	import { useUser } from '@/store/module/user'
 	import { toast } from '@/utils/toast'
+	import { webScoket } from '@/utils/webSocket'
 
 	const pluginActive = ref<PluginModel | null>(null)
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getPluginList)
 
 	const { showHandler, showModel, closeHandler } = showFormEffect(pluginActive, fetchHandler)
-	const { deleteHandler } = deleteEffect(deletePlugin, fetchHandler, '此插件')
+	const { deleteHandler } = deleteEffect(
+		async id => {
+			const result = await deletePlugin(id)
+			if (result.length > 0) {
+				webScoket(result)
+			}
+		},
+		fetchHandler,
+		'此插件'
+	)
 	onMounted(async () => {
 		await fetchHandler()
 	})
@@ -30,10 +40,12 @@
 	const successHandler = (response: any) => {
 		if (response.code !== 200) {
 			toast(response.msg)
-		}
-		if (uploadDOM.value) {
-			uploadDOM.value.clearFiles()
-			fetchHandler()
+		} else {
+			if (response.data && response.data.length > 0) webScoket(response.data)
+			if (uploadDOM.value) {
+				uploadDOM.value.clearFiles()
+				fetchHandler()
+			}
 		}
 	}
 </script>

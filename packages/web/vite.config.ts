@@ -14,10 +14,16 @@ export default defineConfig({
 		port: 8080,
 		open: true,
 		proxy: {
-			'/api': {
+			'/server': {
 				target: 'http://localhost:3000',
 				changeOrigin: true,
-				rewrite: path => path.replace(/^\/api/, '')
+				rewrite: path => path.replace(/^\/server/, '')
+			},
+			'/ws_server': {
+				target: 'http://localhost:9527',
+				changeOrigin: true,
+				ws: true,
+				rewrite: path => path.replace(/^\/server/, '')
 			}
 		}
 	},
@@ -26,6 +32,12 @@ export default defineConfig({
 			'/server': {
 				target: 'http://localhost:3000',
 				changeOrigin: true,
+				rewrite: path => path.replace(/^\/server/, '')
+			},
+			'/ws_server': {
+				target: 'http://localhost:9527',
+				changeOrigin: true,
+				ws: true,
 				rewrite: path => path.replace(/^\/server/, '')
 			}
 		}
