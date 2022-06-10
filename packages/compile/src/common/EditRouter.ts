@@ -28,7 +28,7 @@ export const editVueRouter = (
 	config: GenRouteConfig,
 	handleType: HandleStatus = HandleStatus.ADD
 ) => {
-	const path = resolve(getConfigPath().outVueDir, 'router/module/', `${parentPath}.ts`)
+	const path = resolve(getConfigPath().webDir, 'router/module/', `${parentPath}.ts`)
 	const project = new Project()
 	project.addSourceFileAtPath(path)
 	const sourceFile = project.getSourceFileOrThrow(path)

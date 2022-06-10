@@ -7,9 +7,9 @@ import { AssignStmt } from '@/parser/ast/AssignStmt'
 import { Translate } from '@/parser/utils/Types'
 
 export const genDTO = (moduleName: string, upperModuleName: string, astNode: ASTNode) => {
-	const modelNode = astNode.findByKey('#dto')
-	if (modelNode !== null) {
-		const assignValueElement = (modelNode as AssignStmt).getAssignValue()['#dto'] as Translate
+	const dtoNode = astNode.findByKey('#dto')
+	if (dtoNode) {
+		const assignValueElement = (dtoNode as AssignStmt).getAssignValue()['#dto'] as Translate
 
 		const dtoList = Object.keys(assignValueElement)
 			.map(key => {

@@ -1,13 +1,14 @@
 import { ObjectLiteralExpression, Project, PropertyAssignment } from 'ts-morph'
 import { getConfigPath } from '@/config'
 import { HandleStatus } from '@/common/Status'
+import { resolve } from 'path'
 
 export const editAppModule = (
 	moduleName: string,
 	upperModuleName: string,
 	handleType: HandleStatus = HandleStatus.ADD
 ) => {
-	const path = getConfigPath().appModulePath
+	const path = resolve(getConfigPath().nestDir, 'app.module.ts')
 	const project = new Project()
 	project.addSourceFileAtPath(path)
 	const sourceFile = project.getSourceFileOrThrow(path)

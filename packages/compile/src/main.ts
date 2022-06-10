@@ -1,7 +1,7 @@
 import { setConfigPath } from '@/config'
 import { editVueRouter } from '@/common/EditRouter'
 
-setConfigPath({ outDir: '../api/src/', appModulePath: '../api/src/app.module.ts', outVueDir: '../web/src/' })
+setConfigPath({ nestDir: '../api/src/', webDir: '../web/src/' })
 
 editVueRouter('tool', 'Tool', {
 	routeIcon: 'plugin',

@@ -8,7 +8,7 @@ import { EntitySource } from './template'
 
 export const genEntity = (moduleName: string, upperModuleName: string, astNode: ASTNode) => {
 	const modelNode = astNode.findByKey('#model')
-	if (modelNode !== null) {
+	if (modelNode) {
 		const assignValueElement = (modelNode as AssignStmt).getAssignValue()['#model'] as Translate
 
 		const baseEntityStr = {

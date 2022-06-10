@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
 import shell from 'shelljs'
 
-const getWebPath = (filePath: string, prefixPath = '') => resolve(getConfigPath().outVueDir, prefixPath, filePath)
+const getWebPath = (filePath: string, prefixPath = '') => resolve(getConfigPath().webDir, prefixPath, filePath)
 
 export const isWebExit = (filePath: string, prefixPath = '') => existsSync(getWebPath(filePath, prefixPath))
 
@@ -17,12 +17,12 @@ export const writeWebFile = (fileName: string, source: string, prefixPath = '') 
 
 export const createWebDir = (dirPath: string) => {
 	if (!isWebExit(dirPath)) {
-		mkdirSync(resolve(getConfigPath().outVueDir, dirPath))
+		mkdirSync(resolve(getConfigPath().webDir, dirPath))
 	}
 }
 
 export const removeWebDir = (dirPath: string) => {
 	if (isWebExit(dirPath)) {
-		shell.rm('-rf', resolve(getConfigPath().outVueDir, dirPath))
+		shell.rm('-rf', resolve(getConfigPath().webDir, dirPath))
 	}
 }

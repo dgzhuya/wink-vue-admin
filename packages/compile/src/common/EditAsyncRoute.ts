@@ -4,7 +4,7 @@ import { Project, SyntaxKind } from 'ts-morph'
 import { HandleStatus } from '@/common/Status'
 
 export const editAsyncRoute = (importPath: string, importName: string, handleType: HandleStatus = HandleStatus.ADD) => {
-	const path = resolve(getConfigPath().outVueDir, 'router/module/index.ts')
+	const path = resolve(getConfigPath().webDir, 'router/module/index.ts')
 	const project = new Project()
 
 	project.addSourceFileAtPath(path)

@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
 import shell from 'shelljs'
 
-const getNestModulePath = (filePath: string, prefixPath = '') => resolve(getConfigPath().outDir, prefixPath, filePath)
+const getNestModulePath = (filePath: string, prefixPath = '') => resolve(getConfigPath().nestDir, prefixPath, filePath)
 
 export const isNestExit = (filePath: string, prefixPath = '') => existsSync(getNestModulePath(filePath, prefixPath))
 
@@ -17,12 +17,12 @@ export const writeNestFile = (fileName: string, source: string, prefixPath = '')
 
 export const createNestDir = (dirPath: string) => {
 	if (!isNestExit(dirPath)) {
-		mkdirSync(resolve(getConfigPath().outDir, dirPath))
+		mkdirSync(resolve(getConfigPath().nestDir, dirPath))
 	}
 }
 
 export const removeNestDir = (dirPath: string) => {
 	if (isNestExit(dirPath)) {
-		shell.rm('-rf', resolve(getConfigPath().outDir, dirPath))
+		shell.rm('-rf', resolve(getConfigPath().nestDir, dirPath))
 	}
 }
