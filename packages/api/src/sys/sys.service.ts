@@ -25,9 +25,7 @@ export class SysService {
 
 	async login(loginDto: LoginUserDto) {
 		const user = await this.userRepository.findOneBy({ username: loginDto.username })
-		if (user === undefined) {
-			throw new BadParamsException('40006')
-		}
+		if (!user) throw new BadParamsException('40006')
 		const result = compareSync(loginDto.password, user.password)
 		if (!result) {
 			throw new BadParamsException('40007')
