@@ -10,8 +10,8 @@ import { join } from 'path'
 
 async function bootstrap() {
 	setConfigPath({
-		nestDir: join(__dirname, '.'),
-		webDir: join(__dirname, '..', 'web')
+		nestDir: join(__dirname, '../', 'src'),
+		webDir: join(__dirname, '../../web', 'src')
 	})
 	const app = await NestFactory.create(AppModule)
 	app.useGlobalGuards(new AuthGuard())

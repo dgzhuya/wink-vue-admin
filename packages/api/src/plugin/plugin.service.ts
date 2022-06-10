@@ -166,7 +166,6 @@ export class PluginService {
 		const { data, error } = analyse(readFileSync(filePath).toString())
 		if (error) throw new BadParamsException('40019')
 		const astNode = await nodeParser(data)
-		const routerInfo = getRouterInfo(astNode)
 		const currentPermission = await this.permissionRepository.findOneBy({ key: pluginInfo.routeName })
 		if (!currentPermission) throw new BadParamsException('40025')
 		const childrenPermission = await this.permissionRepository.find({
@@ -188,7 +187,7 @@ export class PluginService {
 		}
 		await this.pluginRepository.softDelete(rid)
 		try {
-			clearModule(pluginInfo.key, routerInfo)
+			clearModule(astNode)
 		} catch (error) {
 			throw new BuildErrorException('50003')
 		}
