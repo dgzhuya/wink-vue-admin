@@ -23,7 +23,7 @@ export default defineConfig({
 				target: 'http://localhost:9527',
 				changeOrigin: true,
 				ws: true,
-				rewrite: path => path.replace(/^\/server/, '')
+				rewrite: path => path.replace(/^\/ws_server/, '')
 			}
 		}
 	},
@@ -38,7 +38,7 @@ export default defineConfig({
 				target: 'http://localhost:9527',
 				changeOrigin: true,
 				ws: true,
-				rewrite: path => path.replace(/^\/server/, '')
+				rewrite: path => path.replace(/^\/ws_server/, '')
 			}
 		}
 	},
