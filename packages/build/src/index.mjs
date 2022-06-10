@@ -24,9 +24,11 @@ wss.on('connection', (ws, request) => {
 			const resultData = JSON.parse(data.toString())
 			if (resultData && process.env.WS_KEY && resultData.key === process.env.WS_KEY && resultData.codePath) {
 				codePath = data.codePath
+				ws.send(JSON.stringify({ code: 200 }))
 			}
 		} catch (error) {
 			console.log('error:', error)
+			ws.send(JSON.stringify({ code: 500 }))
 		}
 	})
 })

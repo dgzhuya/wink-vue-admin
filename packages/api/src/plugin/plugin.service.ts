@@ -23,6 +23,7 @@ import { Permission } from '@/permission/entities/permission.entity'
 import { RolePermission } from '@/common/entities/role-permission.entity'
 import { exec } from 'child_process'
 import * as WebSocket from 'ws'
+import { BuildErrorException } from '@/common/exception/build-error-exception'
 
 @Injectable()
 export class PluginService {
@@ -116,8 +117,12 @@ export class PluginService {
 			description,
 			url: join('/static/', originalname)
 		})
-		translate(astNode)
-		return this.execFileBuild()
+		try {
+			translate(astNode)
+			return await this.execFileBuild()
+		} catch (e) {
+			throw new BuildErrorException('50001')
+		}
 	}
 
 	async findAll(skip: number, take: number, search?: string) {
@@ -134,7 +139,7 @@ export class PluginService {
 				total
 			}
 		}
-		return this.pluginRepository.find()
+		await this.pluginRepository.find()
 	}
 
 	findOne(id: number) {
@@ -178,20 +183,42 @@ export class PluginService {
 			}
 		}
 		await this.pluginRepository.softDelete(rid)
-		clearModule(pluginInfo.key, routerInfo)
-		return this.execFileBuild()
+		try {
+			clearModule(pluginInfo.key, routerInfo)
+			return await this.execFileBuild()
+		} catch (e) {
+			throw new BuildErrorException('50001')
+		}
 	}
 
 	private execFileBuild() {
-		exec(`node ${this.formatPath}`)
-		if (process.env.NODE_ENV === 'production') {
-			const codePath = Math.random().toString(36).slice(-6)
-			const ws = new WebSocket('ws://localhost:9527/build')
-			ws.on('open', () => {
-				ws.send(JSON.stringify({ key: process.env.WS_KEY, codePath }))
-				ws.close()
-			})
-			return codePath
-		}
+		let sendTimes = 0
+		return new Promise((resolve, reject) => {
+			exec(`node ${this.formatPath}`)
+			if (process.env.NODE_ENV === 'production') {
+				const codePath = Math.random().toString(36).slice(-6)
+				const ws = new WebSocket('ws://localhost:9527/build')
+				ws.on('open', () => {
+					ws.send(JSON.stringify({ key: process.env.WS_KEY, codePath }))
+				})
+
+				ws.on('message', event => {
+					if (event.data) {
+						const result = JSON.parse(event.data)
+						if (result.code === 200) {
+							ws.close()
+							resolve(codePath)
+						} else {
+							if (sendTimes < 3) {
+								sendTimes += 1
+								ws.send(JSON.stringify({ key: process.env.WS_KEY, codePath }))
+							} else {
+								reject()
+							}
+						}
+					}
+				})
+			}
+		})
 	}
 }
