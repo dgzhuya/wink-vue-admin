@@ -20,7 +20,9 @@ wss.on('connection', (ws, request) => {
 		ws.send(JSON.stringify({ code: 200, msg: '项目重启成功,即将自动刷新' }))
 	}
 	ws.on('message', data => {
-		if (data && process.env.WS_KEY && data.key === process.env.WS_KEY && data.codePath) {
+		const resultData = JSON.parse(data.toString())
+		console.log('data:', resultData)
+		if (resultData && process.env.WS_KEY && resultData.key === process.env.WS_KEY && resultData.codePath) {
 			codePath = data.codePath
 		}
 	})

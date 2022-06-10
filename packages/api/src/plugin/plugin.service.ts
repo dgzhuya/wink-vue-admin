@@ -22,7 +22,7 @@ import { DefaultPluginInfo } from '@/config/plugin'
 import { Permission } from '@/permission/entities/permission.entity'
 import { RolePermission } from '@/common/entities/role-permission.entity'
 import { exec } from 'child_process'
-import WebSocket from 'ws'
+import * as WebSocket from 'ws'
 
 @Injectable()
 export class PluginService {
@@ -183,13 +183,13 @@ export class PluginService {
 	}
 
 	private execFileBuild() {
-		console.log(this.formatPath)
-		// exec(`node ${this.formatPath}`)
+		exec(`node ${this.formatPath}`)
 		if (process.env.NODE_ENV === 'production') {
 			const codePath = Math.random().toString(36).slice(-6)
 			const ws = new WebSocket('ws://localhost:9527/build')
 			ws.on('open', () => {
-				ws.send({ key: process.env.WS_KEY, codePath })
+				ws.send(JSON.stringify({ key: process.env.WS_KEY, codePath }))
+				ws.close()
 			})
 			return codePath
 		}
