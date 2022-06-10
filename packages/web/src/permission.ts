@@ -12,14 +12,16 @@ router.beforeEach(async (to, form, next) => {
 		if (!user.hasUserInfo) {
 			await user.fetchUserInfo()
 			const permissions = user.getPermissions
-			const permissionsRoutes = filterPermissionRouters(asyncRoutes, permissions)
-			permissionsRoutes.forEach(route => router.addRoute(route))
-			router.addRoute({
-				path: '/:pathMath(.*)',
-				name: '404',
-				redirect: '/404'
-			})
-			return next(to.path)
+			if (permissions.length > 0) {
+				const permissionsRoutes = filterPermissionRouters(asyncRoutes, permissions)
+				permissionsRoutes.forEach(route => router.addRoute(route))
+				router.addRoute({
+					path: '/:pathMath(.*)',
+					name: '404',
+					redirect: '/404'
+				})
+				return next(to.path)
+			}
 		}
 		if (to.meta.noAuth) {
 			next('/')
