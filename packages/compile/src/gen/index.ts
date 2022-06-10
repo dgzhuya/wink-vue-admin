@@ -2,7 +2,7 @@ import { ASTNode } from '@/parser/ast/ASTNode'
 import { upperCase } from '@/gen/util/upperCase'
 import { genNestModule } from '@/gen/sources'
 import { genVueCode } from '@/gen/vue'
-import { getModuleName, RouterConfig } from '@/gen/util/getInfoByAST'
+import { getModuleName, getRouterInfo } from '@/gen/util/getInfoByAST'
 import { removeNestDir } from '@/gen/sources/util/fileUtil'
 import { editAppModule } from '@/common/EditAppModule'
 import { HandleStatus } from '@/common/Status'
@@ -18,7 +18,9 @@ export const translate = (astNode: ASTNode) => {
 	genVueCode(moduleName, upperModuleName, astNode)
 }
 
-export const clearModule = (moduleName: string, routerConfig: RouterConfig) => {
+export const clearModule = (astNode: ASTNode) => {
+	const moduleName = getModuleName(astNode)
+	const routerConfig = getRouterInfo(astNode)
 	removeNestDir(moduleName)
 	const upperModuleName = upperCase(moduleName)
 	editAppModule(moduleName, upperModuleName, HandleStatus.REMOVE)

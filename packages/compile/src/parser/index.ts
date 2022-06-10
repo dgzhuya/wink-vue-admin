@@ -1,4 +1,4 @@
-import { Token } from '../lexer/Token'
+import { Token } from '@/lexer/Token'
 import { ASTNode } from './ast/ASTNode'
 import { NodeType } from './ast/NodeType'
 import { AssignStmt } from './ast/AssignStmt'
