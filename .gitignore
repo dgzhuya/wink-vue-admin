@@ -12,3 +12,5 @@ example/
 auto-imports.d.ts
 components.d.ts
 static/
+logs/
+*.log

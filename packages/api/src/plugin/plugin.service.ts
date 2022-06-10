@@ -107,7 +107,7 @@ export class PluginService {
 			parentId: currentPermission.id,
 			key: `${routerInfo.parentPath}_${routerInfo.path}_delete`
 		})
-		await writeFileSync(join(staticDir, originalname), buffer)
+		writeFileSync(join(staticDir, originalname), buffer)
 		await this.pluginRepository.save({
 			routeName,
 			routePath,
@@ -183,10 +183,11 @@ export class PluginService {
 	}
 
 	private execFileBuild() {
-		exec(`node ${this.formatPath}`)
+		console.log(this.formatPath)
+		// exec(`node ${this.formatPath}`)
 		if (process.env.NODE_ENV === 'production') {
 			const codePath = Math.random().toString(36).slice(-6)
-			const ws = new WebSocket('ws://localhost:8081/build')
+			const ws = new WebSocket('ws://localhost:9527/build')
 			ws.on('open', () => {
 				ws.send({ key: process.env.WS_KEY, codePath })
 			})

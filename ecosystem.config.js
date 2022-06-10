@@ -1,8 +1,13 @@
+const path = require('path')
+
+console.log(path.resolve(__dirname, 'packages/api/'))
+
 module.exports = {
 	apps: [
 		{
 			name: 'wink-api',
-			script: 'packages/api/dist/main.js',
+			script: 'dist/main.js',
+			cwd: path.resolve(__dirname, 'packages/api/'),
 			env: {
 				NODE_ENV: 'production',
 				WS_KEY: 'ws_key'
@@ -10,7 +15,8 @@ module.exports = {
 		},
 		{
 			name: 'wink-build',
-			script: 'packages/build/src/index.mjs',
+			script: 'src/index.mjs',
+			cwd: path.resolve(__dirname, 'packages/build/'),
 			env: {
 				NODE_ENV: 'production',
 				WS_KEY: 'ws_key'
