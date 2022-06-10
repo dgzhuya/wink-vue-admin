@@ -119,6 +119,10 @@ export class PluginService {
 		})
 		try {
 			translate(astNode)
+		} catch (error) {
+			throw new BuildErrorException('50002')
+		}
+		try {
 			return await this.execFileBuild()
 		} catch (e) {
 			throw new BuildErrorException('50001')
@@ -185,6 +189,10 @@ export class PluginService {
 		await this.pluginRepository.softDelete(rid)
 		try {
 			clearModule(pluginInfo.key, routerInfo)
+		} catch (error) {
+			throw new BuildErrorException('50003')
+		}
+		try {
 			return await this.execFileBuild()
 		} catch (e) {
 			throw new BuildErrorException('50001')
@@ -195,31 +203,31 @@ export class PluginService {
 		let sendTimes = 0
 		return new Promise((resolve, reject) => {
 			exec(`node ${this.formatPath}`)
-			if (process.env.NODE_ENV === 'production') {
-				const codePath = Math.random().toString(36).slice(-6)
-				const ws = new WebSocket('ws://localhost:9527/build')
-				ws.on('open', () => {
-					ws.send(JSON.stringify({ key: process.env.WS_KEY, codePath }))
-				})
+			// if (process.env.NODE_ENV === 'production') {
+			const codePath = Math.random().toString(36).slice(-6)
+			const ws = new WebSocket('ws://localhost:9527/build')
+			ws.on('open', () => {
+				ws.send(JSON.stringify({ key: 'ws_key', codePath }))
+			})
 
-				ws.on('message', event => {
-					const data = event.toString()
-					if (data) {
-						const result = JSON.parse(data)
-						if (result.code === 200) {
-							ws.close()
-							resolve(codePath)
+			ws.on('message', event => {
+				const data = event.toString()
+				if (data) {
+					const result = JSON.parse(data)
+					if (result.code === 200) {
+						ws.close()
+						resolve(codePath)
+					} else {
+						if (sendTimes < 3) {
+							sendTimes += 1
+							ws.send(JSON.stringify({ key: 'ws_key', codePath }))
 						} else {
-							if (sendTimes < 3) {
-								sendTimes += 1
-								ws.send(JSON.stringify({ key: process.env.WS_KEY, codePath }))
-							} else {
-								reject()
-							}
+							reject()
 						}
 					}
-				})
-			}
+				}
+			})
+			// }
 		})
 	}
 }
