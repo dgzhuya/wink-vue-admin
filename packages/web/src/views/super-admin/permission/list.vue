@@ -5,6 +5,8 @@
 	import { showFormEffect } from '@/effect/show-form'
 	import { PermissionModel } from '@/types/super-admin/permission'
 	import { dateHandler } from '@/utils/format'
+	import { toast } from '@/utils/toast'
+	import { error } from 'console'
 	import PermissionForm from './permission-form.vue'
 
 	const loadChildren = async (
@@ -17,6 +19,7 @@
 
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getPermissionList)
 	const { deleteHandler } = deleteEffect(deletePermission, async () => tableCloseHandler(true), '此权限')
+
 	onMounted(async () => {
 		await fetchHandler()
 	})
@@ -25,6 +28,34 @@
 	const permissionActive = ref<PermissionModel | null>(null)
 	const { showExtraHandler, closeHandler, showModel } = showFormEffect(permissionActive, fetchHandler, parentId)
 	const tableDOM = ref()
+
+	const tableDeleteHandler = (pid: number) => {
+		if (tableData.value && tableDOM.value) {
+			const isTable = tableData.value.map(i => i.id).includes(pid)
+			if (isTable) {
+				deleteHandler(pid)
+			} else {
+				const treeNodeMap = tableDOM.value.store.states.lazyTreeNodeMap
+				const mapKeys = Object.keys(treeNodeMap.value)
+				for (let i = 0; i < mapKeys.length; i++) {
+					const mapKey = mapKeys[i]
+					const resultIndex = treeNodeMap.value[mapKey].findIndex((i: any) => i.id === pid)
+					if (resultIndex !== -1) {
+						const deleteItem = treeNodeMap.value[mapKey][resultIndex]
+						if (deleteItem.hasChildren) {
+							deleteHandler(pid)
+						} else {
+							deleteHandler(pid, false).then(status => {
+								if (status === 'ok') treeNodeMap.value[mapKey].splice(resultIndex, 1)
+							})
+						}
+						break
+					}
+				}
+			}
+		}
+	}
+
 	const tableCloseHandler = (refresh: boolean) => {
 		if (refresh && tableDOM.value) {
 			if ((permissionActive.value !== null && permissionActive.value.parentId) || parentId.value !== -1) {
@@ -120,7 +151,7 @@
 						<el-button
 							type="danger"
 							v-permission="['super-admin_permission_delete']"
-							@click="deleteHandler(row.id)"
+							@click="tableDeleteHandler(row.id)"
 							size="small"
 							>删除</el-button
 						>
