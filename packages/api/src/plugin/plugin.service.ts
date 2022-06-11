@@ -206,7 +206,7 @@ export class PluginService {
 				const codePath = Math.random().toString(36).slice(-6)
 				const ws = new WebSocket('ws://localhost:9527/build')
 				ws.on('open', () => {
-					ws.send(JSON.stringify({ key: 'ws_key', codePath }))
+					ws.send(JSON.stringify({ key: process.env.WS_KEY, codePath }))
 				})
 
 				ws.on('message', event => {
@@ -219,7 +219,7 @@ export class PluginService {
 						} else {
 							if (sendTimes < 3) {
 								sendTimes += 1
-								ws.send(JSON.stringify({ key: 'ws_key', codePath }))
+								ws.send(JSON.stringify({ key: process.env.WS_KEY, codePath }))
 							} else {
 								reject()
 							}
