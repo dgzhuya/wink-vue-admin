@@ -47,3 +47,5 @@
   ```sh
   pnpm preview
   ``` 
+- 项目登录：默认用户名为super-admin,密码为123456
+  
