@@ -4,6 +4,7 @@ import { SysService } from '@/sys/sys.service'
 import { NoAuthApi, NoAuthToken } from '@/common/utils/passport'
 import { TOKEN_ROLE_ID, TOKEN_USER_ID } from '@/config/auth-config'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
+import { ResetPasswordDto } from '@/sys/dto/reset-password.dto'
 
 @Controller('sys')
 export class SysController {
@@ -25,6 +26,11 @@ export class SysController {
 			throw new BadParamsException('40013')
 		}
 		return this.sysService.toggleUserRole(+uid, +rid)
+	}
+
+	@Post('password')
+	resetPassword(@Body() passwordDto: ResetPasswordDto, @Query(TOKEN_USER_ID) uid: string) {
+		return this.sysService.resetPassword(passwordDto, +uid)
 	}
 
 	@NoAuthToken()

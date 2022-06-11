@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { compareSync } from 'bcryptjs'
+import { compareSync, hash } from 'bcryptjs'
 import { LoginUserDto } from '@/sys/dto/login-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from '@/user/entities/user.entity'
@@ -12,6 +12,7 @@ import { Permission } from '@/permission/entities/permission.entity'
 import { UserRole } from '@/common/entities/user-role.entity'
 import { RolePermission } from '@/common/entities/role-permission.entity'
 import { filter } from '@/common/utils/filter'
+import { ResetPasswordDto } from '@/sys/dto/reset-password.dto'
 
 @Injectable()
 export class SysService {
@@ -27,9 +28,8 @@ export class SysService {
 		const user = await this.userRepository.findOneBy({ username: loginDto.username })
 		if (!user) throw new BadParamsException('40006')
 		const result = compareSync(loginDto.password, user.password)
-		if (!result) {
-			throw new BadParamsException('40007')
-		}
+		if (!result) throw new BadParamsException('40007')
+
 		const userRole = await this.userRoleRepository.findOne({
 			where: {
 				userId: user.id,
@@ -45,6 +45,15 @@ export class SysService {
 				expiresIn: '5d'
 			})
 		}
+	}
+
+	async resetPassword(resetPasswordDto: ResetPasswordDto, uid: number) {
+		const user = await this.userRepository.findOneBy({ id: uid })
+		if (!user) throw new BadParamsException('40006')
+		const result = compareSync(resetPasswordDto.currentPassword, user.password)
+		if (!result) throw new BadParamsException('40007')
+		const newPassword = await hash(resetPasswordDto.newPassword, 10)
+		return this.userRepository.update(uid, { password: newPassword })
 	}
 
 	async toggleUserRole(uid: number, rid: number) {
