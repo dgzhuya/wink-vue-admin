@@ -202,31 +202,31 @@ export class PluginService {
 		let sendTimes = 0
 		return new Promise((resolve, reject) => {
 			exec(`node ${this.formatPath}`)
-			// if (process.env.NODE_ENV === 'production') {
-			const codePath = Math.random().toString(36).slice(-6)
-			const ws = new WebSocket('ws://localhost:9527/build')
-			ws.on('open', () => {
-				ws.send(JSON.stringify({ key: 'ws_key', codePath }))
-			})
+			if (process.env.NODE_ENV === 'production') {
+				const codePath = Math.random().toString(36).slice(-6)
+				const ws = new WebSocket('ws://localhost:9527/build')
+				ws.on('open', () => {
+					ws.send(JSON.stringify({ key: 'ws_key', codePath }))
+				})
 
-			ws.on('message', event => {
-				const data = event.toString()
-				if (data) {
-					const result = JSON.parse(data)
-					if (result.code === 200) {
-						ws.close()
-						resolve(codePath)
-					} else {
-						if (sendTimes < 3) {
-							sendTimes += 1
-							ws.send(JSON.stringify({ key: 'ws_key', codePath }))
+				ws.on('message', event => {
+					const data = event.toString()
+					if (data) {
+						const result = JSON.parse(data)
+						if (result.code === 200) {
+							ws.close()
+							resolve(codePath)
 						} else {
-							reject()
+							if (sendTimes < 3) {
+								sendTimes += 1
+								ws.send(JSON.stringify({ key: 'ws_key', codePath }))
+							} else {
+								reject()
+							}
 						}
 					}
-				}
-			})
-			// }
+				})
+			}
 		})
 	}
 }
