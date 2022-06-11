@@ -15,7 +15,7 @@
 		<div class="user-profile">
 			<div class="box-center">
 				<pan-thumb :image="info.avatar" height="100px" width="100px">
-					<div>Hello</div>
+					<div>wink</div>
 				</pan-thumb>
 			</div>
 			<div class="box-center">

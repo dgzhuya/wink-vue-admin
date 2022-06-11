@@ -7,3 +7,8 @@ export interface BaseModel {
 	updateTime?: string
 	createTime?: string
 }
+
+export interface ResetParams {
+	currentPassword: string
+	newPassword: string
+}
