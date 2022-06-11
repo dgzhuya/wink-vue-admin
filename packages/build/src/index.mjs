@@ -8,10 +8,10 @@ let codePath = ''
 wss.on('connection', (ws, request) => {
 	if (codePath !== '' && request.url === `/build/${codePath}`) {
 		codePath = ''
-		ws.send(JSON.stringify({ code: 200, msg: '开始编译API' }))
+		ws.send(JSON.stringify({ code: 200, msg: '编译API' }))
 		shell.cd('../api')
 		shell.exec('npm run build')
-		ws.send(JSON.stringify({ code: 200, msg: '开始编译web' }))
+		ws.send(JSON.stringify({ code: 200, msg: '编译web' }))
 		shell.cd('../web')
 		shell.exec('npm run build:prod')
 		if (fs.existsSync('/var/www/admin_web')) {
@@ -23,9 +23,9 @@ wss.on('connection', (ws, request) => {
 			)
 			shell.cp('-r', './dist/*', '/var/www/admin_web/')
 		}
-		ws.send(JSON.stringify({ code: 200, msg: '项目编译成功,开始重启' }))
+		ws.send(JSON.stringify({ code: 200, msg: '重启项目' }))
 		shell.exec('pm2 restart wink-api')
-		ws.send(JSON.stringify({ code: 201, msg: '项目重启成功' }))
+		ws.send(JSON.stringify({ code: 201, msg: '页面刷新' }))
 	}
 	ws.on('message', data => {
 		try {
