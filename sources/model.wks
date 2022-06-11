@@ -1,7 +1,8 @@
-#name: "plugin"
+// 插件唯一名称
+#name: "wechat"
 // api or database
-#comment: "插件"
-#description: "插件管理说明" 
+#comment: "微信插件"
+#description: "用于渲染微信小程序页面" 
 #way: "database"
 #model {
 	id: @id @number
@@ -30,10 +31,10 @@
 	parentTitle: '工具管理'
 	parentName: 'Tool'
 	parentIcon: 'personnel'
-	path: 'plugin'
-	title: '插件管理'
+	path: 'wechat'
+	title: '微信工具'
 	icon: 'plugin'
-	name: 'ToolPlugin'
+	name: 'WechatPlugin'
 }
 
 #table {
