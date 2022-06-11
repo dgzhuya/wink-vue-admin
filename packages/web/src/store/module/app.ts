@@ -27,7 +27,7 @@ export const useApp = defineStore('app', {
 				setItem(TAGS_VIEW, this.$state.tagViewList)
 			}
 		},
-		async removeTagView(index: number, type: 'other' | 'right' | 'index' = 'index') {
+		async removeTagView(index: number, activePath: string, type: 'other' | 'right' | 'index' = 'index') {
 			const len = this.$state.tagViewList.length
 			if (index >= 0 && index < len) {
 				switch (type) {
@@ -48,7 +48,9 @@ export const useApp = defineStore('app', {
 						break
 				}
 				const lastTag = this.$state.tagViewList[this.$state.tagViewList.length - 1]
-				await router.push(lastTag.path)
+				if (activePath && !this.$state.tagViewList.map(tag => tag.path).includes(activePath)) {
+					await router.push(lastTag.path)
+				}
 				setItem(TAGS_VIEW, this.$state.tagViewList)
 			}
 		}

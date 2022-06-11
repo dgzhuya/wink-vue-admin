@@ -8,7 +8,7 @@
 	const { cssVar } = storeToRefs(useTheme())
 	const { tagViewList, showTags } = storeToRefs(useApp())
 	const isActive = (tagPath: string) => tagPath === route.fullPath
-	const app = useApp()
+	const { removeTagView } = useApp()
 
 	const selectIndex = ref(0)
 	const visible = ref(false)
@@ -48,7 +48,11 @@
 			:to="{ path: tag.fullPath }"
 		>
 			{{ tag.title }}
-			<svg-icon icon="close" class-name="el-icon-close" @click.prevent.stop="app.removeTagView(index)"></svg-icon>
+			<svg-icon
+				icon="close"
+				class-name="el-icon-close"
+				@click.prevent.stop="removeTagView(index, route.fullPath)"
+			></svg-icon>
 		</router-link>
 	</div>
 	<context-menu v-show="visible" :style="menuStyle" :index="selectIndex"></context-menu>

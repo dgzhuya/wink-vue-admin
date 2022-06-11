@@ -7,13 +7,15 @@
 	const onRefreshClick = () => {
 		router.go(0)
 	}
-	const app = useApp()
+	const route = useRoute()
+
+	const { removeTagView } = useApp()
 </script>
 <template>
 	<ul class="context-menu-container">
 		<li @click="onRefreshClick">刷新</li>
-		<li @click="app.removeTagView(index, 'right')">关闭右边</li>
-		<li @click="app.removeTagView(index, 'right')">关闭其他</li>
+		<li @click="removeTagView(index, route.fullPath, 'right')">关闭右边</li>
+		<li @click="removeTagView(index, route.fullPath, 'right')">关闭其他</li>
 	</ul>
 </template>
 <style lang="scss" scoped>
