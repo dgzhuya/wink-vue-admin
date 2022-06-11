@@ -1,7 +1,6 @@
 import { toast } from './toast'
 
 export const showLoading = ref<boolean>(false)
-export const showLoadingText = ref<string>('')
 
 export const webScoket = (wsPath: string) => {
 	const wsProtocol = document.location.protocol === 'https:' ? 's' : ''
@@ -10,15 +9,15 @@ export const webScoket = (wsPath: string) => {
 	ws.addEventListener('message', event => {
 		try {
 			const result = JSON.parse(event.data)
-			showLoadingText.value = result.msg
-			toast(result.msg, 'success')
 			if (result.code === 201) {
 				showLoading.value = false
-				showLoadingText.value = ''
 				ws.close()
+				toast(result.msg, 'success')
 				setTimeout(() => {
 					window.location.href = ''
-				}, 500)
+				}, 2000)
+			} else {
+				toast(`开始${result.msg}`, 'success')
 			}
 		} catch (error) {
 			showLoading.value = false

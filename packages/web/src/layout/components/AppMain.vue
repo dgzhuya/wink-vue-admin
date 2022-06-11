@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 	import { useApp } from '@/store/module/app'
-	import { showLoading, showLoadingText } from '@/utils/webSocket'
+	import { showLoading } from '@/utils/webSocket'
 
 	const app = useApp()
 </script>
 <template>
 	<div
 		v-loading="showLoading"
-		:element-loading-text="showLoadingText"
+		element-loading-text="编译中..."
 		class="app-main"
 		:class="app.showTags ? 'show-tags' : 'hidden-tags'"
 	>

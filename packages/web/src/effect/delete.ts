@@ -15,10 +15,6 @@ export const deleteEffect = (
 				buttonSize: 'small'
 			})
 			await deleteFunc(id)
-			ElMessage({
-				type: 'success',
-				message: '删除成功'
-			})
 			if (refresh) await fetchFunc()
 			return 'ok'
 		} catch (error) {
