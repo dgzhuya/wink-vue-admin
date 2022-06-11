@@ -7,8 +7,8 @@
 	const loginFormRef = ref<FormInstance>()
 
 	const loginForm = ref({
-		username: 'super-admin',
-		password: '123456'
+		username: '',
+		password: ''
 	})
 </script>
 <template>
