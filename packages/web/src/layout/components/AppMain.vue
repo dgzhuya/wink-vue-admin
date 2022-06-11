@@ -1,10 +1,16 @@
 <script lang="ts" setup>
 	import { useApp } from '@/store/module/app'
+	import { showLoading, showLoadingText } from '@/utils/webSocket'
 
 	const app = useApp()
 </script>
 <template>
-	<div class="app-main" :class="app.showTags ? 'show-tags' : 'hidden-tags'">
+	<div
+		v-loading="showLoading"
+		:element-loading-text="showLoadingText"
+		class="app-main"
+		:class="app.showTags ? 'show-tags' : 'hidden-tags'"
+	>
 		<router-view v-slot="{ Component, route }">
 			<transition name="fade-tranform" mode="out-in">
 				<keep-alive>
