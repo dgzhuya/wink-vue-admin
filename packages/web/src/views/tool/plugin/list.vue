@@ -69,7 +69,6 @@
 			<el-table :data="tableData" border class="list-table-container">
 				<el-table-column prop="id" label="id"> </el-table-column>
 				<el-table-column prop="name" label="插件名称"> </el-table-column>
-				<el-table-column prop="url" label="插件URL"> </el-table-column>
 				<el-table-column prop="description" label="插件描述"> </el-table-column>
 				<el-table-column label="创建时间" :width="180">
 					<template #default="{ row }">

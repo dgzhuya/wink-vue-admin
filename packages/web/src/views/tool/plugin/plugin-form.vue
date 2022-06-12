@@ -61,9 +61,6 @@
 			<el-form-item label="插件描述">
 				<el-input v-model="pluginInfo.description" maxlength="100" show-word-limit type="textarea" />
 			</el-form-item>
-			<el-form-item label="插件URL">
-				<el-input v-model="pluginInfo.url" />
-			</el-form-item>
 		</el-form>
 		<template #footer>
 			<div class="form-footer">
