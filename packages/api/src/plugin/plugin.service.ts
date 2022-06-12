@@ -4,7 +4,6 @@ import { In, Repository } from 'typeorm'
 import { UpdatePluginDto } from './dto/update-plugin.dto'
 import { Plugin } from './entities/plugin.entity'
 import { isNotNull } from '@/common/utils/isNotNull'
-import { Express } from 'express'
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs'
 import { join } from 'path'
 import {
@@ -27,7 +26,6 @@ import { BuildErrorException } from '@/common/exception/build-error-exception'
 
 @Injectable()
 export class PluginService {
-	private timer: NodeJS.Timeout | null
 	private readonly formatPath: string
 
 	constructor(
@@ -35,7 +33,6 @@ export class PluginService {
 		@InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
 		@InjectRepository(RolePermission) private readonly rolePermissionRepository: Repository<RolePermission>
 	) {
-		this.timer = null
 		this.formatPath = join(__dirname, '../../../../', 'script/format.mjs')
 	}
 
@@ -45,6 +42,7 @@ export class PluginService {
 		if (!existsSync(staticDir)) {
 			mkdirSync(staticDir)
 		}
+		if (existsSync(join(staticDir, originalname))) throw new BadParamsException('40026')
 		const { data, error } = analyse(buffer.toString())
 		if (error) throw new BadParamsException('40019')
 		const astNode = await nodeParser(data)
@@ -115,7 +113,7 @@ export class PluginService {
 			name: comment,
 			key: pluginName,
 			description,
-			url: join('/static/', originalname)
+			url: originalname
 		})
 		try {
 			translate(astNode)
