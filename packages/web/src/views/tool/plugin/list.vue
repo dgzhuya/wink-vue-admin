@@ -48,6 +48,8 @@
 			}
 		}
 	}
+
+	const genPluginUrl = (fileName: string) => `${window.location.protocol}//${window.location.host}/server/${fileName}`
 </script>
 
 <template>
@@ -70,6 +72,11 @@
 				<el-table-column prop="id" label="id"> </el-table-column>
 				<el-table-column prop="name" label="插件名称"> </el-table-column>
 				<el-table-column prop="description" label="插件描述"> </el-table-column>
+				<el-table-column label="插件地址" :width="180">
+					<template #default="{ row }">
+						<a style="color: #3295fa; text-decoration: underline" :href="genPluginUrl(row.url)">点击下载</a>
+					</template>
+				</el-table-column>
 				<el-table-column label="创建时间" :width="180">
 					<template #default="{ row }">
 						{{ dateHandler(row.createTime) }}
