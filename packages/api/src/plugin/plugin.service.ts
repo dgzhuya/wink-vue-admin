@@ -4,7 +4,7 @@ import { In, Repository } from 'typeorm'
 import { UpdatePluginDto } from './dto/update-plugin.dto'
 import { Plugin } from './entities/plugin.entity'
 import { isNotNull } from '@/common/utils/isNotNull'
-import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs'
+import { writeFileSync, existsSync, mkdirSync, readFileSync, renameSync } from 'fs'
 import { join } from 'path'
 import {
 	nodeParser,
@@ -160,7 +160,7 @@ export class PluginService {
 		const pluginInfo = await this.pluginRepository.findOneBy({ id: rid })
 		if (!pluginInfo) throw new BadParamsException('40024')
 
-		const filePath = join(process.cwd(), pluginInfo.url)
+		const filePath = join(process.cwd(), 'static', pluginInfo.url)
 		const { data, error } = analyse(readFileSync(filePath).toString())
 		if (error) throw new BadParamsException('40019')
 		const astNode = await nodeParser(data)
@@ -184,6 +184,7 @@ export class PluginService {
 			}
 		}
 		await this.pluginRepository.softDelete(rid)
+		renameSync(filePath, `${filePath}.bak`)
 		try {
 			clearModule(astNode)
 		} catch (error) {
