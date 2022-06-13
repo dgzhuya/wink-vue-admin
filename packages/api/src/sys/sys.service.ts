@@ -42,7 +42,7 @@ export class SysService {
 		}
 		return {
 			token: sign({ uid: `${user.id}`, rid: `${userRole.roleId}` }, JwtSalt, {
-				expiresIn: '5d'
+				expiresIn: '10h'
 			})
 		}
 	}

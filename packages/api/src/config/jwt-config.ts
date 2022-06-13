@@ -1,1 +1,1 @@
-export const JwtSalt = 'admin-api-7749'
+export const JwtSalt = 'admin-api-9527'
