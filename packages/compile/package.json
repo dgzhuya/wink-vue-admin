@@ -7,7 +7,7 @@
 		"dist"
 	],
 	"scripts": {
-		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+		"format": "prettier --write \\\"src/**/*.ts\\\" \\\"__test__/**/*.ts\\\"",
 		"test": "esno src/main.ts"
 	},
 	"author": "pinktu",

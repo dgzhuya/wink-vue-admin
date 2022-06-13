@@ -3,12 +3,10 @@ import { translate } from '@/gen'
 import { analyse } from '@/lexer'
 import { nodeParser } from '@/parser'
 import { readFileSync } from 'fs'
-import { resolve } from 'path'
 
 it('gen module', () => {
-	const path = resolve(__dirname, '../../../sources/model.wks')
-	setConfigPath({ outDir: '../api/src/', appModulePath: '../api/src/app.module.ts' })
-	const source = readFileSync(path).toString()
+	setConfigPath({ nestDir: '../api/src/', webDir: '../web/src/' })
+	const source = readFileSync('../../sources/model.wks').toString()
 	const result = analyse(source)
 	if (!result.error) {
 		nodeParser(result.data).then(node => {

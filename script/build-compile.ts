@@ -2,7 +2,6 @@ import { OutputOptions, rollup, RollupBuild, RollupOptions } from 'rollup'
 import ts from 'rollup-plugin-typescript2'
 import json from '@rollup/plugin-json'
 import common from '@rollup/plugin-commonjs'
-import { terser } from 'rollup-plugin-terser'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import dts from 'rollup-plugin-dts'
 import { resolve } from 'path'
@@ -20,7 +19,6 @@ const configOptions: RollupOptions = {
 		json(),
 		nodeResolve(),
 		common(),
-		terser(),
 		ts({
 			tsconfig: targetPath('tsconfig.json')
 		})
