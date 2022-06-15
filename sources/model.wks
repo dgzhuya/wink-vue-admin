@@ -1,19 +1,17 @@
 // 插件唯一名称
-#name: "wechat"
+#name: "demo"
 // api or database
-#comment: "微信插件"
-#description: "用于渲染微信小程序页面" 
+#comment: "测试数据"
+#description: "用于测试插件数据" 
 #way: "database"
 #model {
 	id: @id @number
-	url: @string
 	name: @string
 	description: @string @nullable
 	base: @DateEntity
 }
 
 #dto {
-	url: @string
 	name: @string
 	description: @string
 }
@@ -31,23 +29,21 @@
 	parentTitle: '工具管理'
 	parentName: 'Tool'
 	parentIcon: 'personnel'
-	path: 'wechat'
-	title: '微信工具'
+	path: 'demo'
+	title: '测试路由'
 	icon: 'plugin'
-	name: 'WechatPlugin'
+	name: 'DemoPlugin'
 }
 
 #table {
 	id: @number @comment("id")
-	name: @string @comment("插件名称")
-	url: @string @comment("插件URL")
-	description: @string @comment("插件描述")
+	name: @string @comment("名称")
+	description: @string @comment("描述")
 	createTime: @string @date @comment("创建时间")
 	updateTime: @string @date @comment("修改时间")
 }
 
 #form {
-	name: @string @comment("插件名称")
-	description: @string @textarea @comment("插件描述")
-	url: @string @comment("插件URL")
+	name: @string @comment("名称")
+	description: @string @textarea @comment("描述")
 }

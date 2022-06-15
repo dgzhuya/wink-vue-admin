@@ -4,8 +4,7 @@
 	"description": "vue+nestjs开发的后台管理系统",
 	"scripts": {
 		"commit": "git add --all&&cz",
-		"format": "prettier --write \"packages/**/*.ts\" \"packages/**/*.vue\" \"packages/**/*.json\"",
-		"build:format": "node script/format.mjs",
+		"format": "node script/format.mjs",
 		"build:compile": "esno script/build-compile.ts"
 	},
 	"keywords": [
@@ -50,3 +49,4 @@
 		}
 	}
 }
+
