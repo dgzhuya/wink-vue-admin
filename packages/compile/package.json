@@ -1,7 +1,8 @@
 {
-	"name": "@wink/compile",
-	"version": "1.0.0",
-	"description": "",
+	"name": "wink-creater",
+	"version": "1.0.1",
+	"description": "一个简单的编译工具",
+	"license": "MIT",
 	"main": "dist/index.js",
 	"files": [
 		"dist"
@@ -34,5 +35,9 @@
 	"dependencies": {
 		"shelljs": "^0.8.5",
 		"ts-morph": "^15.1.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/dgzhuya/wink-vue-admin/tree/main/packages/compile"
 	}
 }
