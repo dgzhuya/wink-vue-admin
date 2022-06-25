@@ -27,7 +27,6 @@
 		"@nestjs/platform-express": "^8.4.6",
 		"@nestjs/serve-static": "^2.2.2",
 		"@nestjs/typeorm": "8.1.2",
-		"@wink/compile": "workspace:^1.0.0",
 		"bcryptjs": "^2.4.3",
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.13.2",
@@ -38,6 +37,7 @@
 		"rxjs": "^7.5.5",
 		"sqlite3": "^5.0.8",
 		"typeorm": "^0.3.6",
+		"wink-creater": "workspace:^1.0.1",
 		"ws": "^8.8.0"
 	},
 	"devDependencies": {

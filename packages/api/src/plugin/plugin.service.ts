@@ -15,7 +15,7 @@ import {
 	translate,
 	getModuleComment,
 	clearModule
-} from '@wink/compile'
+} from 'wink-creater'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { DefaultPluginInfo } from '@/config/plugin'
 import { Permission } from '@/permission/entities/permission.entity'

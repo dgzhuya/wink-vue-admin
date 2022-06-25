@@ -5,7 +5,7 @@ import { ServerExceptionFilter } from './common/filters/server-execption.filter'
 import { TransformInterceptor } from './common/interceptor/transform.interceptor'
 import { ValidationPipe } from './common/pipe/validation.pipe'
 import { AuthGuard } from '@/common/guard/auth.guard'
-import { setConfigPath } from '@wink/compile'
+import { setConfigPath } from 'wink-creater'
 import { join } from 'path'
 
 async function bootstrap() {
