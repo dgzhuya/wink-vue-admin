@@ -6,9 +6,15 @@
 
 > 本项目使用pnpm管理,请提前安装 [pnpm](https://pnpm.io/)
 
-- 项目依赖
-  ```sh
+* 项目依赖
+
+  ```shell
   pnpm i
+  ```
+* 编译compile，然后再次安装
+
+  ```shell
+  pnpm build:compile && pnpm i
   ```
 
 ### 运行服务
@@ -20,6 +26,7 @@
 #### 直接运行
 
 - 运行API服务
+
   > 在packages/api目录运行命令
   >
 
@@ -27,6 +34,7 @@
   pnpm start:dev
   ```
 - 运行build服务
+
   > 进入packages/build目录运行命令
   >
 
@@ -34,6 +42,7 @@
   pnpm dev
   ```
 - 运行前端项目
+
   > 进入packages/web目录运行命令
   >
 
@@ -45,7 +54,16 @@
 
 > 需要提前安装[pm2](https://pm2.keymetrics.io/docs/usage/quick-start/)
 
+- 编译API文件
+
+  > 进入package/api目录运行
+  >
+
+  ```shell
+  pnpm build
+  ```
 - pm2运行后端
+
   > 在根目录下运行命令
   >
 
@@ -53,6 +71,7 @@
   pm2 start
   ```
 - 运行前端项目
+
   > 进入packages/web目录运行命令
   >
 
