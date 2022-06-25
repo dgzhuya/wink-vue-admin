@@ -1,11 +1,12 @@
 {
 	"name": "wink-creater",
-	"version": "1.0.1",
+	"version": "1.0.3",
 	"description": "一个简单的编译工具",
 	"license": "MIT",
 	"main": "dist/index.js",
 	"files": [
-		"dist"
+		"dist",
+		"README.md"
 	],
 	"scripts": {
 		"format": "prettier --write \\\"src/**/*.ts\\\" \\\"__test__/**/*.ts\\\"",
