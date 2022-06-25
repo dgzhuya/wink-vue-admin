@@ -1,6 +1,6 @@
 {
 	"name": "wink-creater",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "一个简单的编译工具",
 	"license": "MIT",
 	"main": "dist/index.js",
