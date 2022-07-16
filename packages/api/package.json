@@ -36,7 +36,8 @@
 		"rxjs": "^7.5.6",
 		"sqlite3": "^5.0.9",
 		"typeorm": "^0.3.7",
-		"wink-creater": "workspace:^1.0.1"
+		"wink-creater": "workspace:^1.0.1",
+		"ws": "^8.8.1"
 	},
 	"devDependencies": {
 		"@jest/types": "^28.1.3",

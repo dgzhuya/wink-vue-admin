@@ -47,5 +47,10 @@
 		"commitizen": {
 			"path": "node_modules/cz-git"
 		}
+	},
+	"pnpm": {
+		"overrides": {
+			"@types/superagent": "4.1.14"
+		}
 	}
 }
