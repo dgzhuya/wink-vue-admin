@@ -21,7 +21,7 @@
 
 > 设置环境变量为process.env.NODE_ENV为production用于接受websocket消息(使用pm2运行可跳过)
 
-#### 下载[数据库](https://pinktu.github.io/admin.db),放入packages/api目录下
+#### 下载[数据库](https://dgzhuya.github.io/admin.db),放入packages/api目录下
 
 #### 直接运行
 
