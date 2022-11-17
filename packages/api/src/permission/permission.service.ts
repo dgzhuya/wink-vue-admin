@@ -34,7 +34,7 @@ export class PermissionService {
 		return this.permissionRepository.save({ ...createPermissionDto, parent: parentPermission })
 	}
 
-	async searchPermission(skip: number, take: number, search?: string) {
+	async getTablePermissions(skip: number, take: number, search?: string) {
 		let queryBuilder = this.permissionRepository.createQueryBuilder('permission')
 		if (search) {
 			queryBuilder = queryBuilder

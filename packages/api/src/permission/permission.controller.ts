@@ -16,7 +16,7 @@ export class PermissionController {
 	@Get()
 	findAll(@Query() pageDto: PageDto) {
 		const { skip, take } = PageDto.setSkipTake(pageDto)
-		return this.permissionService.searchPermission(skip, take, pageDto.search)
+		return this.permissionService.getTablePermissions(skip, take, pageDto.search)
 	}
 
 	@Get('tree')
