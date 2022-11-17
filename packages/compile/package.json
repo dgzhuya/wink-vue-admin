@@ -1,5 +1,5 @@
 {
-	"name": "wink-creater",
+	"name": "@biuxiu/compile",
 	"version": "1.0.5",
 	"description": "一个简单的编译工具",
 	"license": "MIT",
@@ -43,3 +43,4 @@
 		"url": "https://github.com/dgzhuya/wink-vue-admin/tree/main/packages/compile"
 	}
 }
+
