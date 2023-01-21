@@ -36,7 +36,7 @@
 		"rxjs": "^7.5.7",
 		"sqlite3": "^5.1.2",
 		"typeorm": "^0.3.10",
-		"wink-creater": "workspace:^1.0.5",
+		"@biuxiu/compile": "1.0.5",
 		"ws": "^8.10.0"
 	},
 	"devDependencies": {
