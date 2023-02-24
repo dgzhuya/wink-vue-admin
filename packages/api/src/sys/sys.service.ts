@@ -11,7 +11,7 @@ import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { Permission } from '@/permission/entities/permission.entity'
 import { UserRole } from '@/common/entities/user-role.entity'
 import { RolePermission } from '@/common/entities/role-permission.entity'
-import { filter } from '@/common/utils/filter'
+import { filterObj } from '@/common/utils/filterObj'
 import { ResetPasswordDto } from '@/sys/dto/reset-password.dto'
 
 @Injectable()
@@ -101,7 +101,7 @@ export class SysService {
 		}
 
 		return {
-			...filter(user, key => key !== 'password'),
+			...filterObj(user, key => key !== 'password'),
 			majorId: rid,
 			permissions,
 			roles

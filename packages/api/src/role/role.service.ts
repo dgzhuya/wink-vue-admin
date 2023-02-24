@@ -53,6 +53,10 @@ export class RoleService {
 		return this.roleRepository.update(id, updateRoleDto)
 	}
 
+	/**
+	 * 删除角色信息
+	 * @param rid 角色ID
+	 */
 	async remove(rid: number) {
 		const userRoles = await this.userRoleRepository.find({
 			where: { roleId: rid },
@@ -83,44 +87,44 @@ export class RoleService {
 		return rolePermissions.map(rp => rp.permissionId)
 	}
 
+	/**
+	 * 设置角色权限
+	 * @param rid 角色ID
+	 * @param permissions 权限信息
+	 */
 	async setRolePermission({ rid, permissions }: RolePermissionDto) {
 		if (permissions.length === 0) {
 			throw new BadParamsException('40010')
-		} else {
-			const ridCount = await this.roleRepository.count({ where: { id: rid } })
-			if (ridCount === 0) {
-				throw new BadParamsException('40001')
-			}
-			const permissionCount = await this.permissionRepository
-				.createQueryBuilder('permission')
-				.where('permission.id IN (:...permissions)', { permissions })
-				.getCount()
-
-			if (permissionCount !== permissions.length) {
-				throw new BadParamsException('40005')
-			}
-
-			const rolePermissions = await this.rolePermissionRepository.find({
-				where: { roleId: rid },
-				select: ['id', 'permissionId']
-			})
-			const deletePermissions = rolePermissions
-				.filter(permission => permissions.indexOf(permission.id) === -1)
-				.map(p => p.id)
-			const insertPermissions = permissions
-				.filter(p => rolePermissions.findIndex(rp => rp.id === p) === -1)
-				.map(pid => new RolePermission(rid, pid))
-			if (deletePermissions.length > 0) {
-				await this.rolePermissionRepository
-					.createQueryBuilder()
-					.delete()
-					.whereInIds(deletePermissions)
-					.execute()
-			}
-			if (insertPermissions.length > 0) {
-				await this.rolePermissionRepository.createQueryBuilder().insert().values(insertPermissions).execute()
-			}
-			return this.permissionRepository.find({ where: { id: In(permissions) }, select: ['id', 'title'] })
 		}
+		const ridCount = await this.roleRepository.count({ where: { id: rid } })
+		if (ridCount === 0) {
+			throw new BadParamsException('40001')
+		}
+		const permissionCount = await this.permissionRepository
+			.createQueryBuilder('permission')
+			.where('permission.id IN (:...permissions)', { permissions })
+			.getCount()
+
+		if (permissionCount !== permissions.length) {
+			throw new BadParamsException('40005')
+		}
+
+		const rolePermissions = await this.rolePermissionRepository.find({
+			where: { roleId: rid },
+			select: ['id', 'permissionId']
+		})
+		const deletePermissions = rolePermissions
+			.filter(permission => permissions.indexOf(permission.id) === -1)
+			.map(p => p.id)
+		const insertPermissions = permissions
+			.filter(p => rolePermissions.findIndex(rp => rp.id === p) === -1)
+			.map(pid => new RolePermission(rid, pid))
+		if (deletePermissions.length > 0) {
+			await this.rolePermissionRepository.createQueryBuilder().delete().whereInIds(deletePermissions).execute()
+		}
+		if (insertPermissions.length > 0) {
+			await this.rolePermissionRepository.createQueryBuilder().insert().values(insertPermissions).execute()
+		}
+		return this.permissionRepository.find({ where: { id: In(permissions) }, select: ['id', 'title'] })
 	}
 }
