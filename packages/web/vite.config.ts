@@ -2,6 +2,7 @@ import { defineConfig, normalizePath } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import vueSetupExtend from 'vite-plugin-vue-setup-extend'
 import AutoImport from 'unplugin-auto-import/vite'
 import { resolve } from 'path'
 import { createSvgIconsPlugin } from './src/plugin/svg-icons/index'
@@ -66,6 +67,7 @@ export default defineConfig({
 		}
 	},
 	plugins: [
+		vueSetupExtend(),
 		vue(),
 		createSvgIconsPlugin({ dir: resolve(__dirname, 'src/icons') }),
 		AutoImport({
