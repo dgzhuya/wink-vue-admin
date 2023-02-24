@@ -15,7 +15,7 @@
 	<ul class="context-menu-container">
 		<li @click="onRefreshClick">刷新</li>
 		<li @click="removeTagView(index, route.fullPath, 'right')">关闭右边</li>
-		<li @click="removeTagView(index, route.fullPath, 'right')">关闭其他</li>
+		<li @click="removeTagView(index, route.fullPath, 'other')">关闭其他</li>
 	</ul>
 </template>
 <style lang="scss" scoped>
