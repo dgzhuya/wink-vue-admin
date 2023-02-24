@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="screenfull" setup>
 	import screenfull from 'screenfull'
 
 	const isFullScreen = ref(false)

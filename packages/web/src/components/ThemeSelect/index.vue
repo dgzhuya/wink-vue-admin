@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="theme-select" setup>
 	import SelectColor from './SelectColor/index.vue'
 
 	const selectColorVisible = ref(false)

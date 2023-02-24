@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="login" setup>
 	import { loginRules, passwordType } from './rule'
 	import { useUser } from '@/store/module/user'
 	import { FormInstance } from 'element-plus'

@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="tag-view" setup>
 	import { storeToRefs } from 'pinia'
 	import { useApp } from '@/store/module/app'
 	import { useTheme } from '@/store/module/theme'

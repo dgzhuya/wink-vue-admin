@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="breadcrumb" setup>
 	import { useTheme } from '@/store/module/theme'
 
 	const router = useRouter()

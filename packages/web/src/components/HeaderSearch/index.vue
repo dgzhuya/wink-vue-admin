@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="header-search" setup>
 	import { AdminMenuItem } from '@/types'
 	import { generateMenus, filterRouters } from '@/utils/route'
 	import { ElSelect } from 'element-plus'

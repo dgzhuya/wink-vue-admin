@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="side-bar" setup>
 	import { useApp } from '@/store/module/app'
 	import { useTheme } from '@/store/module/theme'
 	import { storeToRefs } from 'pinia'

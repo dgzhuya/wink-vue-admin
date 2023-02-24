@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="screenfull" setup>
 	withDefaults(
 		defineProps<{
 			image?: string

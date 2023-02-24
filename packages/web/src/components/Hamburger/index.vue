@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="hamburger" setup>
 	import { useApp } from '@/store/module/app'
 
 	const app = useApp()

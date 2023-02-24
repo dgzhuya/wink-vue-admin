@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" name="layout" setup>
 	import { useApp } from '@/store/module/app'
 	import TagView from '@/components/TagView/index.vue'
 
