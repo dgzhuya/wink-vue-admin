@@ -51,7 +51,7 @@
 		:model-value="showForm"
 		:title="props.plugin ? '添加插件' : '编辑插件'"
 		@close="closeHandler()"
-		custom-class="form-container"
+		class="form-container"
 		lock-scroll
 	>
 		<el-form ref="formRef" :model="pluginInfo" label-width="120px" class="form-detail">

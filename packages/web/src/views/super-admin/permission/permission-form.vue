@@ -58,7 +58,7 @@
 		:model-value="showForm"
 		:title="props.permission === null ? '添加权限' : '编辑权限'"
 		@close="closeHandler()"
-		custom-class="form-container"
+		class="form-container"
 		lock-scroll
 	>
 		<el-form ref="formRef" :model="permissionInfo" label-width="120px" class="form-detail">

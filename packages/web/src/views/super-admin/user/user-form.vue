@@ -65,7 +65,7 @@
 		:model-value="showForm"
 		:title="props.user === null ? '添加用户' : '编辑用户'"
 		@close="closeHandler()"
-		custom-class="form-container"
+		class="form-container"
 		lock-scroll
 	>
 		<el-form ref="formRef" :model="userInfo" label-width="120px" class="form-detail">

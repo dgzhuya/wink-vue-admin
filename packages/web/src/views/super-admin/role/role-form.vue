@@ -47,7 +47,7 @@
 		:model-value="showForm"
 		:title="props.role ? '添加角色' : '编辑角色'"
 		@close="closeHandler()"
-		custom-class="form-container"
+		class="form-container"
 		lock-scroll
 	>
 		<el-form ref="formRef" :model="roleInfo" label-width="120px" class="form-detail">

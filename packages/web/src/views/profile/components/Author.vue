@@ -83,7 +83,7 @@
 		{{ info.address }}
 	</div>
 	<el-button class="edit-password" @click="showDialog = true" type="primary">修改密码</el-button>
-	<el-dialog v-model="showDialog" custom-class="profile-form-container" title="修改密码" :before-close="handleClose">
+	<el-dialog v-model="showDialog" class="profile-form-container" title="修改密码" :before-close="handleClose">
 		<el-form ref="formRef" :model="resetParams" label-width="120px" class="form-detail">
 			<el-form-item label="当前密码">
 				<el-input v-model="resetParams.currentPassword" />
