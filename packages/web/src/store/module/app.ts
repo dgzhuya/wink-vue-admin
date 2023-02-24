@@ -28,6 +28,7 @@ export const useApp = defineStore('app', {
 			}
 		},
 		async removeTagView(index: number, activePath: string, type: 'other' | 'right' | 'index' = 'index') {
+			console.log('type: ', type)
 			const len = this.$state.tagViewList.length
 			if (index >= 0 && index < len) {
 				switch (type) {
@@ -36,14 +37,10 @@ export const useApp = defineStore('app', {
 						break
 					case 'other':
 						this.$state.tagViewList.splice(0, index)
-						if (index !== len - 1) {
-							this.$state.tagViewList.splice(index + 1, len)
-						}
+						if (index !== len - 1) this.$state.tagViewList.splice(index + 1, len)
 						break
 					case 'right':
-						if (index === len - 1) {
-							return
-						}
+						if (index === len - 1) return
 						this.$state.tagViewList.splice(index + 1, len - index - 1)
 						break
 				}
