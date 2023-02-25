@@ -14,8 +14,8 @@ import { RoleService } from '@/role/role.service'
 @Injectable()
 export class UserService {
 	constructor(
-		@InjectRepository(User) private readonly userRepository: Repository<User>,
 		private readonly roleService: RoleService,
+		@InjectRepository(User) private readonly userRepository: Repository<User>,
 		@InjectRepository(UserRole) private readonly userRoleRepository: Repository<UserRole>
 	) {}
 

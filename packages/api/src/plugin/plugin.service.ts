@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { In, Repository } from 'typeorm'
+import { Repository } from 'typeorm'
 import { UpdatePluginDto } from './dto/update-plugin.dto'
 import { Plugin } from './entities/plugin.entity'
 import { isNotNull } from '@/common/utils/isNotNull'
 import { writeFileSync, existsSync, mkdirSync, readFileSync, renameSync } from 'fs'
 import { join } from 'path'
 import {
+	ASTNode,
+	RouterConfig,
 	nodeParser,
 	analyse,
 	getModuleName,
@@ -21,9 +23,7 @@ import { DefaultPluginInfo } from '@/config/plugin'
 import { exec } from 'child_process'
 import * as WebSocket from 'ws'
 import { BuildErrorException } from '@/common/exception/build-error-exception'
-import { ASTNode } from '../../../compile/src/parser/ast/ASTNode'
 import { PermissionService } from '@/permission/permission.service'
-import { RouterConfig } from '../../../compile/src/gen/util/getInfoByAST'
 import { Permission } from '@/permission/entities/permission.entity'
 
 @Injectable()
@@ -32,8 +32,8 @@ export class PluginService {
 	private readonly staticDir: string
 
 	constructor(
-		@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>,
-		private readonly permissionService: PermissionService
+		private readonly permissionService: PermissionService,
+		@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>
 	) {
 		this.formatPath = join(__dirname, '../../../../', 'script/format.mjs')
 
