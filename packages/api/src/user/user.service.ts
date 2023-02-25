@@ -9,12 +9,13 @@ import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { UserRole } from '@/common/entities/user-role.entity'
 import { UserRoleDto, UserRolesDto } from '@/user/dto/user-role.dto'
 import { filterObj } from '@/common/utils/filterObj'
+import { RoleService } from '@/role/role.service'
 
 @Injectable()
 export class UserService {
 	constructor(
 		@InjectRepository(User) private readonly userRepository: Repository<User>,
-		@InjectRepository(Role) private readonly roleRepository: Repository<Role>,
+		private readonly roleService: RoleService,
 		@InjectRepository(UserRole) private readonly userRoleRepository: Repository<UserRole>
 	) {}
 
@@ -32,8 +33,8 @@ export class UserService {
 	}
 
 	/**
-	 * 搜索查询信息
-	 * @param skip 数据查询开始位置
+	 * 搜索用户信息
+	 * @param skip 查询起始位置
 	 * @param take 查询数量
 	 * @param search 搜索关键词
 	 */
@@ -107,39 +108,36 @@ export class UserService {
 	 * @param roles 角色列表
 	 */
 	async setUserRoles({ uid, roles }: UserRolesDto) {
-		if (roles.length === 0) {
-			throw new BadParamsException('40010')
-		}
+		// 当前用户角色不能为空
+		if (roles.length === 0) throw new BadParamsException('40010')
+
+		// 查询用户ID是否存在
 		const uidCount = await this.userRepository.countBy({ id: uid })
-		if (uidCount === 0) {
-			throw new BadParamsException('40006')
-		}
-		const ridsCount = await this.roleRepository
-			.createQueryBuilder('role')
-			.where('role.id IN (:...roleIds)', { roleIds: roles })
-			.getCount()
-		if (ridsCount !== roles.length) {
-			throw new BadParamsException('40001')
-		}
+		if (uidCount === 0) throw new BadParamsException('40006')
+
+		// 查询传入的角色信息
+		const rIdCount = await this.roleService.findRoleCountByIds(roles)
+		if (rIdCount !== roles.length) throw new BadParamsException('40001')
+
+		// 查询当前用户ID包含的角色信息
 		const userRoles = await this.userRoleRepository.findBy({ userId: uid })
-
+		// 获取用户主要角色
 		const majorRole = userRoles.filter(ur => ur.isMajor)
-		if (majorRole.length > 0 && !roles.includes(majorRole[0].roleId)) {
-			throw new BadParamsException('40017')
-		}
+		if (majorRole.length > 0 && !roles.includes(majorRole[0].roleId)) throw new BadParamsException('40017')
 
+		// 需要删除的用户角色关联信息
 		const deleteRoles = userRoles.filter(role => roles.indexOf(role.roleId) === -1).map(r => r.id)
-
-		const insertRoles = roles
-			.filter(rid => userRoles.findIndex(role => role.roleId === rid) === -1)
-			.map(rid => new UserRole({ roleId: rid, userId: uid }))
-
-		if (insertRoles.length > 0) {
-			await this.userRoleRepository.createQueryBuilder().insert().values(insertRoles).execute()
-		}
 		if (deleteRoles.length > 0) {
 			await this.userRoleRepository.createQueryBuilder().delete().whereInIds(deleteRoles).execute()
 		}
+		// 需要添加的用户角色关联信息
+		const insertRoles = roles
+			.filter(rid => userRoles.findIndex(role => role.roleId === rid) === -1)
+			.map(rid => new UserRole({ roleId: rid, userId: uid }))
+		if (insertRoles.length > 0) {
+			await this.userRoleRepository.createQueryBuilder().insert().values(insertRoles).execute()
+		}
+		return this.roleService.findRoleByIds(roles)
 	}
 
 	/**
@@ -149,17 +147,14 @@ export class UserService {
 	 */
 	async setMajorRole({ uid, rid }: UserRoleDto) {
 		const uidCount = await this.userRepository.countBy({ id: uid })
-		if (uidCount === 0) {
-			throw new BadParamsException('40006')
-		}
-		const ridCount = await this.roleRepository.countBy({ id: rid })
-		if (ridCount === 0) {
-			throw new BadParamsException('40001')
-		}
+		if (uidCount === 0) throw new BadParamsException('40006')
+		// 查询用户角色不能为空
+		const ridCount = await this.roleService.findRoleCountByIds([rid])
+		if (ridCount === 0) throw new BadParamsException('40001')
+
 		const curUserRoles = await this.userRoleRepository.findBy({ userId: uid })
-		if (curUserRoles.length === 0) {
-			throw new BadParamsException('40004')
-		}
+		if (curUserRoles.length === 0) throw new BadParamsException('40004')
+
 		const majorRole = curUserRoles.filter(r => r.isMajor)
 		if (majorRole.length > 0) {
 			if (majorRole[0].roleId === rid) {

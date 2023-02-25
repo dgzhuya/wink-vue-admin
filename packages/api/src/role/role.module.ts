@@ -3,13 +3,14 @@ import { RoleService } from './role.service'
 import { RoleController } from './role.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Role } from './entities/role.entity'
-import { Permission } from '@/permission/entities/permission.entity'
 import { RolePermission } from '@/common/entities/role-permission.entity'
 import { UserRole } from '@/common/entities/user-role.entity'
+import { PermissionModule } from '@/permission/permission.module'
 
 @Module({
-	imports: [TypeOrmModule.forFeature([Role, Permission, RolePermission, UserRole])],
+	imports: [TypeOrmModule.forFeature([Role, RolePermission, UserRole]), PermissionModule],
 	controllers: [RoleController],
-	providers: [RoleService]
+	providers: [RoleService],
+	exports: [RoleService]
 })
 export class RoleModule {}

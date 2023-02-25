@@ -4,7 +4,7 @@ import { CreatePermissionDto } from './dto/create-permission.dto'
 import { UpdatePermissionDto } from './dto/update-permission.dto'
 import { Permission } from './entities/permission.entity'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
-import { IsNull, Repository } from 'typeorm'
+import { In, IsNull, Repository } from 'typeorm'
 import { RolePermission } from '@/common/entities/role-permission.entity'
 
 @Injectable()
@@ -102,7 +102,7 @@ export class PermissionService {
 	 * @param id 权限ID
 	 * @param updatePermissionDto 需要更新的信息
 	 */
-	async update(id: number, updatePermissionDto: Partial<Permission>) {
+	async update(id: number, updatePermissionDto: UpdatePermissionDto) {
 		if (updatePermissionDto.parentId) throw new BadParamsException('40005')
 
 		if (updatePermissionDto.key) {
@@ -139,5 +139,24 @@ export class PermissionService {
 			}
 		}
 		return this.permissionRepository.softDelete(id)
+	}
+
+	/**
+	 * 通过ids批量获取权限信息
+	 * @param permissions 权限ID列表
+	 */
+	findPermissionByIds(permissions: number[]) {
+		return this.permissionRepository.find({ where: { id: In(permissions) }, select: ['id', 'title'] })
+	}
+
+	/**
+	 * 通过ids批量获取权限数量
+	 * @param permissions 权限ID列表
+	 */
+	async findPermissionCountByIds(permissions: number[]) {
+		return this.permissionRepository
+			.createQueryBuilder('permission')
+			.where('permission.id IN (:...permissions)', { permissions })
+			.getCount()
 	}
 }
