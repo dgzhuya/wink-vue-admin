@@ -172,10 +172,18 @@ export class PermissionService {
 		return this.update(id, { hasChildren })
 	}
 
+	/**
+	 * 通过key查询权限
+	 * @param key 权限key
+	 */
 	findOneByKey(key: string) {
 		return this.permissionRepository.findOneBy({ key })
 	}
 
+	/**
+	 * 是否包含当前key的权限
+	 * @param key 权限名
+	 */
 	async hasPermissionByKey(key: string) {
 		return (await this.permissionRepository.countBy({ key })) !== 0
 	}
@@ -188,5 +196,15 @@ export class PermissionService {
 		if ((await this.permissionRepository.countBy({ parentId: id })) === 0) {
 			await this.updateHasChildren(id)
 		}
+	}
+
+	/**
+	 * 批量删除角色权限关系信息
+	 * @param permissionIds 权限id列表
+	 */
+	async removeRolePermissionByIds(permissionIds: number[]) {
+		return this.rolePermissionRepository.delete({
+			permissionId: In(permissionIds)
+		})
 	}
 }

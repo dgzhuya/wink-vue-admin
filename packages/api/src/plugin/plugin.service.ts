@@ -18,7 +18,6 @@ import {
 } from '@biuxiu/compile'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { DefaultPluginInfo } from '@/config/plugin'
-import { RolePermission } from '@/common/entities/role-permission.entity'
 import { exec } from 'child_process'
 import * as WebSocket from 'ws'
 import { BuildErrorException } from '@/common/exception/build-error-exception'
@@ -34,8 +33,7 @@ export class PluginService {
 
 	constructor(
 		@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>,
-		private readonly permissionService: PermissionService,
-		@InjectRepository(RolePermission) private readonly rolePermissionRepository: Repository<RolePermission>
+		private readonly permissionService: PermissionService
 	) {
 		this.formatPath = join(__dirname, '../../../../', 'script/format.mjs')
 
@@ -196,9 +194,7 @@ export class PluginService {
 		// 获取所需要删除的所有权限ID
 		const permissionIds = [...childrenPermission.map(p => p.id), currentPermission.id]
 		// 批量删除角色关联的权限信息
-		await this.rolePermissionRepository.delete({
-			permissionId: In(permissionIds)
-		})
+		await this.permissionService.removeRolePermissionByIds(permissionIds)
 		// 批量删除当前插件子权限信息
 		await this.permissionService.deletePermissionByParentId(currentPermission.id)
 		// 删除当前权限信息
