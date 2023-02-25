@@ -2,7 +2,14 @@ import { setConfigPath, getConfigPath } from '@/config'
 import { translate, clearModule } from '@/gen'
 import { analyse } from '@/lexer'
 import { nodeParser } from '@/parser'
-import { getModuleDescription, getModuleName, getModuleComment, getRouterInfo } from '@/gen/util/getInfoByAST'
+import { ASTNode } from '@/parser/ast/ASTNode'
+import {
+	getModuleDescription,
+	getModuleName,
+	getModuleComment,
+	getRouterInfo,
+	RouterConfig
+} from '@/gen/util/getInfoByAST'
 
 export {
 	getConfigPath,
@@ -14,5 +21,7 @@ export {
 	getModuleName,
 	getModuleComment,
 	clearModule,
-	getRouterInfo
+	getRouterInfo,
+	ASTNode,
+	RouterConfig
 }
