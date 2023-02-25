@@ -38,8 +38,8 @@ export class PluginService {
 		this.formatPath = join(__dirname, '../../../../', 'script/format.mjs')
 
 		// 查看是否存在static目录
-		const staticDir = join(process.cwd(), 'static')
-		if (!existsSync(staticDir)) mkdirSync(staticDir)
+		this.staticDir = join(process.cwd(), 'static')
+		if (!existsSync(this.staticDir)) mkdirSync(this.staticDir)
 	}
 
 	/**
@@ -99,14 +99,13 @@ export class PluginService {
 		const { id } = await this.permissionService.create({
 			title: comment,
 			description,
-			key: routerInfo.name
+			key: routerInfo.name,
+			parentId: parentPermission.id
 		})
-		if (parentPermission) {
-			await this.permissionService.update(id, { hasChildren: true, parentId: parentPermission.id })
-			if (!parentPermission.hasChildren) await this.permissionService.updateHasChildren(parentPermission.id, true)
-		} else {
-			await this.permissionService.updateHasChildren(id, true)
-		}
+
+		await this.permissionService.updateHasChildren(id, true)
+		if (!parentPermission.hasChildren) await this.permissionService.updateHasChildren(parentPermission.id, true)
+
 		// 批量添加路由子权限信息
 		await Promise.all(this.genChildrenPermission(id, comment, description, routerInfo))
 		// 写入文件服务器中

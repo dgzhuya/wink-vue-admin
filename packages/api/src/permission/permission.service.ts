@@ -121,6 +121,7 @@ export class PermissionService {
 	 * @param id 权限ID
 	 */
 	async remove(id: number) {
+		await this.resetParentHasChildren(id)
 		const curPermission = await this.findOne(id)
 		// 检查当前是否包含子权限信息
 		if (curPermission.hasChildren) throw new BadParamsException('40015')
@@ -185,7 +186,7 @@ export class PermissionService {
 	 * @param key 权限名
 	 */
 	async hasPermissionByKey(key: string) {
-		return (await this.permissionRepository.countBy({ key })) !== 0
+		return (await this.permissionRepository.countBy({ key, deleteTime: null })) !== 0
 	}
 
 	/**
@@ -193,7 +194,7 @@ export class PermissionService {
 	 * @param id 上级权限ID
 	 */
 	async resetParentHasChildren(id: number) {
-		if ((await this.permissionRepository.countBy({ parentId: id })) === 0) {
+		if ((await this.permissionRepository.countBy({ parentId: id, deleteTime: null })) === 0) {
 			await this.updateHasChildren(id)
 		}
 	}

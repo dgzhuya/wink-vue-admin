@@ -1,0 +1,53 @@
+// 插件唯一名称
+#name: "tag"
+// api or database
+#comment: "标签管理"
+#description: "用于管理标签数据" 
+#way: "database"
+#model {
+	id: @id @number
+	name: @string
+	key: @string
+	description: @string @nullable
+	base: @DateEntity
+}
+
+#dto {
+	name: @string
+	key: @string
+	description: @string
+}
+
+#api {
+	@get
+	@post
+	@delete
+	@update
+	@all
+}
+
+#router {
+	parentPath: 'ai'
+	parentTitle: 'ai管理'
+	parentName: 'Ai'
+	parentIcon: 'personnel'
+	path: 'tag'
+	title: '标签管理'
+	icon: 'plugin'
+	name: 'AiTag'
+}
+
+#table {
+	id: @number @comment("id")
+	name: @string @comment("名称")
+	key: @string @comment("关键词")
+	description: @string @comment("描述")
+	createTime: @string @date @comment("创建时间")
+	updateTime: @string @date @comment("修改时间")
+}
+
+#form {
+	name: @string @comment("名称")
+	key: @string @comment("关键词")
+	description: @string @textarea @comment("描述")
+}
