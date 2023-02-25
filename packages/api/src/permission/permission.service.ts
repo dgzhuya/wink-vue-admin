@@ -19,10 +19,9 @@ export class PermissionService {
 	 * @param createPermissionDto 权限信息
 	 */
 	async create(createPermissionDto: CreatePermissionDto) {
-		// 查询权限key是否存在
-		if (createPermissionDto.key) {
-			const keyCount = await this.permissionRepository.countBy({ key: createPermissionDto.key })
-			if (keyCount > 0) throw new BadParamsException('40018')
+		// 查询权限key是否已经存在
+		if (await this.hasPermissionByKey(createPermissionDto.key)) {
+			throw new BadParamsException('40018')
 		}
 		// 设置父级权限信息
 		if (createPermissionDto.parentId) {
@@ -135,7 +134,7 @@ export class PermissionService {
 		if (curPermission.parentId) {
 			const parentCount = await this.permissionRepository.countBy({ parentId: curPermission.parentId })
 			if (parentCount === 1) {
-				await this.update(curPermission.parentId, { hasChildren: false })
+				await this.updateHasChildren(curPermission.parentId)
 			}
 		}
 		return this.permissionRepository.softDelete(id)
@@ -158,5 +157,36 @@ export class PermissionService {
 			.createQueryBuilder('permission')
 			.where('permission.id IN (:...permissions)', { permissions })
 			.getCount()
+	}
+
+	deletePermissionByParentId(parentId: number) {
+		return this.permissionRepository.softDelete({ parentId })
+	}
+
+	/**
+	 * 更新是否包含子权限信息
+	 * @param id 当前ID
+	 * @param hasChildren 是否包含子组件-默认为false
+	 */
+	updateHasChildren(id: number, hasChildren = false) {
+		return this.update(id, { hasChildren })
+	}
+
+	findOneByKey(key: string) {
+		return this.permissionRepository.findOneBy({ key })
+	}
+
+	async hasPermissionByKey(key: string) {
+		return (await this.permissionRepository.countBy({ key })) !== 0
+	}
+
+	/**
+	 * 重置上级权限hasChildren信息
+	 * @param id 上级权限ID
+	 */
+	async resetParentHasChildren(id: number) {
+		if ((await this.permissionRepository.countBy({ parentId: id })) === 0) {
+			await this.updateHasChildren(id)
+		}
 	}
 }

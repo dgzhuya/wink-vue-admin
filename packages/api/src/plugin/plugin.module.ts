@@ -3,11 +3,10 @@ import { PluginService } from './plugin.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { PluginController } from './plugin.controller'
 import { Plugin } from './entities/plugin.entity'
-import { Permission } from '@/permission/entities/permission.entity'
-import { RolePermission } from '@/common/entities/role-permission.entity'
+import { PermissionModule } from '@/permission/permission.module'
 
 @Module({
-	imports: [TypeOrmModule.forFeature([Plugin, Permission, RolePermission])],
+	imports: [TypeOrmModule.forFeature([Plugin]), PermissionModule],
 	controllers: [PluginController],
 	providers: [PluginService]
 })
