@@ -3,20 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
-import { Role } from './entities/role.entity'
+import { RoleEntity } from './entities/role.entity'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
-import { RolePermission } from '@/common/entities/role-permission.entity'
 import { RolePermissionDto } from '@/role/dto/role-permission.dto'
-import { UserRole } from '@/common/entities/user-role.entity'
 import { PermissionService } from '@/permission/permission.service'
 
 @Injectable()
 export class RoleService {
 	constructor(
 		private readonly permissionService: PermissionService,
-		@InjectRepository(Role) private readonly roleRepository: Repository<Role>,
-		@InjectRepository(UserRole) private readonly userRoleRepository: Repository<UserRole>,
-		@InjectRepository(RolePermission) private readonly rolePermissionRepository: Repository<RolePermission>
+		@InjectRepository(RoleEntity) private readonly roleRepository: Repository<RoleEntity>
 	) {}
 
 	/**
@@ -28,10 +24,37 @@ export class RoleService {
 	}
 
 	/**
-	 * 查询所有角色
+	 * 删除角色信息
+	 * @param id 角色ID
 	 */
-	finaAllRole() {
-		return this.roleRepository.find({ select: ['id', 'title'] })
+	async delete(id: number) {
+		const role = await this.roleRepository.findOneBy({ id })
+
+		const users = await role.users
+		if (users.length > 0) throw new BadParamsException('40014')
+
+		const permissions = await role.permissions
+		if (permissions.length > 0) {
+			await this.roleRepository.update(id, { permissions: Promise.resolve([]) })
+		}
+		return this.roleRepository.softDelete(id)
+	}
+
+	/**
+	 * 更新角色信息
+	 * @param id 角色ID
+	 * @param updateRoleDto 角色更新信息
+	 */
+	update(id: number, updateRoleDto: UpdateRoleDto) {
+		return this.roleRepository.update(id, updateRoleDto)
+	}
+
+	/**
+	 * 查询角色详情
+	 * @param id 角色ID
+	 */
+	query(id: number) {
+		return this.roleRepository.findOneBy({ id })
 	}
 
 	/**
@@ -40,7 +63,9 @@ export class RoleService {
 	 * @param take 查询数量
 	 * @param search 搜索条件
 	 */
-	async findRole(skip: number, take: number, search?: string) {
+	async table(skip?: number, take?: number, search?: string) {
+		if (skip === undefined || take === undefined) return this.roleRepository.find()
+
 		let queryBuilder = this.roleRepository.createQueryBuilder('role')
 		if (search) {
 			queryBuilder = queryBuilder
@@ -55,105 +80,52 @@ export class RoleService {
 	}
 
 	/**
-	 * 查询角色详情
+	 * 获取角色的权限信息
 	 * @param id 角色ID
 	 */
-	async findOne(id: number) {
-		return await this.roleRepository.findOneBy({ id })
-	}
-
-	update(id: number, updateRoleDto: UpdateRoleDto) {
-		return this.roleRepository.update(id, updateRoleDto)
-	}
-
-	/**
-	 * 删除角色信息
-	 * @param rid 角色ID
-	 */
-	async remove(rid: number) {
-		const userRoles = await this.userRoleRepository.find({
-			where: { roleId: rid },
-			select: ['userId']
-		})
-		// 查看角色是否绑定了用户
-		if (userRoles.length > 0) throw new BadParamsException('40014')
-
-		// 查询角色关联的权限
-		const rolePermissionIds = await this.rolePermissionRepository.find({
-			where: { roleId: rid },
-			select: ['id']
-		})
-		// 删除角色关联的权限信息
-		if (rolePermissionIds.length > 0) {
-			await this.rolePermissionRepository
-				.createQueryBuilder()
-				.delete()
-				.whereInIds(rolePermissionIds.map(r => r.id))
-				.execute()
-		}
-		return this.roleRepository.softDelete(rid)
-	}
-
-	/**
-	 * 获取角色的权限信息
-	 * @param rid 角色信息
-	 */
-	async getRolePermissions(rid: number) {
-		const rolePermissions = await this.rolePermissionRepository.find({
-			where: { roleId: rid },
-			select: ['permissionId']
-		})
-		return rolePermissions.map(rp => rp.permissionId)
+	async getPermissions(id: number) {
+		const role = await this.roleRepository.findOne({ where: { id }, select: ['permissions'] })
+		return await role.permissions
 	}
 
 	/**
 	 * 设置角色权限
-	 * @param rid 角色ID
-	 * @param permissions 权限信息
+	 * @param is 角色ID
+	 * @param pIds 权限信息
 	 */
-	async setRolePermission({ rid, permissions }: RolePermissionDto) {
-		if (permissions.length === 0) throw new BadParamsException('40010')
+	async setPermission({ id, pIds }: RolePermissionDto) {
+		const role = await this.roleRepository.findOneBy({ id })
+		if (!role) throw new BadParamsException('40001')
 
-		// 验证角色是否存在
-		const ridCount = await this.roleRepository.count({ where: { id: rid } })
+		if (pIds.length === 0) throw new BadParamsException('40010')
+
+		const ridCount = await this.roleRepository.countBy({ id: id })
 		if (ridCount === 0) {
 			throw new BadParamsException('40001')
 		}
-		// 查看权限是否存在
-		const permissionCount = await this.permissionService.findPermissionCountByIds(permissions)
 
-		if (permissionCount !== permissions.length) throw new BadParamsException('40005')
+		if (await this.permissionService.isExited(pIds)) throw new BadParamsException('40005')
 
-		const rolePermissions = await this.rolePermissionRepository.find({
-			where: { roleId: rid },
-			select: ['id', 'permissionId']
-		})
-		// 当前角色需要删除的关联权限信息
-		const deletePermissions = rolePermissions
-			.filter(permission => permissions.indexOf(permission.id) === -1)
-			.map(p => p.id)
-		if (deletePermissions.length > 0) {
-			await this.rolePermissionRepository.createQueryBuilder().delete().whereInIds(deletePermissions).execute()
-		}
-		// 当前角色需要添加的关联权限信息
-		const insertPermissions = permissions
-			.filter(p => rolePermissions.findIndex(rp => rp.id === p) === -1)
-			.map(pid => new RolePermission(rid, pid))
-		if (insertPermissions.length > 0) {
-			await this.rolePermissionRepository.createQueryBuilder().insert().values(insertPermissions).execute()
-		}
-		// 获取当前角色关联的权限信息
-		return this.permissionService.findPermissionByIds(permissions)
+		const permissions = await this.permissionService.queryByIds(pIds)
+		await this.roleRepository.update(id, { permissions: Promise.resolve(permissions) })
+
+		return permissions
 	}
 
-	findRoleByIds(roles: number[]) {
-		return this.roleRepository.find({ where: { id: In(roles) }, select: ['id', 'title'] })
+	/**
+	 * 通过角色id列表查询角色信息
+	 * @param ids 角色id集合
+	 */
+	queryByIds(ids: number[]) {
+		return this.roleRepository.findBy({ id: In(ids) })
 	}
 
-	findRoleCountByIds(roles: number[]) {
-		return this.roleRepository
-			.createQueryBuilder('role')
-			.where('role.id IN (:...roleIds)', { roleIds: roles })
-			.getCount()
+	/**
+	 * 检查角色是否存在
+	 * @param ids 角色id集合
+	 */
+	async isExited(ids: number[]) {
+		const count = await this.roleRepository.countBy({ id: In(ids), deleteTime: null })
+		return count === ids.length
 	}
 }

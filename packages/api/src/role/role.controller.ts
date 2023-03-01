@@ -16,28 +16,28 @@ export class RoleController {
 
 	@Post('permission')
 	setRolePermission(@Body() rolePermissionDto: RolePermissionDto) {
-		return this.roleService.setRolePermission(rolePermissionDto)
+		return this.roleService.setPermission(rolePermissionDto)
 	}
 
 	@Get('/all')
 	getAllRoles() {
-		return this.roleService.finaAllRole()
+		return this.roleService.table()
 	}
 
 	@Get()
 	findAll(@Query() pageDto: PageDto) {
 		const { skip, take } = PageDto.setSkipTake(pageDto)
-		return this.roleService.findRole(skip, take, pageDto.search)
+		return this.roleService.table(skip, take, pageDto.search)
 	}
 
 	@Get(':id')
 	findOne(@Param('id') id: string) {
-		return this.roleService.findOne(+id)
+		return this.roleService.query(+id)
 	}
 
 	@Get(':id/permission')
 	findPermissions(@Param('id') id: string) {
-		return this.roleService.getRolePermissions(+id)
+		return this.roleService.getPermissions(+id)
 	}
 
 	@Patch(':id')
@@ -47,6 +47,6 @@ export class RoleController {
 
 	@Delete(':id')
 	remove(@Param('id') id: string) {
-		return this.roleService.remove(+id)
+		return this.roleService.delete(+id)
 	}
 }

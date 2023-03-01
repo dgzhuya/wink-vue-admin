@@ -1,10 +1,11 @@
 import { BaseEntity } from 'src/common/entities/base.entity'
-import { BeforeInsert, Column, Entity } from 'typeorm'
+import { BeforeInsert, Column, Entity, ManyToMany, JoinTable } from 'typeorm'
 import { hash } from 'bcryptjs'
 import { Exclude } from 'class-transformer'
+import { RoleEntity } from '@/role/entities/role.entity'
 
 @Entity()
-export class User extends BaseEntity {
+export class UserEntity extends BaseEntity {
 	@Column({ length: 30, comment: '用户名' })
 	username: string
 
@@ -14,8 +15,11 @@ export class User extends BaseEntity {
 	@Column({ comment: '手机号', nullable: true })
 	mobile: string
 
-	@Column({ comment: '性别', type: 'bigint', nullable: true })
+	@Column({ comment: '性别', type: 'tinyint', nullable: true })
 	gender: number
+
+	@Column({ comment: '主要角色', type: 'tinyint', nullable: true })
+	major: number
 
 	@Column({ comment: '地址', length: 30, nullable: true })
 	address: string
@@ -26,6 +30,10 @@ export class User extends BaseEntity {
 	@Exclude()
 	@Column({ length: 100, comment: '用户密码' })
 	password: string
+
+	@JoinTable()
+	@ManyToMany(() => RoleEntity)
+	roles: Promise<RoleEntity[]>
 
 	@BeforeInsert()
 	async encryptPwd() {

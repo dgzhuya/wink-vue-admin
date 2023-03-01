@@ -29,8 +29,8 @@ export class SysController {
 	}
 
 	@Post('password')
-	resetPassword(@Body() passwordDto: ResetPasswordDto, @Query(TOKEN_USER_ID) uid: string) {
-		return this.sysService.resetPassword(passwordDto, +uid)
+	resetPassword(@Query(TOKEN_USER_ID) uid: string, @Body() passwordDto: ResetPasswordDto) {
+		return this.sysService.resetPassword(+uid, passwordDto)
 	}
 
 	@NoAuthToken()

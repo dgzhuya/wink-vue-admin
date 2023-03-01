@@ -2,16 +2,14 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CreatePermissionDto } from './dto/create-permission.dto'
 import { UpdatePermissionDto } from './dto/update-permission.dto'
-import { Permission } from './entities/permission.entity'
+import { PermissionEntity } from './entities/permission.entity'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { In, IsNull, Repository } from 'typeorm'
-import { RolePermission } from '@/common/entities/role-permission.entity'
 
 @Injectable()
 export class PermissionService {
 	constructor(
-		@InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
-		@InjectRepository(RolePermission) private readonly rolePermissionRepository: Repository<RolePermission>
+		@InjectRepository(PermissionEntity) private readonly permissionRepository: Repository<PermissionEntity>
 	) {}
 
 	/**
@@ -19,21 +17,69 @@ export class PermissionService {
 	 * @param createPermissionDto 权限信息
 	 */
 	async create(createPermissionDto: CreatePermissionDto) {
-		// 查询权限key是否已经存在
-		if (await this.hasPermissionByKey(createPermissionDto.key)) {
+		if (await this.keyIsExited(createPermissionDto.key)) {
 			throw new BadParamsException('40018')
 		}
-		// 设置父级权限信息
+		const permission = await this.permissionRepository.save(createPermissionDto)
+
 		if (createPermissionDto.parentId) {
-			const parentPermission = await this.permissionRepository.findOneBy({ id: createPermissionDto.parentId })
-			if (!parentPermission) {
-				throw new BadParamsException('40002')
-			}
-			if (!parentPermission.hasChildren) {
-				await this.permissionRepository.update(parentPermission.id, { hasChildren: true })
+			const parent = await this.permissionRepository.findOneBy({ id: createPermissionDto.parentId })
+			if (!parent) throw new BadParamsException('40002')
+			const curParentChildren = await parent.children
+			await this.update(parent.id, {
+				children: Promise.resolve([...curParentChildren, permission])
+			})
+			await this.update(permission.id, { parent: Promise.resolve(parent) })
+		}
+		return permission
+	}
+
+	/**
+	 * 删除权限信息
+	 * @param id 权限ID
+	 */
+	async delete(id: number) {
+		const permission = await this.query(id)
+
+		const roles = await permission.roles
+		if (roles.length > 0) throw new BadParamsException('40016')
+
+		const children = await permission.children
+		if (children.length > 0) throw new BadParamsException('40015')
+
+		const parent = await permission.parent
+		if (parent) {
+			const pChildren = await parent.children
+			await this.permissionRepository.update(parent.id, {
+				children: Promise.resolve(pChildren.filter(p => p.id !== permission.id))
+			})
+		}
+		return this.permissionRepository.softDelete(id)
+	}
+
+	/**
+	 * 更新权限信息
+	 * @param id 权限ID
+	 * @param updatePermissionDto 需要更新的信息
+	 */
+	async update(id: number, updatePermissionDto: UpdatePermissionDto) {
+		if (await updatePermissionDto.parent) throw new BadParamsException('40005')
+
+		if (updatePermissionDto.key) {
+			const permission = await this.permissionRepository.findOneBy({ id })
+			if (permission && permission.key !== updatePermissionDto.key) {
+				if (await this.keyIsExited(permission.key)) throw new BadParamsException('40018')
 			}
 		}
-		return this.permissionRepository.save(createPermissionDto)
+		return this.permissionRepository.update(id, updatePermissionDto)
+	}
+
+	/**
+	 * 查询权限详情
+	 * @param id 权限ID
+	 */
+	query(id: number) {
+		return this.permissionRepository.findOneBy({ id })
 	}
 
 	/**
@@ -42,7 +88,9 @@ export class PermissionService {
 	 * @param take 查询数量
 	 * @param search 搜素关键词
 	 */
-	async getTablePermissions(skip: number, take: number, search?: string) {
+	async table(skip?: number, take?: number, search?: string) {
+		if (skip === undefined || take === undefined) return this.permissionRepository.find()
+
 		let queryBuilder = this.permissionRepository.createQueryBuilder('permission')
 		if (search) {
 			queryBuilder = queryBuilder
@@ -60,28 +108,26 @@ export class PermissionService {
 	}
 
 	/**
-	 * 查询父级权限下子权限
+	 * 查询权限的子权限信息
 	 * @param id 权限ID
 	 */
-	async getPermissionByParent(id: number) {
-		return this.permissionRepository.findBy({ parentId: id })
+	async queryChildren(id?: number) {
+		if (!id) return this.permissionRepository.findBy({ parent: IsNull() })
+		return (await this.query(id)).children
 	}
 
 	/**
-	 * 获取权限树
-	 * @param pid 根权限ID
+	 * 查询树形权限
+	 * @param id 根权限ID
 	 */
-	async getPermissionTree(pid?: number) {
-		const permissionList = await this.permissionRepository.find({
-			where: { parentId: pid || IsNull() },
-			select: ['id', 'title']
-		})
+	async queryTree(id?: number) {
+		const children = await this.queryChildren(id)
 		const result = []
-		if (permissionList.length !== 0) {
-			for (let i = 0; i < permissionList.length; i++) {
+		if (children.length !== 0) {
+			for (let i = 0; i < children.length; i++) {
 				result.push({
-					...permissionList[i],
-					children: await this.getPermissionTree(permissionList[i].id)
+					...children[i],
+					children: await this.queryTree(children[i].id)
 				})
 			}
 		}
@@ -89,88 +135,50 @@ export class PermissionService {
 	}
 
 	/**
-	 * 查询权限详情
+	 * 强制删除权限信息
 	 * @param id 权限ID
 	 */
-	findOne(id: number) {
-		return this.permissionRepository.findOneBy({ id })
+	async deleteForce(id: number) {
+		await this.deleteRole(id)
+		await this.deleteWidthChildren(id)
 	}
 
 	/**
-	 * 更新权限信息
-	 * @param id 权限ID
-	 * @param updatePermissionDto 需要更新的信息
+	 * 删除权限的子权限信息
+	 * @param pid 权限信息
 	 */
-	async update(id: number, updatePermissionDto: UpdatePermissionDto) {
-		if (updatePermissionDto.parentId) throw new BadParamsException('40005')
-
-		if (updatePermissionDto.key) {
-			// 获取当前权限信息
-			const currentPermission = await this.permissionRepository.findOneBy({ id })
-			// 当前权限信息key被修改后，需要检查新的key是否冲突
-			if (currentPermission && currentPermission.key !== updatePermissionDto.key) {
-				const keyCount = await this.permissionRepository.countBy({ key: updatePermissionDto.key })
-				if (keyCount > 0) throw new BadParamsException('40018')
-			}
+	async deleteWidthChildren(pid: number) {
+		const children = await this.queryChildren(pid)
+		for (let i = 0; i < children.length; i++) {
+			const permission = children[i]
+			await this.deleteWidthChildren(permission.id)
 		}
-		return this.permissionRepository.update(id, updatePermissionDto)
+		await this.delete(pid)
 	}
 
 	/**
-	 * 删除权限信息
-	 * @param id 权限ID
+	 * 删除权限关联的角色信息
+	 * @param pid 权限信息
 	 */
-	async remove(id: number) {
-		await this.resetParentHasChildren(id)
-		const curPermission = await this.findOne(id)
-		// 检查当前是否包含子权限信息
-		if (curPermission.hasChildren) throw new BadParamsException('40015')
-
-		// 检查是否有角色绑定当前权限
-		const roles = await this.rolePermissionRepository.findBy({ permissionId: id })
-
-		if (roles.length > 0) throw new BadParamsException('40016')
-
-		// 编辑上级权限信息修改
-		if (curPermission.parentId) {
-			const parentCount = await this.permissionRepository.countBy({ parentId: curPermission.parentId })
-			if (parentCount === 1) {
-				await this.updateHasChildren(curPermission.parentId)
-			}
-		}
-		return this.permissionRepository.softDelete(id)
+	deleteRole(pid: number) {
+		return this.permissionRepository.update(pid, { roles: Promise.resolve([]) })
 	}
 
 	/**
-	 * 通过ids批量获取权限信息
-	 * @param permissions 权限ID列表
+	 * 权限是否存在
+	 * @param ids 权限是否存在
 	 */
-	findPermissionByIds(permissions: number[]) {
-		return this.permissionRepository.find({ where: { id: In(permissions) }, select: ['id', 'title'] })
+	async isExited(ids: number[]) {
+		const count = await this.permissionRepository.countBy({ id: In(ids), deleteTime: null })
+		return count === ids.length
 	}
 
 	/**
-	 * 通过ids批量获取权限数量
-	 * @param permissions 权限ID列表
+	 * 批量查询权限信息
+	 * @param ids 权限ID集合
 	 */
-	async findPermissionCountByIds(permissions: number[]) {
-		return this.permissionRepository
-			.createQueryBuilder('permission')
-			.where('permission.id IN (:...permissions)', { permissions })
-			.getCount()
-	}
-
-	deletePermissionByParentId(parentId: number) {
-		return this.permissionRepository.softDelete({ parentId })
-	}
-
-	/**
-	 * 更新是否包含子权限信息
-	 * @param id 当前ID
-	 * @param hasChildren 是否包含子组件-默认为false
-	 */
-	updateHasChildren(id: number, hasChildren = false) {
-		return this.update(id, { hasChildren })
+	async queryByIds(ids: number[]) {
+		return this.permissionRepository.findBy({ id: In(ids) })
 	}
 
 	/**
@@ -185,27 +193,7 @@ export class PermissionService {
 	 * 是否包含当前key的权限
 	 * @param key 权限名
 	 */
-	async hasPermissionByKey(key: string) {
-		return (await this.permissionRepository.countBy({ key, deleteTime: null })) !== 0
-	}
-
-	/**
-	 * 重置上级权限hasChildren信息
-	 * @param id 上级权限ID
-	 */
-	async resetParentHasChildren(id: number) {
-		if ((await this.permissionRepository.countBy({ parentId: id, deleteTime: null })) === 0) {
-			await this.updateHasChildren(id)
-		}
-	}
-
-	/**
-	 * 批量删除角色权限关系信息
-	 * @param permissionIds 权限id列表
-	 */
-	async removeRolePermissionByIds(permissionIds: number[]) {
-		return this.rolePermissionRepository.delete({
-			permissionId: In(permissionIds)
-		})
+	async keyIsExited(key?: string) {
+		return key && (await this.permissionRepository.countBy({ key, deleteTime: null })) !== 0
 	}
 }

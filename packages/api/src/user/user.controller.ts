@@ -29,12 +29,12 @@ export class UserController {
 	@Get()
 	findAll(@Query() pageDto: PageDto) {
 		const { skip, take } = PageDto.setSkipTake(pageDto)
-		return this.userService.searchUser(skip, take, pageDto.search)
+		return this.userService.table(skip, take, pageDto.search)
 	}
 
 	@Post('roles')
 	setRoles(@Body() useRolesDto: UserRolesDto) {
-		return this.userService.setUserRoles(useRolesDto)
+		return this.userService.setRoles(useRolesDto)
 	}
 
 	@Post('major')
@@ -44,7 +44,7 @@ export class UserController {
 
 	@Get(':id')
 	findOne(@Param('id') id: string) {
-		return this.userService.findOne(+id)
+		return this.userService.query(+id)
 	}
 
 	@Patch(':id')
@@ -54,6 +54,6 @@ export class UserController {
 
 	@Delete(':id')
 	remove(@Param('id') id: string) {
-		return this.userService.remove(+id)
+		return this.userService.delete(+id)
 	}
 }

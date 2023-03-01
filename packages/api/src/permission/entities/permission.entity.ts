@@ -1,8 +1,9 @@
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { BaseEntity } from '@/common/entities/base.entity'
+import { RoleEntity } from '@/role/entities/role.entity'
 
 @Entity()
-export class Permission extends BaseEntity {
+export class PermissionEntity extends BaseEntity {
 	@Column({ comment: '权限名称', length: 100 })
 	title: string
 
@@ -12,9 +13,13 @@ export class Permission extends BaseEntity {
 	@Column({ comment: '角色描述', length: 200, nullable: true })
 	description: string
 
-	@Column({ comment: '父id', nullable: true })
-	parentId: number
+	@ManyToOne(() => PermissionEntity, p => p.children)
+	parent: Promise<PermissionEntity>
 
-	@Column({ comment: '是否拥有子元素', default: false })
-	hasChildren: boolean
+	@OneToMany(() => PermissionEntity, p => p.parent)
+	children: Promise<PermissionEntity[]>
+
+	@JoinTable()
+	@ManyToMany(() => RoleEntity)
+	roles: Promise<RoleEntity[]>
 }

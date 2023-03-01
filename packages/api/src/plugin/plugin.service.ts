@@ -24,7 +24,7 @@ import { exec } from 'child_process'
 import * as WebSocket from 'ws'
 import { BuildErrorException } from '@/common/exception/build-error-exception'
 import { PermissionService } from '@/permission/permission.service'
-import { Permission } from '@/permission/entities/permission.entity'
+import { PermissionEntity } from '@/permission/entities/permission.entity'
 
 @Injectable()
 export class PluginService {
@@ -48,66 +48,33 @@ export class PluginService {
 	 */
 	async create(file: Express.Multer.File) {
 		const { originalname, buffer } = file
-		// 检查文件是否存存在
 		if (existsSync(join(this.staticDir, originalname))) throw new BadParamsException('40026')
 
-		// 解析文件字符串信息为token数组
 		const { data, error } = analyse(buffer.toString())
 		if (error) throw new BadParamsException('40019')
-		// 将token数组解析为虚拟节点树
 		const astNode = await nodeParser(data)
 
-		// 获取插件名称
 		const pluginName = getModuleName(astNode)
-		// 检查插件名称是否已经被使用过
 		const pluginNameCount = await this.pluginRepository.countBy({ key: pluginName })
 		if (DefaultPluginInfo.pluginNames.includes(pluginName) || pluginNameCount > 0)
 			throw new BadParamsException('40021')
-		// 获取插件描述的路由信息
+
 		const routerInfo = getRouterInfo(astNode)
 		const routeName = routerInfo.name
-		// 检查路由名是否冲突
 		const routeNameCount = await this.pluginRepository.countBy({ routeName })
 		if (DefaultPluginInfo.routeNames.includes(routeName) || routeNameCount > 0)
 			throw new BadParamsException('40022')
 
-		// 获取路由地址信息
 		const routePath = `/${routerInfo.parentPath}/${routerInfo.path}`
-		// 检查路由地址是否冲突
 		const routerPathCount = await this.pluginRepository.countBy({ routePath })
 		if (DefaultPluginInfo.routePaths.includes(routePath) || routerPathCount > 0)
 			throw new BadParamsException('40020')
 
-		// 获取模块描述
 		const description = getModuleDescription(astNode)
-		// 获取模块名称
 		const comment = getModuleComment(astNode)
-		// 检查当前路由权限是否存在
-		if (await this.permissionService.hasPermissionByKey(routerInfo.name)) throw new BadParamsException('40023')
 
-		let parentPermission: Permission
-		// 如果不存在父级权限则添加父级权限
-		if (routerInfo.parentName && !(await this.permissionService.hasPermissionByKey(routerInfo.parentName))) {
-			parentPermission = await this.permissionService.create({
-				key: routerInfo.parentName,
-				title: routerInfo.parentTitle
-			})
-		} else {
-			parentPermission = await this.permissionService.findOneByKey(routerInfo.parentName)
-		}
-		// 插入上级路由信息
-		const { id } = await this.permissionService.create({
-			title: comment,
-			description,
-			key: routerInfo.name,
-			parentId: parentPermission.id
-		})
+		await this.pluginPermission(comment, description, routerInfo)
 
-		await this.permissionService.updateHasChildren(id, true)
-		if (!parentPermission.hasChildren) await this.permissionService.updateHasChildren(parentPermission.id, true)
-
-		// 批量添加路由子权限信息
-		await Promise.all(this.genChildrenPermission(id, comment, description, routerInfo))
 		// 写入文件服务器中
 		writeFileSync(join(this.staticDir, originalname), buffer)
 		await this.pluginRepository.save({
@@ -127,7 +94,7 @@ export class PluginService {
 	 * @param take 查询数量
 	 * @param search 搜索条件
 	 */
-	async findAll(skip: number, take: number, search?: string) {
+	async table(skip: number, take: number, search?: string) {
 		if (isNotNull(skip) && isNotNull(take)) {
 			let queryBuilder = this.pluginRepository.createQueryBuilder('plugin')
 			if (search) {
@@ -149,7 +116,7 @@ export class PluginService {
 	 * 获取插件详情
 	 * @param id 插件ID
 	 */
-	findOne(id: number) {
+	query(id: number) {
 		return this.pluginRepository.findOneBy({ id })
 	}
 
@@ -159,11 +126,7 @@ export class PluginService {
 	 * @param updatePluginDto 插件更新信息
 	 */
 	update(id: number, updatePluginDto: UpdatePluginDto) {
-		const pluginDto: any = {}
-		const { name, description } = updatePluginDto
-		if (name) pluginDto.name = name
-		if (description) pluginDto.description = description
-		return this.pluginRepository.update(id, pluginDto)
+		return this.pluginRepository.update(id, new UpdatePluginDto(updatePluginDto))
 	}
 
 	/**
@@ -174,33 +137,16 @@ export class PluginService {
 		const pluginInfo = await this.pluginRepository.findOneBy({ id: rid })
 		if (!pluginInfo) throw new BadParamsException('40024')
 
-		// 获取文件地址
 		const filePath = join(process.cwd(), 'static', pluginInfo.url)
-		// 解析文件为token流
 		const { data, error } = analyse(readFileSync(filePath).toString())
 		if (error) throw new BadParamsException('40019')
-		// 解析token流为AST树
 		const astNode = await nodeParser(data)
 
-		// 获取当前插件权限信息
-		const currentPermission = await this.permissionService.findOneByKey(pluginInfo.routeName)
-		if (!currentPermission) throw new BadParamsException('40025')
+		const permission = await this.permissionService.findOneByKey(pluginInfo.routeName)
+		if (!permission) throw new BadParamsException('40025')
 
-		// 获取当前插件子权限信息
-		const childrenPermission = await this.permissionService.getPermissionByParent(currentPermission.id)
-		if (!childrenPermission) throw new BadParamsException('40025')
+		await this.permissionService.deleteForce(permission.id)
 
-		// 获取所需要删除的所有权限ID
-		const permissionIds = [...childrenPermission.map(p => p.id), currentPermission.id]
-		// 批量删除角色关联的权限信息
-		await this.permissionService.removeRolePermissionByIds(permissionIds)
-		// 批量删除当前插件子权限信息
-		await this.permissionService.deletePermissionByParentId(currentPermission.id)
-		// 删除当前权限信息
-		await this.permissionService.remove(currentPermission.id)
-		if (currentPermission.parentId) {
-			await this.permissionService.resetParentHasChildren(currentPermission.parentId)
-		}
 		await this.pluginRepository.softDelete(rid)
 		renameSync(filePath, `${filePath}.bak`)
 		try {
@@ -213,6 +159,33 @@ export class PluginService {
 		} catch (e) {
 			throw new BuildErrorException('50001')
 		}
+	}
+
+	/**
+	 * 插件权限功数据生成
+	 * @param comment 插件名
+	 * @param description 插件描述
+	 * @param routerInfo 路由信息
+	 * @private
+	 */
+	private async pluginPermission(comment: string, description: string, routerInfo: RouterConfig) {
+		if (await this.permissionService.keyIsExited(routerInfo.name)) throw new BadParamsException('40023')
+		let parentPermission: PermissionEntity
+		if (routerInfo.parentName && !(await this.permissionService.keyIsExited(routerInfo.parentName))) {
+			parentPermission = await this.permissionService.create({
+				key: routerInfo.parentName,
+				title: routerInfo.parentTitle
+			})
+		} else {
+			parentPermission = await this.permissionService.findOneByKey(routerInfo.parentName)
+		}
+		const { id } = await this.permissionService.create({
+			title: comment,
+			description,
+			key: routerInfo.name,
+			parentId: parentPermission.id
+		})
+		await Promise.all(this.genChildrenPermission(id, comment, description, routerInfo))
 	}
 
 	/**

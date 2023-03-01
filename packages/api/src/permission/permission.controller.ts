@@ -16,22 +16,22 @@ export class PermissionController {
 	@Get()
 	findAll(@Query() pageDto: PageDto) {
 		const { skip, take } = PageDto.setSkipTake(pageDto)
-		return this.permissionService.getTablePermissions(skip, take, pageDto.search)
+		return this.permissionService.table(skip, take, pageDto.search)
 	}
 
 	@Get('tree')
 	findPermission() {
-		return this.permissionService.getPermissionTree()
+		return this.permissionService.queryTree()
 	}
 
 	@Get(':id/children')
 	findByParent(@Param('id') id: string) {
-		return this.permissionService.getPermissionByParent(+id)
+		return this.permissionService.queryChildren(+id)
 	}
 
 	@Get(':id')
 	findOne(@Param('id') id: string) {
-		return this.permissionService.findOne(+id)
+		return this.permissionService.query(+id)
 	}
 
 	@Patch(':id')
@@ -41,6 +41,6 @@ export class PermissionController {
 
 	@Delete(':id')
 	remove(@Param('id') id: string) {
-		return this.permissionService.remove(+id)
+		return this.permissionService.delete(+id)
 	}
 }

@@ -18,12 +18,12 @@ export class PluginController {
 	@Get()
 	findAll(@Query() pageDto: PageDto) {
 		const { skip, take } = PageDto.setSkipTake(pageDto)
-		return this.pluginService.findAll(skip, take, pageDto.search)
+		return this.pluginService.table(skip, take, pageDto.search)
 	}
 
 	@Get(':id')
 	findOne(@Param('id') id: string) {
-		return this.pluginService.findOne(+id)
+		return this.pluginService.query(+id)
 	}
 
 	@Patch(':id')

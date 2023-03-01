@@ -1,110 +1,103 @@
 import { Injectable } from '@nestjs/common'
 import { compareSync, hash } from 'bcryptjs'
 import { LoginUserDto } from '@/sys/dto/login-user.dto'
-import { InjectRepository } from '@nestjs/typeorm'
-import { User } from '@/user/entities/user.entity'
-import { In, IsNull, Not, Repository } from 'typeorm'
 import { sign } from 'jsonwebtoken'
 import { JwtSalt } from '@/config/jwt-config'
-import { Role } from '@/role/entities/role.entity'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
-import { Permission } from '@/permission/entities/permission.entity'
-import { UserRole } from '@/common/entities/user-role.entity'
-import { RolePermission } from '@/common/entities/role-permission.entity'
 import { filterObj } from '@/common/utils/filterObj'
 import { ResetPasswordDto } from '@/sys/dto/reset-password.dto'
+import { UserService } from '@/user/user.service'
+import { RoleService } from '@/role/role.service'
 
 @Injectable()
 export class SysService {
-	constructor(
-		@InjectRepository(User) private readonly userRepository: Repository<User>,
-		@InjectRepository(Role) private readonly roleRepository: Repository<Role>,
-		@InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
-		@InjectRepository(UserRole) private readonly userRoleRepository: Repository<UserRole>,
-		@InjectRepository(RolePermission) private readonly rolePermissionRepository: Repository<RolePermission>
-	) {}
+	constructor(private readonly userService: UserService, private readonly roleService: RoleService) {}
 
 	async login(loginDto: LoginUserDto) {
-		const user = await this.userRepository.findOneBy({ username: loginDto.username })
-		if (!user) throw new BadParamsException('40006')
-		const result = compareSync(loginDto.password, user.password)
-		if (!result) throw new BadParamsException('40007')
+		const user = await this.userService.queryByName(loginDto.username)
 
-		const userRole = await this.userRoleRepository.findOne({
-			where: {
-				userId: user.id,
-				isMajor: true
-			},
-			select: ['roleId']
-		})
-		if (!userRole) {
+		if (!user) throw new BadParamsException('40006')
+		if (!user.major) throw new BadParamsException('40012')
+
+		if (!compareSync(loginDto.password, user.password)) {
+			throw new BadParamsException('40007')
+		}
+
+		if (!(await this.roleService.isExited([user.major]))) {
 			throw new BadParamsException('40012')
 		}
 		return {
-			token: sign({ uid: `${user.id}`, rid: `${userRole.roleId}` }, JwtSalt, {
+			token: sign({ uid: `${user.id}`, rid: `${user.major}` }, JwtSalt, {
 				expiresIn: '10h'
 			})
 		}
 	}
 
-	async resetPassword(resetPasswordDto: ResetPasswordDto, uid: number) {
-		const user = await this.userRepository.findOneBy({ id: uid })
+	/**
+	 * 重置密码
+	 * @param uid 用户ID
+	 * @param resetPasswordDto 用户密码信息
+	 */
+	async resetPassword(uid: number, resetPasswordDto: ResetPasswordDto) {
+		if (!(await this.userService.isExited([uid]))) {
+			throw new BadParamsException('40006')
+		}
+
+		const user = await this.userService.query(uid)
 		if (!user) throw new BadParamsException('40006')
-		const result = compareSync(resetPasswordDto.currentPassword, user.password)
-		if (!result) throw new BadParamsException('40007')
-		const newPassword = await hash(resetPasswordDto.newPassword, 10)
-		return this.userRepository.update(uid, { password: newPassword })
+
+		if (!compareSync(resetPasswordDto.currentPassword, user.password)) {
+			throw new BadParamsException('40007')
+		}
+
+		return this.userService.updatePasswd(uid, await hash(resetPasswordDto.newPassword, 10))
 	}
 
+	/**
+	 * 切换用户角色
+	 * @param uid 用户ID
+	 * @param rid 角色ID
+	 */
 	async toggleUserRole(uid: number, rid: number) {
-		const rolePermissions = await this.rolePermissionRepository.find({
-			where: { roleId: rid },
-			select: ['permissionId']
-		})
-		const permissionsResult = await this.permissionRepository.find({
-			select: ['key'],
-			where: { key: Not(IsNull()), id: In(rolePermissions.map(p => p.permissionId)) },
-			order: { createTime: 'DESC' }
-		})
+		if (!(await this.userService.isExited([uid]))) {
+			throw new BadParamsException('40006')
+		}
+		if (!(await this.roleService.isExited([rid]))) {
+			throw new BadParamsException('40001')
+		}
+		const role = await this.roleService.query(rid)
+		const permission = await role.permissions
 		return {
-			permission: permissionsResult.map(pr => pr.key),
+			permission: permission.map(pr => pr.key),
 			token: sign({ uid: `${uid}`, rid: `${rid}` }, JwtSalt, {
 				expiresIn: '5d'
 			})
 		}
 	}
 
+	/**
+	 * 获取用户登录信息
+	 * @param uid 用户ID
+	 * @param rid 角色ID
+	 */
 	async getProfile(uid: number, rid: number) {
-		const user = await this.userRepository.findOneBy({ id: uid })
-		let permissions = []
-		let roles: Role[] = []
-
-		const userRoles = await this.userRoleRepository.find({ where: { userId: uid } })
-		if (userRoles.length > 0) {
-			roles = await this.roleRepository.find({
-				select: ['title', 'id'],
-				where: { id: In(userRoles.map(ur => ur.roleId)) }
-			})
+		if (!(await this.userService.isExited([uid]))) {
+			throw new BadParamsException('40006')
 		}
-
-		const userMajorPermissions = await this.rolePermissionRepository.find({
-			where: { roleId: rid },
-			select: ['permissionId']
-		})
-		if (userMajorPermissions.length > 0) {
-			const permissionResult = await this.permissionRepository.find({
-				select: ['key'],
-				where: { key: Not(IsNull()), id: In(userMajorPermissions.map(p => p.permissionId)) },
-				order: { createTime: 'DESC' }
-			})
-			permissions = permissionResult.map(pr => pr.key)
+		if (!(await this.roleService.isExited([rid]))) {
+			throw new BadParamsException('40001')
 		}
+		const user = await this.userService.query(uid)
+
+		const roles = await user.roles
+		const role = await this.roleService.query(rid)
+
+		const permissions = await role.permissions
 
 		return {
 			...filterObj(user, key => key !== 'password'),
-			majorId: rid,
-			permissions,
-			roles
+			roles,
+			permissions: permissions.map(p => p.key)
 		}
 	}
 }

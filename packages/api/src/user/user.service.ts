@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { User } from './entities/user.entity'
-import { Role } from '@/role/entities/role.entity'
+import { UserEntity } from './entities/user.entity'
+import { RoleEntity } from '@/role/entities/role.entity'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
 import { UserRole } from '@/common/entities/user-role.entity'
 import { UserRoleDto, UserRolesDto } from '@/user/dto/user-role.dto'
@@ -15,8 +15,7 @@ import { RoleService } from '@/role/role.service'
 export class UserService {
 	constructor(
 		private readonly roleService: RoleService,
-		@InjectRepository(User) private readonly userRepository: Repository<User>,
-		@InjectRepository(UserRole) private readonly userRoleRepository: Repository<UserRole>
+		@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>
 	) {}
 
 	/**
@@ -25,11 +24,39 @@ export class UserService {
 	 */
 	async create(createUserDto: CreateUserDto) {
 		const count = await this.userRepository.countBy({ username: createUserDto.username })
-		if (count !== 0) {
-			throw new BadParamsException('40009')
+		if (count !== 0) throw new BadParamsException('40009')
+		return this.userRepository.save(Object.assign(new UserEntity(), createUserDto))
+	}
+
+	/**
+	 * 删除用户
+	 * @param id 用户ID
+	 */
+	async delete(id: number) {
+		const user = await this.userRepository.findOneBy({ id })
+
+		const roles = await user.roles
+		if (roles.length > 0) {
+			await this.userRepository.update(id, { roles: Promise.resolve([]) })
 		}
-		// 使用Object.assign是为调用User对象中encryptPwd函数
-		return this.userRepository.save(Object.assign(new User(), createUserDto))
+		return this.userRepository.softDelete({ id })
+	}
+
+	/**
+	 * 更新用户信息
+	 * @param id 用户ID
+	 * @param updateUserDto 需要更新的数据
+	 */
+	update(id: number, updateUserDto: UpdateUserDto) {
+		return this.userRepository.update(id, updateUserDto)
+	}
+
+	/**
+	 * 查询用户详情
+	 * @param id 用户ID
+	 */
+	async query(id: number) {
+		return await this.userRepository.findOneBy({ id })
 	}
 
 	/**
@@ -38,11 +65,13 @@ export class UserService {
 	 * @param take 查询数量
 	 * @param search 搜索关键词
 	 */
-	async searchUser(skip: number, take: number, search?: string) {
+	async table(skip?: number, take?: number, search?: string) {
+		if (skip === undefined || take === undefined) return this.userRepository.find()
+
 		let queryBuilder = this.userRepository
 			.createQueryBuilder('user')
 			.leftJoinAndMapMany('user.majors', UserRole, 'user_role', 'user_role.userId = user.id')
-			.leftJoinAndMapMany('user.roles', Role, 'role', 'role.id = user_role.roleId')
+			.leftJoinAndMapMany('user.roles', RoleEntity, 'role', 'role.id = user_role.roleId')
 		if (search) {
 			queryBuilder = queryBuilder
 				.where('user.username like :search', { search: `%${search}%` })
@@ -66,78 +95,50 @@ export class UserService {
 	}
 
 	/**
-	 * 查询用户详情
-	 * @param id 用户ID
+	 * 查看用户是否存在
+	 * @param ids 用户ID列表
 	 */
-	async findOne(id: number) {
-		return await this.userRepository.findOneBy({ id })
+	async isExited(ids: number[]) {
+		const count = await this.userRepository.countBy({ id: In(ids), deleteTime: null })
+		return count === ids.length
 	}
 
 	/**
-	 * 更新用户信息
-	 * @param id 用户ID
-	 * @param updateUserDto 需要更新的数据
+	 * 通过用户名查询用户信息
+	 * @param username 用户名
 	 */
-	update(id: number, updateUserDto: UpdateUserDto) {
-		return this.userRepository.update(id, updateUserDto)
+	queryByName(username: string) {
+		const user = this.userRepository.findOneBy({ username })
+		return user
 	}
 
 	/**
-	 * 删除用户
+	 * 重置用户密码
 	 * @param id 用户ID
+	 * @param password 新密码
 	 */
-	async remove(id: number) {
-		const userRoleIds = await this.userRoleRepository.find({
-			where: { userId: id },
-			select: ['id']
-		})
-		// 清除删除用户所关联的角色信息
-		if (userRoleIds.length > 0) {
-			await this.userRoleRepository
-				.createQueryBuilder()
-				.delete()
-				.whereInIds(userRoleIds.map(u => u.id))
-				.execute()
-		}
-		return this.userRepository.softDelete({ id })
+	updatePasswd(id: number, password: string) {
+		return this.userRepository.update(id, { password })
 	}
 
 	/**
 	 * 设置用户角色
 	 * @param uid 用户ID
-	 * @param roles 角色列表
+	 * @param rIds 角色列表
 	 */
-	async setUserRoles({ uid, roles }: UserRolesDto) {
-		// 当前用户角色不能为空
-		if (roles.length === 0) throw new BadParamsException('40010')
+	async setRoles({ id, rIds }: UserRolesDto) {
+		const user = await this.userRepository.findOne({ where: { id }, select: ['major'] })
+		if (!user) throw new BadParamsException('40006')
 
-		// 查询用户ID是否存在
-		const uidCount = await this.userRepository.countBy({ id: uid })
-		if (uidCount === 0) throw new BadParamsException('40006')
+		if (rIds.length === 0) throw new BadParamsException('40010')
+		if (await this.roleService.isExited(rIds)) throw new BadParamsException('40001')
 
-		// 查询传入的角色信息
-		const rIdCount = await this.roleService.findRoleCountByIds(roles)
-		if (rIdCount !== roles.length) throw new BadParamsException('40001')
-
-		// 查询当前用户ID包含的角色信息
-		const userRoles = await this.userRoleRepository.findBy({ userId: uid })
-		// 获取用户主要角色
-		const majorRole = userRoles.filter(ur => ur.isMajor)
-		if (majorRole.length > 0 && !roles.includes(majorRole[0].roleId)) throw new BadParamsException('40017')
-
-		// 需要删除的用户角色关联信息
-		const deleteRoles = userRoles.filter(role => roles.indexOf(role.roleId) === -1).map(r => r.id)
-		if (deleteRoles.length > 0) {
-			await this.userRoleRepository.createQueryBuilder().delete().whereInIds(deleteRoles).execute()
+		const roles = await this.roleService.queryByIds(rIds)
+		if (!user.major || !rIds.includes(user.major)) {
+			await this.userRepository.update(id, { major: rIds[0] })
 		}
-		// 需要添加的用户角色关联信息
-		const insertRoles = roles
-			.filter(rid => userRoles.findIndex(role => role.roleId === rid) === -1)
-			.map(rid => new UserRole({ roleId: rid, userId: uid }))
-		if (insertRoles.length > 0) {
-			await this.userRoleRepository.createQueryBuilder().insert().values(insertRoles).execute()
-		}
-		return this.roleService.findRoleByIds(roles)
+		await this.userRepository.update(id, { roles: Promise.resolve(roles) })
+		return roles
 	}
 
 	/**
@@ -145,23 +146,10 @@ export class UserService {
 	 * @param uid 用户ID
 	 * @param rid 角色ID
 	 */
-	async setMajorRole({ uid, rid }: UserRoleDto) {
-		const uidCount = await this.userRepository.countBy({ id: uid })
-		if (uidCount === 0) throw new BadParamsException('40006')
-		// 查询用户角色不能为空
-		const ridCount = await this.roleService.findRoleCountByIds([rid])
-		if (ridCount === 0) throw new BadParamsException('40001')
-
-		const curUserRoles = await this.userRoleRepository.findBy({ userId: uid })
-		if (curUserRoles.length === 0) throw new BadParamsException('40004')
-
-		const majorRole = curUserRoles.filter(r => r.isMajor)
-		if (majorRole.length > 0) {
-			if (majorRole[0].roleId === rid) {
-				throw new BadParamsException('40003')
-			}
-			await this.userRoleRepository.update(majorRole[0].id, { isMajor: false })
-		}
-		return this.userRoleRepository.update({ roleId: rid, userId: uid }, { isMajor: true })
+	async setMajorRole({ id, rid }: UserRoleDto) {
+		const user = await this.userRepository.findOneBy({ id })
+		if (!user) throw new BadParamsException('40006')
+		if (await this.roleService.isExited([rid])) throw new BadParamsException('40001')
+		return this.userRepository.update(id, { major: rid })
 	}
 }
