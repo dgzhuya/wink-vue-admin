@@ -30,12 +30,10 @@ export class RoleService {
 	async delete(id: number) {
 		const role = await this.roleRepository.findOneBy({ id })
 
-		const users = await role.users
-		if (users.length > 0) throw new BadParamsException('40014')
+		if (role.users.length > 0) throw new BadParamsException('40014')
 
-		const permissions = await role.permissions
-		if (permissions.length > 0) {
-			await this.roleRepository.update(id, { permissions: Promise.resolve([]) })
+		if (role.permissions.length > 0) {
+			await this.roleRepository.update(id, { permissions: [] })
 		}
 		return this.roleRepository.softDelete(id)
 	}
@@ -73,10 +71,7 @@ export class RoleService {
 				.orWhere('role.description like :search', { search: `%${search}%` })
 		}
 		const [list, total] = await queryBuilder.skip(skip).take(take).getManyAndCount()
-		return {
-			list,
-			total
-		}
+		return { list, total }
 	}
 
 	/**
@@ -85,7 +80,7 @@ export class RoleService {
 	 */
 	async getPermissions(id: number) {
 		const role = await this.roleRepository.findOne({ where: { id }, select: ['permissions'] })
-		return await role.permissions
+		return role.permissions
 	}
 
 	/**
@@ -107,7 +102,7 @@ export class RoleService {
 		if (await this.permissionService.isExited(pIds)) throw new BadParamsException('40005')
 
 		const permissions = await this.permissionService.queryByIds(pIds)
-		await this.roleRepository.update(id, { permissions: Promise.resolve(permissions) })
+		await this.roleRepository.update(id, { permissions })
 
 		return permissions
 	}
@@ -117,7 +112,12 @@ export class RoleService {
 	 * @param ids 角色id集合
 	 */
 	queryByIds(ids: number[]) {
-		return this.roleRepository.findBy({ id: In(ids) })
+		return this.roleRepository.find({
+			where: {
+				id: In(ids)
+			},
+			select: ['id', 'title', 'description']
+		})
 	}
 
 	/**

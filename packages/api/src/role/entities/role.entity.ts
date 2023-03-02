@@ -3,7 +3,7 @@ import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 import { UserEntity } from '@/user/entities/user.entity'
 import { PermissionEntity } from '@/permission/entities/permission.entity'
 
-@Entity()
+@Entity('w_role')
 export class RoleEntity extends BaseEntity {
 	@Column({ comment: '标题', length: 30 })
 	title: string
@@ -11,11 +11,20 @@ export class RoleEntity extends BaseEntity {
 	@Column({ comment: '角色描述', length: 200, nullable: true })
 	description: string
 
-	@JoinTable()
-	@ManyToMany(() => UserEntity)
-	users: Promise<UserEntity[]>
+	@ManyToMany(() => UserEntity, user => user.roles)
+	users: UserEntity[]
 
-	@JoinTable()
-	@ManyToMany(() => PermissionEntity)
-	permissions: Promise<PermissionEntity[]>
+	@JoinTable({
+		name: 'w_role_permission',
+		joinColumn: {
+			name: 'rid',
+			referencedColumnName: 'id'
+		},
+		inverseJoinColumn: {
+			name: 'pid',
+			referencedColumnName: 'id'
+		}
+	})
+	@ManyToMany(() => PermissionEntity, permission => permission.roles)
+	permissions: PermissionEntity[]
 }
