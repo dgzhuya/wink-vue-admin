@@ -25,11 +25,11 @@ export class PermissionService {
 		if (createPermissionDto.parentId) {
 			const parent = await this.permissionRepository.findOneBy({ id: createPermissionDto.parentId })
 			if (!parent) throw new BadParamsException('40002')
-			const curParentChildren = await parent.children
+			const peer = parent.children
 			await this.update(parent.id, {
-				children: Promise.resolve([...curParentChildren, permission])
+				children: [...peer, permission]
 			})
-			await this.update(permission.id, { parent: Promise.resolve(parent) })
+			await this.update(permission.id, { parent })
 		}
 		return permission
 	}
@@ -41,17 +41,15 @@ export class PermissionService {
 	async delete(id: number) {
 		const permission = await this.query(id)
 
-		const roles = await permission.roles
-		if (roles.length > 0) throw new BadParamsException('40016')
+		if (permission.roles.length > 0) throw new BadParamsException('40016')
 
-		const children = await permission.children
-		if (children.length > 0) throw new BadParamsException('40015')
+		if (permission.children.length > 0) throw new BadParamsException('40015')
 
 		const parent = await permission.parent
 		if (parent) {
-			const pChildren = await parent.children
+			const peer = parent.children
 			await this.permissionRepository.update(parent.id, {
-				children: Promise.resolve(pChildren.filter(p => p.id !== permission.id))
+				children: peer.filter(p => p.id !== permission.id)
 			})
 		}
 		return this.permissionRepository.softDelete(id)
@@ -161,7 +159,7 @@ export class PermissionService {
 	 * @param pid 权限信息
 	 */
 	deleteRole(pid: number) {
-		return this.permissionRepository.update(pid, { roles: Promise.resolve([]) })
+		return this.permissionRepository.update(pid, { roles: [] })
 	}
 
 	/**

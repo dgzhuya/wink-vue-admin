@@ -2,7 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typ
 import { BaseEntity } from '@/common/entities/base.entity'
 import { RoleEntity } from '@/role/entities/role.entity'
 
-@Entity()
+@Entity('w_permission')
 export class PermissionEntity extends BaseEntity {
 	@Column({ comment: '权限名称', length: 100 })
 	title: string
@@ -14,12 +14,11 @@ export class PermissionEntity extends BaseEntity {
 	description: string
 
 	@ManyToOne(() => PermissionEntity, p => p.children)
-	parent: Promise<PermissionEntity>
+	parent: PermissionEntity
 
 	@OneToMany(() => PermissionEntity, p => p.parent)
-	children: Promise<PermissionEntity[]>
+	children: PermissionEntity[]
 
-	@JoinTable()
-	@ManyToMany(() => RoleEntity)
-	roles: Promise<RoleEntity[]>
+	@ManyToMany(() => RoleEntity, role => role.permissions)
+	roles: RoleEntity[]
 }
