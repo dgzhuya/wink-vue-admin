@@ -4,7 +4,6 @@ import { LoginUserDto } from '@/sys/dto/login-user.dto'
 import { sign } from 'jsonwebtoken'
 import { JwtSalt } from '@/config/jwt-config'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
-import { filterObj } from '@/common/utils/filterObj'
 import { ResetPasswordDto } from '@/sys/dto/reset-password.dto'
 import { UserService } from '@/user/user.service'
 import { RoleService } from '@/role/role.service'
@@ -15,17 +14,16 @@ export class SysService {
 
 	async login(loginDto: LoginUserDto) {
 		const user = await this.userService.queryByName(loginDto.username)
-
 		if (!user) throw new BadParamsException('40006')
-		if (!user.major) throw new BadParamsException('40012')
 
 		if (!compareSync(loginDto.password, user.password)) {
 			throw new BadParamsException('40007')
 		}
 
-		if (!(await this.roleService.isExited([user.major]))) {
+		if (!user.major || !(await this.roleService.isExited([user.major]))) {
 			throw new BadParamsException('40012')
 		}
+
 		return {
 			token: sign({ uid: `${user.id}`, rid: `${user.major}` }, JwtSalt, {
 				expiresIn: '10h'
@@ -66,9 +64,8 @@ export class SysService {
 			throw new BadParamsException('40001')
 		}
 		const role = await this.roleService.query(rid)
-		const permission = await role.permissions
 		return {
-			permission: permission.map(pr => pr.key),
+			permission: role.permissions.map(pr => pr.key),
 			token: sign({ uid: `${uid}`, rid: `${rid}` }, JwtSalt, {
 				expiresIn: '5d'
 			})
@@ -87,16 +84,13 @@ export class SysService {
 		if (!(await this.roleService.isExited([rid]))) {
 			throw new BadParamsException('40001')
 		}
+
 		const user = await this.userService.query(uid)
-
-		const roles = await user.roles
 		const role = await this.roleService.query(rid)
-
-		const permissions = await role.permissions
+		const permissions = role.permissions
 
 		return {
-			...filterObj(user, key => key !== 'password'),
-			roles,
+			...user,
 			permissions: permissions.map(p => p.key)
 		}
 	}
