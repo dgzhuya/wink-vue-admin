@@ -20,13 +20,13 @@
 		"@rollup/plugin-commonjs": "^24.0.1",
 		"@rollup/plugin-json": "^6.0.0",
 		"@rollup/plugin-node-resolve": "^15.0.1",
-		"@types/node": "^18.14.1",
+		"@types/node": "^18.14.3",
 		"@types/shelljs": "^0.8.11",
-		"@typescript-eslint/eslint-plugin": "^5.53.0",
-		"@typescript-eslint/parser": "^5.53.0",
+		"@typescript-eslint/eslint-plugin": "^5.54.0",
+		"@typescript-eslint/parser": "^5.54.0",
 		"commitizen": "^4.3.0",
 		"cz-git": "^1.5.0",
-		"eslint": "^8.34.0",
+		"eslint": "^8.35.0",
 		"eslint-config-prettier": "^8.6.0",
 		"eslint-config-standard": "^17.0.0",
 		"eslint-plugin-import": "^2.27.5",
@@ -37,7 +37,7 @@
 		"esno": "^0.16.3",
 		"husky": "^8.0.3",
 		"prettier": "^2.8.4",
-		"rollup": "^3.17.2",
+		"rollup": "^3.18.0",
 		"rollup-plugin-dts": "^5.2.0",
 		"rollup-plugin-typescript2": "^0.34.1",
 		"shelljs": "^0.8.5",
@@ -46,12 +46,6 @@
 	"config": {
 		"commitizen": {
 			"path": "node_modules/cz-git"
-		}
-	},
-	"pnpm": {
-		"overrides": {
-			"@types/superagent": "4.1.14",
-			"class-validator": "0.13.0"
 		}
 	}
 }
