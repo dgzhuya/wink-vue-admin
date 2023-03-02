@@ -1,9 +1,16 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+	CreateDateColumn,
+	DeleteDateColumn,
+	Entity,
+	PrimaryColumn,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn
+} from 'typeorm'
 
 @Entity()
 export abstract class BaseEntity {
 	@PrimaryGeneratedColumn()
-	@Column({ comment: 'ID', primary: true })
+	@PrimaryColumn({ comment: '主键ID', type: 'int' })
 	id: number
 
 	@CreateDateColumn({ comment: '创建时间', name: 'create_time' })
