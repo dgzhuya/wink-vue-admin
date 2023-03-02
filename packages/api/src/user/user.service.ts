@@ -3,12 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { UserEntity } from './entities/user.entity'
-import { RoleEntity } from '@/role/entities/role.entity'
+import { UserEntity, UserFields } from './entities/user.entity'
 import { BadParamsException } from '@/common/exception/bad-params-exception'
-import { UserRole } from '@/common/entities/user-role.entity'
 import { UserRoleDto, UserRolesDto } from '@/user/dto/user-role.dto'
-import { filterObj } from '@/common/utils/filterObj'
 import { RoleService } from '@/role/role.service'
 
 @Injectable()
@@ -34,10 +31,8 @@ export class UserService {
 	 */
 	async delete(id: number) {
 		const user = await this.userRepository.findOneBy({ id })
-
-		const roles = await user.roles
-		if (roles.length > 0) {
-			await this.userRepository.update(id, { roles: Promise.resolve([]) })
+		if (user.roles.length > 0) {
+			await this.userRepository.update(id, { roles: [] })
 		}
 		return this.userRepository.softDelete({ id })
 	}
@@ -55,8 +50,13 @@ export class UserService {
 	 * 查询用户详情
 	 * @param id 用户ID
 	 */
-	async query(id: number) {
-		return await this.userRepository.findOneBy({ id })
+	query(id: number) {
+		return this.userRepository
+			.createQueryBuilder('user')
+			.leftJoinAndSelect('user.roles', 'role')
+			.select([...UserFields.map(f => `user.${f}`), ...['id', 'title'].map(f => `role.${f}`)])
+			.where({ id })
+			.getOne()
 	}
 
 	/**
@@ -66,32 +66,23 @@ export class UserService {
 	 * @param search 搜索关键词
 	 */
 	async table(skip?: number, take?: number, search?: string) {
-		if (skip === undefined || take === undefined) return this.userRepository.find()
-
 		let queryBuilder = this.userRepository
 			.createQueryBuilder('user')
-			.leftJoinAndMapMany('user.majors', UserRole, 'user_role', 'user_role.userId = user.id')
-			.leftJoinAndMapMany('user.roles', RoleEntity, 'role', 'role.id = user_role.roleId')
+			.leftJoinAndSelect('user.roles', 'role')
+			.select([...UserFields.map(f => `user.${f}`), ...['id', 'title'].map(f => `role.${f}`)])
+
+		if (skip !== undefined && take !== undefined) {
+			queryBuilder = queryBuilder.take(take).skip(skip)
+		}
+
 		if (search) {
 			queryBuilder = queryBuilder
 				.where('user.username like :search', { search: `%${search}%` })
 				.orWhere('user.nickname like :search', { search: `%${search}%` })
 		}
-		const [list, total] = await queryBuilder.take(take).skip(skip).getManyAndCount()
-		return {
-			total,
-			list: list.map((user: any) => {
-				const major = user.majors.filter(m => m.isMajor)
-				const roles = user.roles.map(r => ({ id: r.id, title: r.title }))
-				const roleIds = roles.map(r => r.id)
-				return {
-					majorId: major.length > 0 ? major[0].roleId : null,
-					...filterObj(user, key => key !== 'password' && key !== 'majors'),
-					roles,
-					roleIds
-				}
-			})
-		}
+
+		const [list, total] = await queryBuilder.getManyAndCount()
+		return { list, total }
 	}
 
 	/**
@@ -108,8 +99,7 @@ export class UserService {
 	 * @param username 用户名
 	 */
 	queryByName(username: string) {
-		const user = this.userRepository.findOneBy({ username })
-		return user
+		return this.userRepository.findOneBy({ username })
 	}
 
 	/**
@@ -127,18 +117,17 @@ export class UserService {
 	 * @param rIds 角色列表
 	 */
 	async setRoles({ id, rIds }: UserRolesDto) {
-		const user = await this.userRepository.findOne({ where: { id }, select: ['major'] })
+		const user = await this.userRepository.findOne({ where: { id }, select: ['major', 'id'] })
 		if (!user) throw new BadParamsException('40006')
 
 		if (rIds.length === 0) throw new BadParamsException('40010')
-		if (await this.roleService.isExited(rIds)) throw new BadParamsException('40001')
+		if (!(await this.roleService.isExited(rIds))) throw new BadParamsException('40001')
 
 		const roles = await this.roleService.queryByIds(rIds)
 		if (!user.major || !rIds.includes(user.major)) {
 			await this.userRepository.update(id, { major: rIds[0] })
 		}
-		await this.userRepository.update(id, { roles: Promise.resolve(roles) })
-		return roles
+		await this.userRepository.update(id, { roles })
 	}
 
 	/**

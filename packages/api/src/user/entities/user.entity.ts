@@ -1,10 +1,22 @@
 import { BaseEntity } from 'src/common/entities/base.entity'
-import { BeforeInsert, Column, Entity, ManyToMany, JoinTable } from 'typeorm'
+import { BeforeInsert, Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 import { hash } from 'bcryptjs'
 import { Exclude } from 'class-transformer'
 import { RoleEntity } from '@/role/entities/role.entity'
 
-@Entity()
+export const UserFields: (keyof UserEntity)[] = [
+	'id',
+	'username',
+	'mobile',
+	'gender',
+	'major',
+	'address',
+	'avatar',
+	'createTime',
+	'updateTime'
+]
+
+@Entity('w_user')
 export class UserEntity extends BaseEntity {
 	@Column({ length: 30, comment: '用户名' })
 	username: string
@@ -18,7 +30,7 @@ export class UserEntity extends BaseEntity {
 	@Column({ comment: '性别', type: 'tinyint', nullable: true })
 	gender: number
 
-	@Column({ comment: '主要角色', type: 'tinyint', nullable: true })
+	@Column({ comment: '主要角色', type: 'int', nullable: true })
 	major: number
 
 	@Column({ comment: '地址', length: 30, nullable: true })
@@ -31,9 +43,19 @@ export class UserEntity extends BaseEntity {
 	@Column({ length: 100, comment: '用户密码' })
 	password: string
 
-	@JoinTable()
-	@ManyToMany(() => RoleEntity)
-	roles: Promise<RoleEntity[]>
+	@JoinTable({
+		name: 'w_user_role',
+		joinColumn: {
+			name: 'uid',
+			referencedColumnName: 'id'
+		},
+		inverseJoinColumn: {
+			name: 'rid',
+			referencedColumnName: 'id'
+		}
+	})
+	@ManyToMany(() => RoleEntity, role => role.users)
+	roles: RoleEntity[]
 
 	@BeforeInsert()
 	async encryptPwd() {
