@@ -1,12 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity } from 'typeorm'
 import { BaseEntity } from 'src/common/entities/base.entity'
 
-@Entity()
-export class Plugin extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	@Column({ primary: true })
-	id: number
-
+@Entity('w_plugin')
+export class PluginEntity extends BaseEntity {
 	@Column({ comment: '插件文件地址' })
 	url: string
 

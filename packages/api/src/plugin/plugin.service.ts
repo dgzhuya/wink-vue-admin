@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { UpdatePluginDto } from './dto/update-plugin.dto'
-import { Plugin } from './entities/plugin.entity'
+import { PluginEntity } from './entities/plugin.entity'
 import { isNotNull } from '@/common/utils/isNotNull'
 import { writeFileSync, existsSync, mkdirSync, readFileSync, renameSync } from 'fs'
 import { join } from 'path'
@@ -33,7 +33,7 @@ export class PluginService {
 
 	constructor(
 		private readonly permissionService: PermissionService,
-		@InjectRepository(Plugin) private readonly pluginRepository: Repository<Plugin>
+		@InjectRepository(PluginEntity) private readonly pluginRepository: Repository<PluginEntity>
 	) {
 		this.formatPath = join(__dirname, '../../../../', 'script/format.mjs')
 
@@ -94,22 +94,18 @@ export class PluginService {
 	 * @param take 查询数量
 	 * @param search 搜索条件
 	 */
-	async table(skip: number, take: number, search?: string) {
-		if (isNotNull(skip) && isNotNull(take)) {
-			let queryBuilder = this.pluginRepository.createQueryBuilder('plugin')
-			if (search) {
-				queryBuilder = queryBuilder
-					.where('plugin.name like :search', { search: `%${search}%` })
-					.orWhere('plugin.key like :search', { search: `%${search}%` })
-					.orWhere('plugin.description like :search', { search: `%${search}%` })
-			}
-			const [list, total] = await queryBuilder.skip(skip).take(take).getManyAndCount()
-			return {
-				list,
-				total
-			}
+	async table(skip?: number, take?: number, search?: string) {
+		if (skip === undefined || take === undefined) return this.pluginRepository.find()
+
+		let queryBuilder = this.pluginRepository.createQueryBuilder('plugin')
+		if (search) {
+			queryBuilder = queryBuilder
+				.where('plugin.name like :search', { search: `%${search}%` })
+				.orWhere('plugin.key like :search', { search: `%${search}%` })
+				.orWhere('plugin.description like :search', { search: `%${search}%` })
 		}
-		await this.pluginRepository.find()
+		const [list, total] = await queryBuilder.skip(skip).take(take).getManyAndCount()
+		return { list, total }
 	}
 
 	/**
