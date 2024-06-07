@@ -4,9 +4,9 @@ import { In, Repository } from 'typeorm'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserEntity, UserFields } from './entities/user.entity'
-import { BadParamsException } from '@/common/exception/bad-params-exception'
-import { UserRoleDto, UserRolesDto } from '@/user/dto/user-role.dto'
-import { RoleService } from '@/role/role.service'
+import { BadParamsException } from '@api/common/exception/bad-params-exception'
+import { UserRoleDto, UserRolesDto } from '@api/user/dto/user-role.dto'
+import { RoleService } from '@api/role/role.service'
 
 @Injectable()
 export class UserService {

@@ -1,5 +1,5 @@
 import { HttpException } from '@nestjs/common'
-import { ServerError, ServerErrorErrorCode } from '@/config/error-code'
+import { ServerError, ServerErrorErrorCode } from '@api/config/error-code'
 
 export class BuildErrorException extends HttpException {
 	constructor(code: ServerErrorErrorCode) {

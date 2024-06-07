@@ -4,15 +4,9 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 import { ServerExceptionFilter } from './common/filters/server-execption.filter'
 import { TransformInterceptor } from './common/interceptor/transform.interceptor'
 import { ValidationPipe } from './common/pipe/validation.pipe'
-import { AuthGuard } from '@/common/guard/auth.guard'
-import { setConfigPath } from '@biuxiu/compile'
-import { join } from 'path'
+import { AuthGuard } from '@api/common/guard/auth.guard'
 
 async function bootstrap() {
-	setConfigPath({
-		nestDir: join(__dirname, '../', 'src'),
-		webDir: join(__dirname, '../../web', 'src')
-	})
 	const app = await NestFactory.create(AppModule)
 	app.useGlobalGuards(new AuthGuard())
 	app.useGlobalPipes(new ValidationPipe())

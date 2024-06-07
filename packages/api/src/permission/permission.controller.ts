@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { PermissionService } from './permission.service'
 import { CreatePermissionDto } from './dto/create-permission.dto'
 import { UpdatePermissionDto } from './dto/update-permission.dto'
-import { PageDto } from '@/common/dto/page.dto'
+import { PageDto } from '@api/common/dto/page.dto'
 
 @Controller('permission')
 export class PermissionController {

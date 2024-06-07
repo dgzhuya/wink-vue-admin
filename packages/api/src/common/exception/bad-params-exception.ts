@@ -1,5 +1,5 @@
 import { HttpException } from '@nestjs/common'
-import { ParamsError, ParamsErrorCode } from '@/config/error-code'
+import { ParamsError, ParamsErrorCode } from '@api/config/error-code'
 
 export class BadParamsException extends HttpException {
 	constructor(code: ParamsErrorCode) {

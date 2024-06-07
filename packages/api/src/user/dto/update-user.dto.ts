@@ -1,5 +1,5 @@
 import { IsIn, IsOptional, IsString, Length, Matches } from 'class-validator'
-import { isNotNull } from '@/common/utils/isNotNull'
+import { isNotNull } from '@api/common/utils/isNotNull'
 
 export class UpdateUserDto {
 	constructor(userDto?: UpdateUserDto) {

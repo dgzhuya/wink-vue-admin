@@ -5,11 +5,9 @@ import { UserController } from './user/user.controller'
 import { LoggerMiddleware } from './common/middleware/logger.middleware'
 import { RoleModule } from './role/role.module'
 import { PermissionModule } from './permission/permission.module'
-import { PermissionController } from '@/permission/permission.controller'
-import { RoleController } from '@/role/role.controller'
+import { PermissionController } from '@api/permission/permission.controller'
+import { RoleController } from '@api/role/role.controller'
 import { SysModule } from './sys/sys.module'
-import { PluginModule } from './plugin/plugin.module'
-import { PluginController } from './plugin/plugin.controller'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 
@@ -22,14 +20,11 @@ import { join } from 'path'
 		DbModule,
 		RoleModule,
 		PermissionModule,
-		SysModule,
-		PluginModule
+		SysModule
 	]
 })
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer
-			.apply(LoggerMiddleware)
-			.forRoutes(UserController, PermissionController, RoleController, SysModule, PluginController)
+		consumer.apply(LoggerMiddleware).forRoutes(UserController, PermissionController, RoleController, SysModule)
 	}
 }

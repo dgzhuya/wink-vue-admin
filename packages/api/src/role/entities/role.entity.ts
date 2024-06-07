@@ -1,7 +1,7 @@
 import { BaseEntity } from 'src/common/entities/base.entity'
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
-import { UserEntity } from '@/user/entities/user.entity'
-import { PermissionEntity } from '@/permission/entities/permission.entity'
+import { UserEntity } from '@api/user/entities/user.entity'
+import { PermissionEntity } from '@api/permission/entities/permission.entity'
 
 @Entity('w_role')
 export class RoleEntity extends BaseEntity {

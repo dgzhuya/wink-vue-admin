@@ -2,7 +2,7 @@ import { BaseEntity } from 'src/common/entities/base.entity'
 import { BeforeInsert, Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 import { hash } from 'bcryptjs'
 import { Exclude } from 'class-transformer'
-import { RoleEntity } from '@/role/entities/role.entity'
+import { RoleEntity } from '@api/role/entities/role.entity'
 
 export const UserFields: (keyof UserEntity)[] = [
 	'id',

@@ -1,6 +1,6 @@
 import { IsIn, IsNotEmpty, IsOptional, IsString, Length, Matches, MaxLength } from 'class-validator'
-import { LoginUserDto } from '@/sys/dto/login-user.dto'
-import { isNotNull } from '@/common/utils/isNotNull'
+import { LoginUserDto } from '@api/sys/dto/login-user.dto'
+import { isNotNull } from '@api/common/utils/isNotNull'
 
 export class CreateUserDto extends LoginUserDto {
 	constructor(userDto?: CreateUserDto) {

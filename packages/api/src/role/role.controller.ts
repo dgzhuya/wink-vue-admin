@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import { RoleService } from './role.service'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
-import { RolePermissionDto } from '@/role/dto/role-permission.dto'
-import { PageDto } from '@/common/dto/page.dto'
+import { RolePermissionDto } from '@api/role/dto/role-permission.dto'
+import { PageDto } from '@api/common/dto/page.dto'
 
 @Controller('role')
 export class RoleController {

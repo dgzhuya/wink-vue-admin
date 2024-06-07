@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Query, Param } from '@nestjs/common'
-import { LoginUserDto } from '@/sys/dto/login-user.dto'
-import { SysService } from '@/sys/sys.service'
-import { NoAuthApi, NoAuthToken } from '@/common/utils/passport'
-import { TOKEN_ROLE_ID, TOKEN_USER_ID } from '@/config/auth-config'
-import { BadParamsException } from '@/common/exception/bad-params-exception'
-import { ResetPasswordDto } from '@/sys/dto/reset-password.dto'
+import { LoginUserDto } from '@api/sys/dto/login-user.dto'
+import { SysService } from '@api/sys/sys.service'
+import { NoAuthApi, NoAuthToken } from '@api/common/utils/passport'
+import { TOKEN_ROLE_ID, TOKEN_USER_ID } from '@api/config/auth-config'
+import { BadParamsException } from '@api/common/exception/bad-params-exception'
+import { ResetPasswordDto } from '@api/sys/dto/reset-password.dto'
 
 @Controller('sys')
 export class SysController {

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { CreatePermissionDto } from './dto/create-permission.dto'
 import { UpdatePermissionDto } from './dto/update-permission.dto'
 import { PermissionEntity } from './entities/permission.entity'
-import { BadParamsException } from '@/common/exception/bad-params-exception'
+import { BadParamsException } from '@api/common/exception/bad-params-exception'
 import { In, IsNull, Repository } from 'typeorm'
 
 @Injectable()

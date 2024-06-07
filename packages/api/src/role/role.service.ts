@@ -4,9 +4,9 @@ import { In, Repository } from 'typeorm'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { RoleEntity } from './entities/role.entity'
-import { BadParamsException } from '@/common/exception/bad-params-exception'
-import { RolePermissionDto } from '@/role/dto/role-permission.dto'
-import { PermissionService } from '@/permission/permission.service'
+import { BadParamsException } from '@api/common/exception/bad-params-exception'
+import { RolePermissionDto } from '@api/role/dto/role-permission.dto'
+import { PermissionService } from '@api/permission/permission.service'
 
 @Injectable()
 export class RoleService {

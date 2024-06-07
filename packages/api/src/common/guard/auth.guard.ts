@@ -1,10 +1,10 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Request } from 'express'
 import { verify } from 'jsonwebtoken'
-import { JwtSalt } from '@/config/jwt-config'
-import { logger } from '@/common/log/logger'
-import { NO_AUTH_API, NO_AUTH_TOKEN, TOKEN_ROLE_ID, TOKEN_USER_ID } from '@/config/auth-config'
-import { BadParamsException } from '@/common/exception/bad-params-exception'
+import { JwtSalt } from '@api/config/jwt-config'
+import { logger } from '@api/common/log/logger'
+import { NO_AUTH_API, NO_AUTH_TOKEN, TOKEN_ROLE_ID, TOKEN_USER_ID } from '@api/config/auth-config'
+import { BadParamsException } from '@api/common/exception/bad-params-exception'
 
 @Injectable()
 export class AuthGuard implements CanActivate {

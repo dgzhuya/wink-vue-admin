@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { compareSync, hash } from 'bcryptjs'
-import { LoginUserDto } from '@/sys/dto/login-user.dto'
+import { LoginUserDto } from '@api/sys/dto/login-user.dto'
 import { sign } from 'jsonwebtoken'
-import { JwtSalt } from '@/config/jwt-config'
-import { BadParamsException } from '@/common/exception/bad-params-exception'
-import { ResetPasswordDto } from '@/sys/dto/reset-password.dto'
-import { UserService } from '@/user/user.service'
-import { RoleService } from '@/role/role.service'
+import { JwtSalt } from '@api/config/jwt-config'
+import { BadParamsException } from '@api/common/exception/bad-params-exception'
+import { ResetPasswordDto } from '@api/sys/dto/reset-password.dto'
+import { UserService } from '@api/user/user.service'
+import { RoleService } from '@api/role/role.service'
 
 @Injectable()
 export class SysService {
-	constructor(private readonly userService: UserService, private readonly roleService: RoleService) {}
+	constructor(
+		private readonly userService: UserService,
+		private readonly roleService: RoleService
+	) {}
 
 	async login(loginDto: LoginUserDto) {
 		const user = await this.userService.queryByName(loginDto.username)

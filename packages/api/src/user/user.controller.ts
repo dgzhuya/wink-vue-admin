@@ -13,8 +13,8 @@ import {
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { PageDto } from '@/common/dto/page.dto'
-import { UserRoleDto, UserRolesDto } from '@/user/dto/user-role.dto'
+import { PageDto } from '@api/common/dto/page.dto'
+import { UserRoleDto, UserRolesDto } from '@api/user/dto/user-role.dto'
 
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)
