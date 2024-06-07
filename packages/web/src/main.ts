@@ -3,8 +3,8 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 import permission from './directives/permission'
-import '@/style/index.scss'
-import '@/plugin/svg-icons/virtual'
+import '@web/style/index.scss'
+import '@web/plugin/svg-icons/virtual'
 import './permission'
 
 const app = createApp(App)

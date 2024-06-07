@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-	import { RoleDto, RoleModel } from '@/types/super-admin/role'
-	import { updateRole, createRole } from '@/api/super-admin/role'
-	import { toast } from '@/utils/toast'
-	import { pickerKeyVal } from '@/utils/pickerKeyVal'
+	import { RoleDto, RoleModel } from '@web/types/super-admin/role'
+	import { updateRole, createRole } from '@web/api/super-admin/role'
+	import { toast } from '@web/utils/toast'
+	import { pickerKeyVal } from '@web/utils/pickerKeyVal'
 
 	const props = defineProps<{ role: RoleModel | null; showForm: boolean }>()
 	const roleId = ref(-1)
@@ -67,5 +67,5 @@
 	</el-dialog>
 </template>
 <style lang="scss" scoped>
-	@import '@/style/form.scss';
+	@import '@web/style/form.scss';
 </style>

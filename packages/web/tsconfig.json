@@ -15,8 +15,7 @@
 		"skipLibCheck": true,
 		"baseUrl": "./",
 		"paths": {
-			"@": ["src"],
-			"@/*": ["src/*"]
+			"@web/*": ["src/*"]
 		}
 	},
 	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

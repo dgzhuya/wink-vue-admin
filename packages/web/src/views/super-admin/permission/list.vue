@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-	import { getPermissionList, getPermissionsByParent, deletePermission } from '@/api/super-admin/permission'
-	import { deleteEffect } from '@/effect/delete'
-	import { pageEffect } from '@/effect/page'
-	import { showFormEffect } from '@/effect/show-form'
-	import { PermissionModel } from '@/types/super-admin/permission'
-	import { dateHandler } from '@/utils/format'
-	import { toast } from '@/utils/toast'
+	import { getPermissionList, getPermissionsByParent, deletePermission } from '@web/api/super-admin/permission'
+	import { deleteEffect } from '@web/effect/delete'
+	import { pageEffect } from '@web/effect/page'
+	import { showFormEffect } from '@web/effect/show-form'
+	import { PermissionModel } from '@web/types/super-admin/permission'
+	import { dateHandler } from '@web/utils/format'
+	import { toast } from '@web/utils/toast'
 	import { error } from 'console'
 	import PermissionForm from './permission-form.vue'
 
@@ -180,5 +180,5 @@
 </template>
 
 <style lang="scss" scoped>
-	@import '@/style/table.scss';
+	@import '@web/style/table.scss';
 </style>

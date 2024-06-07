@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-	import { filterRouters, generateMenus } from '@/utils/route'
+	import { filterRouters, generateMenus } from '@web/utils/route'
 	import SidebarItem from './SidebarItem.vue'
-	import { useTheme } from '@/store/module/theme'
-	import { useApp } from '@/store/module/app'
+	import { useTheme } from '@web/store/module/theme'
+	import { useApp } from '@web/store/module/app'
 	import { storeToRefs } from 'pinia'
 
 	const { cssVar } = storeToRefs(useTheme())

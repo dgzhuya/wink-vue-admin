@@ -1,5 +1,5 @@
 <script lang="ts" name="svg-icon" setup>
-	import { isExternal as external } from '@/utils/validate'
+	import { isExternal as external } from '@web/utils/validate'
 	interface SvgIconProp {
 		icon: string | null
 		className?: string

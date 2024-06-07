@@ -1,6 +1,6 @@
 <script lang="ts" name="header-search" setup>
-	import { AdminMenuItem } from '@/types'
-	import { generateMenus, filterRouters } from '@/utils/route'
+	import { AdminMenuItem } from '@web/types'
+	import { generateMenus, filterRouters } from '@web/utils/route'
 	import { ElSelect } from 'element-plus'
 	import Fuse from 'fuse.js'
 

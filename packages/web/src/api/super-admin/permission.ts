@@ -1,6 +1,6 @@
-import { TableParams } from '@/types'
-import { PermissionModel, PermissionDto, CreatePermissionDto, PermissionTree } from '@/types/super-admin/permission'
-import request from '@/utils/request'
+import { TableParams } from '@web/types'
+import { PermissionModel, PermissionDto, CreatePermissionDto, PermissionTree } from '@web/types/super-admin/permission'
+import request from '@web/utils/request'
 
 export const getPermissionList = (data: TableParams) => {
 	return request<{ total: number; list: PermissionModel[] }>({

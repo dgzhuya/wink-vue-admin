@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-	import SvgIcon from '@/components/SvgIcon/index.vue'
-	import { UserDto, UserModel } from '@/types/super-admin/user'
-	import { updateUserInfo, createUser, setUserMajorRole } from '@/api/super-admin/user'
-	import { toast } from '@/utils/toast'
-	import { pickerKeyVal } from '@/utils/pickerKeyVal'
+	import SvgIcon from '@web/components/SvgIcon/index.vue'
+	import { UserDto, UserModel } from '@web/types/super-admin/user'
+	import { updateUserInfo, createUser, setUserMajorRole } from '@web/api/super-admin/user'
+	import { toast } from '@web/utils/toast'
+	import { pickerKeyVal } from '@web/utils/pickerKeyVal'
 
 	const props = defineProps<{ user: UserModel | null; showForm: boolean }>()
 	const userId = ref(-1)
@@ -108,5 +108,5 @@
 	</el-dialog>
 </template>
 <style lang="scss" scoped>
-	@import '@/style/form.scss';
+	@import '@web/style/form.scss';
 </style>

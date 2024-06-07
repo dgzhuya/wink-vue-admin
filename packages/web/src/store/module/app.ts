@@ -1,7 +1,7 @@
-import { TAGS_VIEW } from '@/constants'
-import router from '@/router'
-import { TagItem } from '@/types'
-import { getItem, setItem } from '@/utils/store'
+import { TAGS_VIEW } from '@web/constants'
+import router from '@web/router'
+import { TagItem } from '@web/types'
+import { getItem, setItem } from '@web/utils/store'
 import { defineStore } from 'pinia'
 
 export const useApp = defineStore('app', {

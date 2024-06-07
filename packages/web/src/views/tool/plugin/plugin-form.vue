@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-	import { PluginDto, PluginModel } from '@/types/tool/plugin'
-	import { updatePlugin, createPlugin } from '@/api/tool/plugin'
-	import { toast } from '@/utils/toast'
-	import { pickerKeyVal } from '@/utils/pickerKeyVal'
+	import { PluginDto, PluginModel } from '@web/types/tool/plugin'
+	import { updatePlugin, createPlugin } from '@web/api/tool/plugin'
+	import { toast } from '@web/utils/toast'
+	import { pickerKeyVal } from '@web/utils/pickerKeyVal'
 
 	const props = defineProps<{ plugin: PluginModel | null; showForm: boolean }>()
 	const pluginId = ref(-1)
@@ -71,5 +71,5 @@
 	</el-dialog>
 </template>
 <style lang="scss" scoped>
-	@import '@/style/form.scss';
+	@import '@web/style/form.scss';
 </style>

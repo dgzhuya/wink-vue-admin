@@ -1,5 +1,5 @@
 <script lang="ts" name="breadcrumb" setup>
-	import { useTheme } from '@/store/module/theme'
+	import { useTheme } from '@web/store/module/theme'
 
 	const router = useRouter()
 	const route = useRoute()
@@ -18,7 +18,7 @@
 	</el-breadcrumb>
 </template>
 <style lang="scss" scoped>
-	@import '@/style/transion.scss';
+	@import '@web/style/transion.scss';
 
 	.breadcrumb {
 		display: inline-block;

@@ -1,5 +1,5 @@
-import router from '@/router'
-import { useUser } from '@/store/module/user'
+import router from '@web/router'
+import { useUser } from '@web/store/module/user'
 import { asyncRoutes } from './router/module'
 import { useApp } from './store/module/app'
 import { filterPermissionRouters } from './utils/route'

@@ -1,6 +1,6 @@
-import { StoreUserInfo } from '@/types'
-import { LoginParams, ResetParams } from '@/types/super-admin'
-import request from '@/utils/request'
+import { StoreUserInfo } from '@web/types'
+import { LoginParams, ResetParams } from '@web/types/super-admin'
+import request from '@web/utils/request'
 
 export const login = (data: LoginParams) => {
 	return request<{ token: string }>({

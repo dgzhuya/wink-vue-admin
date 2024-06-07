@@ -1,5 +1,5 @@
-import { colorMap } from '@/constants/color-map'
-import formula from '@/constants/formula.json'
+import { colorMap } from '@web/constants/color-map'
+import formula from '@web/constants/formula.json'
 import { dependencies } from '../../package.json'
 import axios from 'axios'
 import rgbHex from 'rgb-hex'

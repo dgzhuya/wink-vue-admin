@@ -19,12 +19,6 @@ export default defineConfig({
 				target: 'http://localhost:3000',
 				changeOrigin: true,
 				rewrite: path => path.replace(/^\/server/, '')
-			},
-			'/ws_server': {
-				target: 'http://localhost:9527',
-				changeOrigin: true,
-				ws: true,
-				rewrite: path => path.replace(/^\/ws_server/, '')
 			}
 		}
 	},
@@ -34,18 +28,12 @@ export default defineConfig({
 				target: 'http://localhost:3000',
 				changeOrigin: true,
 				rewrite: path => path.replace(/^\/server/, '')
-			},
-			'/ws_server': {
-				target: 'http://localhost:9527',
-				changeOrigin: true,
-				ws: true,
-				rewrite: path => path.replace(/^\/ws_server/, '')
 			}
 		}
 	},
 	resolve: {
 		alias: {
-			'@': resolve(__dirname, 'src')
+			'@web': resolve(__dirname, 'src')
 		}
 	},
 	build: {

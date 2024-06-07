@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { AdminMenuItem } from '@/types'
+	import { AdminMenuItem } from '@web/types'
 
 	defineProps<{ route: AdminMenuItem }>()
 </script>

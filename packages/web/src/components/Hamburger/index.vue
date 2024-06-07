@@ -1,5 +1,5 @@
 <script lang="ts" name="hamburger" setup>
-	import { useApp } from '@/store/module/app'
+	import { useApp } from '@web/store/module/app'
 
 	const app = useApp()
 	const icon = computed(() => (app.sideBarStatus ? 'hamburger-opened' : 'hamburger-closed'))

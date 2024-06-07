@@ -1,6 +1,6 @@
-import { TableParams } from '@/types'
-import { UserDto, CreateUserDto, UserModel } from '@/types/super-admin/user'
-import request from '@/utils/request'
+import { TableParams } from '@web/types'
+import { UserDto, CreateUserDto, UserModel } from '@web/types/super-admin/user'
+import request from '@web/utils/request'
 
 export const getUserList = (data: TableParams) => {
 	return request<{ total: number; list: UserModel[] }>({

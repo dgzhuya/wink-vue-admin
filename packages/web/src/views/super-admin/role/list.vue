@@ -69,14 +69,14 @@
 </template>
 
 <script lang="ts" setup>
-	import { getRoleList, deleteRole } from '@/api/super-admin/role'
-	import { pageEffect } from '@/effect/page'
-	import { RoleModel } from '@/types/super-admin/role'
-	import { dateHandler } from '@/utils/format'
-	import { showFormEffect } from '@/effect/show-form'
+	import { getRoleList, deleteRole } from '@web/api/super-admin/role'
+	import { pageEffect } from '@web/effect/page'
+	import { RoleModel } from '@web/types/super-admin/role'
+	import { dateHandler } from '@web/utils/format'
+	import { showFormEffect } from '@web/effect/show-form'
 	import RoleForm from './role-form.vue'
 	import RolePremission from './role-premission.vue'
-	import { deleteEffect } from '@/effect/delete'
+	import { deleteEffect } from '@web/effect/delete'
 
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getRoleList)
 	onMounted(async () => {
@@ -95,5 +95,5 @@
 </script>
 
 <style lang="scss" scoped>
-	@import '@/style/table.scss';
+	@import '@web/style/table.scss';
 </style>

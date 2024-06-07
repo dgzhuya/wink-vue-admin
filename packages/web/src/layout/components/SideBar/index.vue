@@ -1,6 +1,6 @@
 <script lang="ts" name="side-bar" setup>
-	import { useApp } from '@/store/module/app'
-	import { useTheme } from '@/store/module/theme'
+	import { useApp } from '@web/store/module/app'
+	import { useTheme } from '@web/store/module/theme'
 	import { storeToRefs } from 'pinia'
 
 	const { cssVar } = storeToRefs(useTheme())

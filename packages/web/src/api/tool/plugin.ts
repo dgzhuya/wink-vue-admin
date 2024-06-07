@@ -1,6 +1,6 @@
-import { TableParams } from '@/types'
-import { PluginModel, PluginDto } from '@/types/tool/plugin'
-import request from '@/utils/request'
+import { TableParams } from '@web/types'
+import { PluginModel, PluginDto } from '@web/types/tool/plugin'
+import request from '@web/utils/request'
 
 export const getPluginList = (data: TableParams) => {
 	return request<{ total: number; list: PluginModel[] }>({

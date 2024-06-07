@@ -1,10 +1,10 @@
-import { getUserInfo, login } from '@/api'
-import { LoginParams } from '@/types/super-admin'
+import { getUserInfo, login } from '@web/api'
+import { LoginParams } from '@web/types/super-admin'
 import { defineStore } from 'pinia'
 import { FormInstance } from 'element-plus'
-import { getItem, removeItem, setItem } from '@/utils/store'
-import router from '@/router'
-import { StoreUserInfo } from '@/types'
+import { getItem, removeItem, setItem } from '@web/utils/store'
+import router from '@web/router'
+import { StoreUserInfo } from '@web/types'
 
 const TOKEN_KEY = 'token'
 

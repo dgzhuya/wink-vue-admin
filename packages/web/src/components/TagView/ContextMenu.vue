@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { useApp } from '@/store/module/app'
+	import { useApp } from '@web/store/module/app'
 
 	defineProps<{ index: number }>()
 

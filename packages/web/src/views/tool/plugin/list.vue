@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-	import { getPluginList, deletePlugin } from '@/api/tool/plugin'
+	import { getPluginList, deletePlugin } from '@web/api/tool/plugin'
 	import PluginForm from './plugin-form.vue'
-	import { pageEffect } from '@/effect/page'
-	import { dateHandler } from '@/utils/format'
-	import { PluginModel } from '@/types/tool/plugin'
-	import { showFormEffect } from '@/effect/show-form'
-	import { deleteEffect } from '@/effect/delete'
-	import { useUser } from '@/store/module/user'
-	import { toast } from '@/utils/toast'
-	import { webScoket } from '@/utils/webSocket'
+	import { pageEffect } from '@web/effect/page'
+	import { dateHandler } from '@web/utils/format'
+	import { PluginModel } from '@web/types/tool/plugin'
+	import { showFormEffect } from '@web/effect/show-form'
+	import { deleteEffect } from '@web/effect/delete'
+	import { useUser } from '@web/store/module/user'
+	import { toast } from '@web/utils/toast'
+	import { webScoket } from '@web/utils/webSocket'
 
 	const pluginActive = ref<PluginModel | null>(null)
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getPluginList)
@@ -129,5 +129,5 @@
 </template>
 
 <style lang="scss" scoped>
-	@import '@/style/table.scss';
+	@import '@web/style/table.scss';
 </style>

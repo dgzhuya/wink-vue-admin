@@ -1,6 +1,6 @@
-import { TableParams } from '@/types'
-import { RoleModel, RoleDto, RoleSimple } from '@/types/super-admin/role'
-import request from '@/utils/request'
+import { TableParams } from '@web/types'
+import { RoleModel, RoleDto, RoleSimple } from '@web/types/super-admin/role'
+import request from '@web/utils/request'
 
 export const getRoleList = (data: TableParams) => {
 	return request<{ total: number; list: RoleModel[] }>({

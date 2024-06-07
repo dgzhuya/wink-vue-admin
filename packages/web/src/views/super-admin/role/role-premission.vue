@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-	import { getPermissionTree } from '@/api/super-admin/permission'
-	import { getRolePermissions, setRolePermission } from '@/api/super-admin/role'
-	import { PermissionTree } from '@/types/super-admin/permission'
+	import { getPermissionTree } from '@web/api/super-admin/permission'
+	import { getRolePermissions, setRolePermission } from '@web/api/super-admin/role'
+	import { PermissionTree } from '@web/types/super-admin/permission'
 
 	const premissionTree = ref<PermissionTree[]>([])
 	const roleProps = withDefaults(defineProps<{ show: boolean; rid: number }>(), {

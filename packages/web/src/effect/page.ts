@@ -1,4 +1,4 @@
-import { TableParams, TableResult } from '@/types'
+import { TableParams, TableResult } from '@web/types'
 
 export const pageEffect = <T>(fetchFunc: (config: TableParams) => Promise<TableResult<T>>) => {
 	const total = ref(0)

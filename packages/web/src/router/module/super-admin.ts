@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router'
 
 export const SuperAdminRoute: RouteRecordRaw = {
 	path: '/super-admin',
-	component: () => import('@/layout/index.vue'),
+	component: () => import('@web/layout/index.vue'),
 	name: 'SuperAdmin',
 	meta: {
 		title: '系统管理',
@@ -12,7 +12,7 @@ export const SuperAdminRoute: RouteRecordRaw = {
 	children: [
 		{
 			path: '/super-admin/user',
-			component: () => import('@/views/super-admin/user/list.vue'),
+			component: () => import('@web/views/super-admin/user/list.vue'),
 			name: 'AdminUser',
 			meta: {
 				title: '用户管理',
@@ -21,7 +21,7 @@ export const SuperAdminRoute: RouteRecordRaw = {
 		},
 		{
 			path: '/super-admin/role',
-			component: () => import('@/views/super-admin/role/list.vue'),
+			component: () => import('@web/views/super-admin/role/list.vue'),
 			name: 'AdminRole',
 			meta: {
 				title: '角色管理',
@@ -30,7 +30,7 @@ export const SuperAdminRoute: RouteRecordRaw = {
 		},
 		{
 			path: '/super-admin/permission',
-			component: () => import('@/views/super-admin/permission/list.vue'),
+			component: () => import('@web/views/super-admin/permission/list.vue'),
 			name: 'AdminPermission',
 			meta: {
 				title: '权限管理',

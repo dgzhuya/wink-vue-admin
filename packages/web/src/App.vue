@@ -5,7 +5,7 @@
 </template>
 <script lang="ts" setup>
 	import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-	import { generateNewStyle, writeStyle } from '@/utils/style'
+	import { generateNewStyle, writeStyle } from '@web/utils/style'
 	import { useTheme } from './store/module/theme'
 
 	const locale = zhCn

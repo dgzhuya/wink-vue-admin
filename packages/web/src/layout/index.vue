@@ -1,6 +1,6 @@
 <script lang="ts" name="layout" setup>
-	import { useApp } from '@/store/module/app'
-	import TagView from '@/components/TagView/index.vue'
+	import { useApp } from '@web/store/module/app'
+	import TagView from '@web/components/TagView/index.vue'
 
 	const app = useApp()
 </script>

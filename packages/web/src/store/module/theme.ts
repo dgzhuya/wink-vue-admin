@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-import variablesModule from '@/style/variables.module.scss'
-import { DEFAULT_COLOR, MAIN_COLOR } from '@/constants'
-import { generateColors } from '@/utils/style'
-import { getItem, setItem } from '@/utils/store'
+import variablesModule from '@web/style/variables.module.scss'
+import { DEFAULT_COLOR, MAIN_COLOR } from '@web/constants'
+import { generateColors } from '@web/utils/style'
+import { getItem, setItem } from '@web/utils/store'
 
 export const useTheme = defineStore('theme', {
 	state: () => {

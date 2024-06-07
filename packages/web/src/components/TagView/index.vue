@@ -1,7 +1,7 @@
 <script lang="ts" name="tag-view" setup>
 	import { storeToRefs } from 'pinia'
-	import { useApp } from '@/store/module/app'
-	import { useTheme } from '@/store/module/theme'
+	import { useApp } from '@web/store/module/app'
+	import { useTheme } from '@web/store/module/theme'
 	import ContextMenu from './ContextMenu.vue'
 
 	const route = useRoute()

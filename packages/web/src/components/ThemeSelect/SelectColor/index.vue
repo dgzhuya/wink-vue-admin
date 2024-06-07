@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 	import { predefineColors } from './colors'
-	import { useTheme } from '@/store/module/theme'
-	import { generateNewStyle, writeStyle } from '@/utils/style'
-	import { DEFAULT_COLOR } from '@/constants'
+	import { useTheme } from '@web/store/module/theme'
+	import { generateNewStyle, writeStyle } from '@web/utils/style'
+	import { DEFAULT_COLOR } from '@web/constants'
 
 	defineProps<{ modelValue: boolean }>()
 	const theme = useTheme()

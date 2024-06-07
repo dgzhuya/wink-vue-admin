@@ -1,5 +1,5 @@
-import { useUser } from '@/store/module/user'
-import { RequestResult } from '@/types'
+import { useUser } from '@web/store/module/user'
+import { RequestResult } from '@web/types'
 import axios, { AxiosRequestConfig } from 'axios'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'

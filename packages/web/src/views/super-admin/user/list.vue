@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-	import { getUserList, setUserRoles, deleteUser } from '@/api/super-admin/user'
+	import { getUserList, setUserRoles, deleteUser } from '@web/api/super-admin/user'
 	import UserForm from './user-form.vue'
-	import SvgIcon from '@/components/SvgIcon/index.vue'
-	import { pageEffect } from '@/effect/page'
-	import { dateHandler } from '@/utils/format'
-	import { UserModel } from '@/types/super-admin/user'
-	import { showFormEffect } from '@/effect/show-form'
-	import { RoleSimple } from '@/types/super-admin/role'
-	import { getAllRoles } from '@/api/super-admin/role'
-	import { deleteEffect } from '@/effect/delete'
+	import SvgIcon from '@web/components/SvgIcon/index.vue'
+	import { pageEffect } from '@web/effect/page'
+	import { dateHandler } from '@web/utils/format'
+	import { UserModel } from '@web/types/super-admin/user'
+	import { showFormEffect } from '@web/effect/show-form'
+	import { RoleSimple } from '@web/types/super-admin/role'
+	import { getAllRoles } from '@web/api/super-admin/role'
+	import { deleteEffect } from '@web/effect/delete'
 
 	const userActive = ref<UserModel | null>(null)
 	const { tableData, size, page, total, pageHandler, sizeHandler, fetchHandler } = pageEffect(getUserList)
@@ -116,5 +116,5 @@
 </template>
 
 <style lang="scss" scoped>
-	@import '@/style/table.scss';
+	@import '@web/style/table.scss';
 </style>

@@ -1,4 +1,4 @@
-import { AdminMenuItem } from '@/types'
+import { AdminMenuItem } from '@web/types'
 import { RouteRecordRaw } from 'vue-router'
 import { deepClone } from './deepClone'
 

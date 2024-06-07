@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-	import { useUser } from '@/store/module/user'
-	import { ResetParams } from '@/types/super-admin'
+	import { useUser } from '@web/store/module/user'
+	import { ResetParams } from '@web/types/super-admin'
 	import { storeToRefs } from 'pinia'
-	import { dateHandler } from '@/utils/format'
-	import { toast } from '@/utils/toast'
-	import { resetPassword } from '@/api'
+	import { dateHandler } from '@web/utils/format'
+	import { toast } from '@web/utils/toast'
+	import { resetPassword } from '@web/api'
 
 	const user = useUser()
 	const { info } = storeToRefs(user)
@@ -101,7 +101,7 @@
 	</el-dialog>
 </template>
 <style lang="scss" scoped>
-	@import '@/style/form.scss';
+	@import '@web/style/form.scss';
 
 	.info-field-container {
 		display: flex;

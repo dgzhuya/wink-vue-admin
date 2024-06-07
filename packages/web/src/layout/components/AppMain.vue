@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-	import { useApp } from '@/store/module/app'
-	import { showLoading } from '@/utils/webSocket'
+	import { useApp } from '@web/store/module/app'
+	import { showLoading } from '@web/utils/webSocket'
 
 	const app = useApp()
 </script>

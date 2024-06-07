@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-	import { useUser } from '@/store/module/user'
-	import ThemeSelect from '@/components/ThemeSelect/index.vue'
-	import Hamburger from '@/components/Hamburger/index.vue'
-	import Breadcrumb from '@/components/Breadcrumb/index.vue'
-	import Screenfull from '@/components/Screenfull/index.vue'
-	import HeaderSearch from '@/components/HeaderSearch/index.vue'
-	import SvgIcon from '@/components/SvgIcon/index.vue'
+	import { useUser } from '@web/store/module/user'
+	import ThemeSelect from '@web/components/ThemeSelect/index.vue'
+	import Hamburger from '@web/components/Hamburger/index.vue'
+	import Breadcrumb from '@web/components/Breadcrumb/index.vue'
+	import Screenfull from '@web/components/Screenfull/index.vue'
+	import HeaderSearch from '@web/components/HeaderSearch/index.vue'
+	import SvgIcon from '@web/components/SvgIcon/index.vue'
 
 	const user = useUser()
 </script>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-	import { useUser } from '@/store/module/user'
+	import { useUser } from '@web/store/module/user'
 	import { storeToRefs } from 'pinia'
-	import PanThumb from '@/components/PanThumb/index.vue'
+	import PanThumb from '@web/components/PanThumb/index.vue'
 
 	const { info } = storeToRefs(useUser())
 </script>

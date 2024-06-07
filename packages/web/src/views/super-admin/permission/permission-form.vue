@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-	import { CreatePermissionDto, PermissionDto, PermissionModel } from '@/types/super-admin/permission'
-	import { updatePermission, createPermission } from '@/api/super-admin/permission'
-	import { toast } from '@/utils/toast'
-	import { pickerKeyVal } from '@/utils/pickerKeyVal'
+	import { CreatePermissionDto, PermissionDto, PermissionModel } from '@web/types/super-admin/permission'
+	import { updatePermission, createPermission } from '@web/api/super-admin/permission'
+	import { toast } from '@web/utils/toast'
+	import { pickerKeyVal } from '@web/utils/pickerKeyVal'
 
 	const props = defineProps<{ permission: PermissionModel | null; showForm: boolean; parentId: number }>()
 	const permissionId = ref(-1)
@@ -82,5 +82,5 @@
 </template>
 
 <style lang="scss" scoped>
-	@import '@/style/form.scss';
+	@import '@web/style/form.scss';
 </style>
