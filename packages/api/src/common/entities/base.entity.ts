@@ -1,4 +1,5 @@
 import {
+	BeforeSoftRemove,
 	CreateDateColumn,
 	DeleteDateColumn,
 	Entity,
@@ -21,4 +22,11 @@ export abstract class BaseEntity {
 
 	@DeleteDateColumn({ comment: '删除标记', name: 'delete_time', select: false })
 	deleteTime: Date
+
+	@BeforeSoftRemove()
+	deleteTimeToEastAsia() {
+		const currentDate = new Date()
+		const eastAsiaOffset = 8 * 60 * 60 * 1000
+		this.deleteTime = new Date(currentDate.getTime() + eastAsiaOffset)
+	}
 }
