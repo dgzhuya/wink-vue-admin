@@ -4,7 +4,7 @@ import { CreatePermissionDto } from './dto/create-permission.dto'
 import { UpdatePermissionDto } from './dto/update-permission.dto'
 import { PermissionEntity } from './entities/permission.entity'
 import { BadParamsException } from '@api/common/exception/bad-params-exception'
-import { In, IsNull, Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 
 @Injectable()
 export class PermissionService {
@@ -25,11 +25,8 @@ export class PermissionService {
 		if (createPermissionDto.parentId) {
 			const parent = await this.permissionRepository.findOneBy({ id: createPermissionDto.parentId })
 			if (!parent) throw new BadParamsException('40002')
-			const peer = parent.children
-			await this.update(parent.id, {
-				children: [...peer, permission]
-			})
-			await this.update(permission.id, { parent })
+			permission.parent = parent
+			await this.permissionRepository.save(permission)
 		}
 		return permission
 	}
@@ -61,8 +58,6 @@ export class PermissionService {
 	 * @param updatePermissionDto 需要更新的信息
 	 */
 	async update(id: number, updatePermissionDto: UpdatePermissionDto) {
-		if (await updatePermissionDto.parent) throw new BadParamsException('40005')
-
 		if (updatePermissionDto.key) {
 			const permission = await this.permissionRepository.findOneBy({ id })
 			if (permission && permission.key !== updatePermissionDto.key) {
@@ -96,9 +91,10 @@ export class PermissionService {
 				.orWhere('permission.key like :search', { search: `%${search}%` })
 				.orWhere('permission.description like :search', { search: `%${search}%` })
 		} else {
-			queryBuilder = queryBuilder.where({ parentId: IsNull() })
+			queryBuilder = queryBuilder.andWhere('permission.parentId Is Null')
 		}
-		const [list, total] = await queryBuilder.skip(skip).take(take).getManyAndCount()
+		const [result, total] = await queryBuilder.skip(skip).take(take).getManyAndCount()
+		const list = await this.#hasChildren(result)
 		return {
 			list,
 			total
@@ -109,9 +105,16 @@ export class PermissionService {
 	 * 查询权限的子权限信息
 	 * @param id 权限ID
 	 */
-	async queryChildren(id?: number) {
-		if (!id) return this.permissionRepository.findBy({ parent: IsNull() })
-		return (await this.query(id)).children
+	async queryChildren(id?: number, isTree = false) {
+		let permissionQuery = this.permissionRepository.createQueryBuilder('permission')
+		if (!id) {
+			permissionQuery = permissionQuery.andWhere('permission.parentId Is Null')
+		} else {
+			permissionQuery = permissionQuery.andWhere(`permission.parentId=${id}`)
+		}
+		const list = await permissionQuery.getMany()
+
+		return isTree ? list : this.#hasChildren(list)
 	}
 
 	/**
@@ -193,5 +196,16 @@ export class PermissionService {
 	 */
 	async keyIsExited(key?: string) {
 		return key && (await this.permissionRepository.countBy({ key, deleteTime: null })) !== 0
+	}
+
+	async #hasChildren(list: PermissionEntity[]) {
+		for (let i = 0; i < list.length; i++) {
+			const count = await this.permissionRepository
+				.createQueryBuilder('permission')
+				.andWhere(`permission.parentId=${list[i].id}`)
+				.getCount()
+			list[i]['hasChildren'] = count > 0
+		}
+		return list
 	}
 }

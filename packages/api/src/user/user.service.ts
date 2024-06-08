@@ -82,6 +82,10 @@ export class UserService {
 		}
 
 		const [list, total] = await queryBuilder.getManyAndCount()
+		for (let i = 0; i < list.length; i++) {
+			list[i]['roleIds'] = list[i].roles.map(r => r.id)
+		}
+
 		return { list, total }
 	}
 
@@ -127,7 +131,8 @@ export class UserService {
 		if (!user.major || !rIds.includes(user.major)) {
 			await this.userRepository.update(id, { major: rIds[0] })
 		}
-		await this.userRepository.update(id, { roles })
+		user.roles = roles
+		return this.userRepository.save(user)
 	}
 
 	/**
@@ -138,7 +143,10 @@ export class UserService {
 	async setMajorRole({ id, rid }: UserRoleDto) {
 		const user = await this.userRepository.findOneBy({ id })
 		if (!user) throw new BadParamsException('40006')
-		if (await this.roleService.isExited([rid])) throw new BadParamsException('40001')
+		const isExited = await this.roleService.isExited([rid])
+		if (!isExited) {
+			throw new BadParamsException('40001')
+		}
 		return this.userRepository.update(id, { major: rid })
 	}
 }

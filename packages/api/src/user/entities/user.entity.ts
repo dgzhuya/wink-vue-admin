@@ -7,6 +7,7 @@ import { RoleEntity } from '@api/role/entities/role.entity'
 export const UserFields: (keyof UserEntity)[] = [
 	'id',
 	'username',
+	'nickname',
 	'mobile',
 	'gender',
 	'major',

@@ -55,6 +55,15 @@ export class RoleService {
 		return this.roleRepository.findOneBy({ id })
 	}
 
+	getPermissionKey(id: number) {
+		return this.roleRepository
+			.createQueryBuilder('role')
+			.leftJoinAndSelect('role.permissions', 'permission')
+			.select(['role.id', 'permission.key'])
+			.where({ id })
+			.getOne()
+	}
+
 	/**
 	 * 查询角色列表
 	 * @param skip 查询起始位置
@@ -79,8 +88,13 @@ export class RoleService {
 	 * @param id 角色ID
 	 */
 	async getPermissions(id: number) {
-		const role = await this.roleRepository.findOne({ where: { id }, select: ['permissions'] })
-		return role.permissions
+		const roleWithPermissions = await this.roleRepository
+			.createQueryBuilder('role')
+			.leftJoinAndSelect('role.permissions', 'permission')
+			.select(['role.id', 'permission.id'])
+			.where({ id })
+			.getOne()
+		return roleWithPermissions.permissions.map(p => p.id)
 	}
 
 	/**
@@ -92,19 +106,24 @@ export class RoleService {
 		const role = await this.roleRepository.findOneBy({ id })
 		if (!role) throw new BadParamsException('40001')
 
-		if (pIds.length === 0) throw new BadParamsException('40010')
+		if (pIds.length === 0) {
+			throw new BadParamsException('40010')
+		}
 
 		const ridCount = await this.roleRepository.countBy({ id: id })
 		if (ridCount === 0) {
 			throw new BadParamsException('40001')
 		}
 
-		if (await this.permissionService.isExited(pIds)) throw new BadParamsException('40005')
+		const isExited = await this.permissionService.isExited(pIds)
+		if (!isExited) {
+			throw new BadParamsException('40005')
+		}
 
 		const permissions = await this.permissionService.queryByIds(pIds)
-		await this.roleRepository.update(id, { permissions })
-
-		return permissions
+		role.permissions = permissions
+		this.roleRepository.save(role)
+		return ''
 	}
 
 	/**

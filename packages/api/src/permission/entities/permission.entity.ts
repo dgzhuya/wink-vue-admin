@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { BaseEntity } from '@api/common/entities/base.entity'
 import { RoleEntity } from '@api/role/entities/role.entity'
 

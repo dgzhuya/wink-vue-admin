@@ -89,8 +89,7 @@ export class SysService {
 		}
 
 		const user = await this.userService.query(uid)
-		const role = await this.roleService.query(rid)
-		const permissions = role.permissions
+		const { permissions } = await this.roleService.getPermissionKey(rid)
 
 		return {
 			...user,
