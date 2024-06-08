@@ -12,7 +12,7 @@ export interface UserDto {
 
 export interface UserModel extends BaseModel, UserDto {
 	id: number
-	majorId?: number
+	major?: number
 	roles: RoleSimple[]
 	roleIds: number[]
 }

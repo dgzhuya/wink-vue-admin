@@ -82,7 +82,7 @@
 				<el-input v-model="userInfo.nickname" />
 			</el-form-item>
 			<el-form-item v-if="user !== null && user.roles && user.roles.length > 0" label="主要角色">
-				<el-select v-model="user.majorId" @change="setMajorHandler" placeholder="未知">
+				<el-select v-model="user.major" @change="setMajorHandler" placeholder="未知">
 					<el-option v-for="role in user.roles" :value="role.id" :label="role.title" :key="role.id" />
 				</el-select>
 			</el-form-item>
