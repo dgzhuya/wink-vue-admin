@@ -26,8 +26,8 @@ export const setRolePermission = (rid: number, permissions: number[]) => {
 		url: '/role/permission',
 		method: 'post',
 		data: {
-			rid,
-			permissions
+			id: rid,
+			pIds: permissions
 		}
 	})
 }

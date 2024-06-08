@@ -22,7 +22,7 @@ export const setUserMajorRole = (uid: number, rid: number) => {
 		method: 'post',
 		url: '/user/major',
 		data: {
-			uid,
+			id: uid,
 			rid
 		}
 	})
@@ -42,8 +42,8 @@ export const setUserRoles = (uid: number, roles: number[]) => {
 		method: 'post',
 		url: 'user/roles',
 		data: {
-			uid,
-			roles
+			id: uid,
+			rIds: roles
 		}
 	})
 }
