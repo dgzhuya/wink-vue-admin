@@ -59,7 +59,7 @@ const createSvgIconsPlugin = (opt: { dir: string; customDomId?: string }): Plugi
 							? svgViewBoxReslut[1]
 							: `0,0,${svgWidtReslut !== null ? svgWidtReslut[1] : 128},${
 									svgHightReslut !== null ? svgHightReslut[1] : 128
-							  }`
+								}`
 					const svgPath = svgStr.replace(/<svg(S*?)[^>]*>/, '').replace('</svg>', '')
 					cache[symbolId] = `<symbol ${xmlns} viewBox="${viewBox}" id="${symbolId}">${svgPath}</symbol>`
 				}
