@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/entities/base.entity'
+import { BaseEntity } from '@api/common/entities/base.entity'
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 import { UserEntity } from '@api/user/entities/user.entity'
 import { PermissionEntity } from '@api/permission/entities/permission.entity'

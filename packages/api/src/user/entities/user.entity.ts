@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/entities/base.entity'
+import { BaseEntity } from '@api/common/entities/base.entity'
 import { BeforeInsert, Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 import { hash } from 'bcryptjs'
 import { Exclude } from 'class-transformer'
