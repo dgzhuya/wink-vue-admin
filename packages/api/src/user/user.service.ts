@@ -30,9 +30,10 @@ export class UserService {
 	 * @param id 用户ID
 	 */
 	async delete(id: number) {
-		const user = await this.userRepository.findOneBy({ id })
+		const user = await this.userRepository.findOne({ where: { id }, relations: ['roles'] })
 		if (user.roles.length > 0) {
-			await this.userRepository.update(id, { roles: [] })
+			user.roles = []
+			await this.userRepository.save(user)
 		}
 		return this.userRepository.softDelete({ id })
 	}
@@ -125,7 +126,10 @@ export class UserService {
 		if (!user) throw new BadParamsException('40006')
 
 		if (rIds.length === 0) throw new BadParamsException('40010')
-		if (!(await this.roleService.isExited(rIds))) throw new BadParamsException('40001')
+
+		const isExited = await this.roleService.isExited(rIds)
+
+		if (!isExited) throw new BadParamsException('40001')
 
 		const roles = await this.roleService.queryByIds(rIds)
 		if (!user.major || !rIds.includes(user.major)) {

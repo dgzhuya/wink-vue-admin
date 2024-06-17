@@ -28,12 +28,18 @@ export class RoleService {
 	 * @param id 角色ID
 	 */
 	async delete(id: number) {
-		const role = await this.roleRepository.findOneBy({ id })
+		const role = await this.roleRepository.findOne({
+			where: {
+				id
+			},
+			relations: ['permissions', 'users']
+		})
 
 		if (role.users.length > 0) throw new BadParamsException('40014')
 
 		if (role.permissions.length > 0) {
-			await this.roleRepository.update(id, { permissions: [] })
+			role.permissions = []
+			await this.roleRepository.save(role)
 		}
 		return this.roleRepository.softDelete(id)
 	}

@@ -36,18 +36,19 @@ export class PermissionService {
 	 * @param id 权限ID
 	 */
 	async delete(id: number) {
-		const permission = await this.query(id)
+		const permission = await this.permissionRepository.findOne({
+			where: { id },
+			relations: ['parent', 'roles', 'children']
+		})
 
 		if (permission.roles.length > 0) throw new BadParamsException('40016')
 
 		if (permission.children.length > 0) throw new BadParamsException('40015')
 
-		const parent = await permission.parent
-		if (parent) {
-			const peer = parent.children
-			await this.permissionRepository.update(parent.id, {
-				children: peer.filter(p => p.id !== permission.id)
-			})
+		if (permission.parent) {
+			const children = await this.queryChildren(permission.parent.id)
+			permission.parent.children = children.filter(child => child.id !== id)
+			this.permissionRepository.save(permission.parent)
 		}
 		return this.permissionRepository.softDelete(id)
 	}
@@ -125,44 +126,14 @@ export class PermissionService {
 		const children = await this.queryChildren(id)
 		const result = []
 		if (children.length !== 0) {
-			for (let i = 0; i < children.length; i++) {
+			for (const child of children) {
 				result.push({
-					...children[i],
-					children: await this.queryTree(children[i].id)
+					...child,
+					children: await this.queryTree(child.id)
 				})
 			}
 		}
 		return result
-	}
-
-	/**
-	 * 强制删除权限信息
-	 * @param id 权限ID
-	 */
-	async deleteForce(id: number) {
-		await this.deleteRole(id)
-		await this.deleteWidthChildren(id)
-	}
-
-	/**
-	 * 删除权限的子权限信息
-	 * @param pid 权限信息
-	 */
-	async deleteWidthChildren(pid: number) {
-		const children = await this.queryChildren(pid)
-		for (let i = 0; i < children.length; i++) {
-			const permission = children[i]
-			await this.deleteWidthChildren(permission.id)
-		}
-		await this.delete(pid)
-	}
-
-	/**
-	 * 删除权限关联的角色信息
-	 * @param pid 权限信息
-	 */
-	deleteRole(pid: number) {
-		return this.permissionRepository.update(pid, { roles: [] })
 	}
 
 	/**
