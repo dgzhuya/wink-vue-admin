@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Query, Param } from '@nestjs/common'
 import { LoginUserDto } from '@api/sys/dto/login-user.dto'
 import { SysService } from '@api/sys/sys.service'
-import { NoAuthApi, NoAuthToken } from '@api/common/utils/passport'
+import { NoAuthToken } from '@api/common/utils/passport'
 import { TOKEN_ROLE_ID, TOKEN_USER_ID } from '@api/config/auth-config'
 import { BadParamsException } from '@api/common/exception/bad-params-exception'
 import { ResetPasswordDto } from '@api/sys/dto/reset-password.dto'
@@ -15,7 +15,6 @@ export class SysController {
 		return this.sysService.getProfile(+uid, +rid)
 	}
 
-	@NoAuthApi()
 	@Get(':rid')
 	toggleUserRole(
 		@Query(TOKEN_USER_ID) uid: string,
