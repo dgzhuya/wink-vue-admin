@@ -1,1 +1,1 @@
-{}
+{ "Lua.workspace.library": [".vscode/base-type.lua", ".vscode/nest-type.lua", ".vscode/vue-type.lua"] }
