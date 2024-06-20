@@ -14,3 +14,4 @@ static/
 logs/
 *.log
 wink.*
+.vscode/*.lua
