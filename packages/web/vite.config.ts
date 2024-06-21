@@ -1,11 +1,16 @@
-import { defineConfig, normalizePath } from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend'
 import AutoImport from 'unplugin-auto-import/vite'
-import { resolve } from 'path'
+import { resolve, posix } from 'path'
+import autoprefixer from 'autoprefixer'
 import { createSvgIconsPlugin } from './src/plugin/svg-icons/index'
+
+function normalizePath(inputPath: string) {
+	return posix.normalize(inputPath).replace(/\\/g, '/')
+}
 
 const mixinPath = normalizePath(resolve(__dirname, 'src/style/mixin.scss'))
 const variablesPath = normalizePath(resolve(__dirname, 'src/style/variables.scss'))
@@ -13,7 +18,6 @@ const variablesPath = normalizePath(resolve(__dirname, 'src/style/variables.scss
 export default defineConfig({
 	server: {
 		port: 8080,
-		open: true,
 		proxy: {
 			'/server': {
 				target: 'http://localhost:3000',
@@ -48,7 +52,7 @@ export default defineConfig({
 		},
 		postcss: {
 			plugins: [
-				require('autoprefixer')({
+				autoprefixer({
 					overrideBrowserslist: ['Chrome > 40', 'ff > 31', 'ie 11']
 				})
 			]
