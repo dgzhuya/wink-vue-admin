@@ -57,7 +57,7 @@ CREATE TABLE
 INSERT INTO
 	w_permission (title, "key", "description")
 VALUES
-	('系统管理', 'SuperAdmin', '系统管理权限');
+	('系统管理', '#super_admin', '系统管理权限');
 
 INSERT INTO
 	w_permission (title, "key", "description", "parentId")
