@@ -2,6 +2,7 @@
 	import { useApp } from '@web/store/module/app'
 	import { useTheme } from '@web/store/module/theme'
 	import { storeToRefs } from 'pinia'
+	import WinkIcon from '@web/assets/wink.svg'
 
 	const { cssVar } = storeToRefs(useTheme())
 	const logoSize = parseInt(cssVar.value.sideBarLogoSize)
@@ -16,11 +17,7 @@
 		}"
 	>
 		<div class="logo-container">
-			<el-avatar
-				:size="logoSize"
-				shape="square"
-				src="https://m.imooc.com/static/wap/static/common/img/logo-small@2x.png"
-			></el-avatar>
+			<el-avatar :size="logoSize" shape="square" :src="WinkIcon"></el-avatar>
 			<h1 class="logo-title" v-if="app.sideBarStatus">wink-admin</h1>
 		</div>
 		<el-scrollbar>
