@@ -1,6 +1,5 @@
 import { AdminMenuItem } from '@web/types'
 import { RouteRecordRaw } from 'vue-router'
-import { deepClone } from './deepClone'
 
 const getChildrenRoutes = (routes: RouteRecordRaw[]) => {
 	const result: RouteRecordRaw[] = []
@@ -57,7 +56,7 @@ export const filterPermissionRouters = (routes: RouteRecordRaw[], permissions: s
 	const result: RouteRecordRaw[] = []
 
 	for (let i = 0; i < routes.length; i++) {
-		const route = deepClone(routes[i])
+		const route = routes[i]
 		if (route.children) {
 			route.children = filterPermissionRouters(route.children, permissions)
 		}

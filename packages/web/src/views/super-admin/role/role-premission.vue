@@ -45,6 +45,7 @@
 		if (treeSelectDom.value) {
 			const keys = treeSelectDom.value.getCheckedKeys()
 			await setRolePermission(activeRid.value, keys)
+			window.location.href = ''
 		}
 		cancelClick()
 	}
