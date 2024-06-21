@@ -69,9 +69,7 @@
 		lock-scroll
 	>
 		<el-form ref="formRef" :model="userInfo" label-width="120px" class="form-detail">
-			<el-tooltip content="点击上传用户头像" effect="light" placement="top">
-				<svg-icon :icon="userInfo.avatar" @click="uploadIcon()" class-name="form-avatar"></svg-icon>
-			</el-tooltip>
+			<svg-icon :icon="userInfo.avatar" @click="uploadIcon()" class-name="form-avatar"></svg-icon>
 			<el-form-item label="用户名">
 				<el-input v-model="userInfo.username" />
 			</el-form-item>
