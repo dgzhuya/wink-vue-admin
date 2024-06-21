@@ -20,7 +20,7 @@ INSERT INTO
 	w_user (username, nickname, major, 'password')
 VALUES
 	(
-		'super-admin',
+		'#super_admin',
 		'超级管理员',
 		1,
 		'$2a$10$aSRwOHnesbDdHoeExUy9hOo.vqAdfzspvE9/U4lCX9lI7tbdDIugG'
@@ -62,31 +62,31 @@ VALUES
 INSERT INTO
 	w_permission (title, "key", "description", "parentId")
 VALUES
-	('用户管理', 'AdminUser', '用户信息查看', 1),
-	('角色管理', 'AdminRole', '角色信息查看', 1),
-	('权限管理', 'AdminPermission', '权限信息查看', 1),
-	('添加用户', 'super-admin_user_add', '添加用户信息', 2),
-	('编辑用户', 'super-admin_user_update', '编辑用户信息', 2),
-	('删除用户', 'super-admin_user_delete', '删除用户信息', 2),
-	('添加角色', 'super-admin_role_add', '添加角色信息', 3),
-	('编辑角色', 'super-admin_role_update', '修改角色信息', 3),
-	('删除角色', 'super-admin_role_delete', '删除角色信息', 3),
+	('用户管理', '#super_admin_user', '用户信息查看', 1),
+	('角色管理', '#super_admin_role', '角色信息查看', 1),
+	('权限管理', '#super_admin_permission', '权限信息查看', 1),
+	('添加用户', '#super_admin_user@add', '添加用户信息', 2),
+	('编辑用户', '#super_admin_user@update', '编辑用户信息', 2),
+	('删除用户', '#super_admin_user@delete', '删除用户信息', 2),
+	('添加角色', '#super_admin_role@add', '添加角色信息', 3),
+	('编辑角色', '#super_admin_role@update', '修改角色信息', 3),
+	('删除角色', '#super_admin_role@delete', '删除角色信息', 3),
+	('设置角色权限', '#super_admin_role@set', '设置角色权限', 3),
 	(
-		'设置角色权限',
-		'super-admin_role_permission',
-		'设置角色权限',
-		3
+		'添加权限',
+		'#super_admin_permission@add',
+		'添加权限信息',
+		4
 	),
-	('添加权限', 'super-admin_permission_add', '添加权限信息', 4),
 	(
 		'编辑权限',
-		'super-admin_permission_update',
+		'#super_admin_permission@update',
 		'更新权限信息',
 		4
 	),
 	(
 		'删除权限',
-		'super-admin_permission_delete',
+		'#super_admin_permission@delete',
 		'删除权限信息',
 		4
 	);

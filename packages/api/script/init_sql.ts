@@ -1,4 +1,4 @@
-import Database from 'better-sqlite3'
+import * as Database from 'better-sqlite3'
 import { join } from 'path'
 import { existsSync, writeFileSync, rmSync, readFileSync } from 'fs'
 
