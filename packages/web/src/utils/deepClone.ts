@@ -1,10 +1,12 @@
-export const deepClone = <T extends object>(source: T) => {
-	const sourceClone: any = Array.isArray(source) ? [] : {}
+export const deepClone = <T extends object>(source: T): T => {
+	const sourceClone = Array.isArray(source) ? ([] as T) : ({} as T)
 	if (source && typeof source === 'object') {
-		for (const key in source) {
+		for (const k in source) {
+			const key = k as keyof T
+			const val = source[key] as T[keyof T]
 			if (source.hasOwnProperty(key)) {
-				if (source[key] && typeof source[key] === 'object') {
-					sourceClone[key] = deepClone(source[key] as unknown as object)
+				if (val && typeof val === 'object') {
+					sourceClone[key] = deepClone(val)
 				} else {
 					sourceClone[key] = source[key]
 				}

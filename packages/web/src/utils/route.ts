@@ -44,22 +44,25 @@ export function generateMenus(routes: RouteRecordRaw[]) {
 	return result
 }
 
+export function formatPermissionKey(path: string) {
+	const key = path
+		.split('/')
+		.filter(p => p)
+		.join('_')
+		.replaceAll('-', '_')
+	return `#${key}`
+}
+
 export const filterPermissionRouters = (routes: RouteRecordRaw[], permissions: string[]) => {
 	const result: RouteRecordRaw[] = []
+
 	for (let i = 0; i < routes.length; i++) {
-		const route: RouteRecordRaw = deepClone(routes[i])
+		const route = deepClone(routes[i])
 		if (route.children) {
-			const childrenRoute = filterPermissionRouters(route.children, permissions)
-			if (childrenRoute.length > 0) {
-				route.children = childrenRoute
-				result.push(route)
-			} else if (typeof route.name === 'string' && permissions.includes(route.name)) {
-				result.push(route)
-			}
-		} else {
-			if (typeof route.name === 'string' && permissions.includes(route.name)) {
-				result.push(route)
-			}
+			route.children = filterPermissionRouters(route.children, permissions)
+		}
+		if (permissions.includes(formatPermissionKey(route.path))) {
+			result.push(route)
 		}
 	}
 	return result

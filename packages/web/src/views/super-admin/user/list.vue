@@ -36,10 +36,8 @@
 
 <template>
 	<div class="list-container">
-		<el-card v-permission="['super-admin_user_add']" class="list-header">
-			<el-button v-permission="['super-admin_user_add']" @click="showHandler()" type="primary"
-				>添加用户</el-button
-			>
+		<el-card v-permission="['add']" class="list-header">
+			<el-button v-permission="['add']" @click="showHandler()" type="primary">添加用户</el-button>
 		</el-card>
 		<el-card>
 			<el-table :data="tableData" border class="list-table-container">
@@ -74,25 +72,12 @@
 						{{ dateHandler(row.createTime) }}
 					</template>
 				</el-table-column>
-				<el-table-column
-					v-permission="['super-admin_user_update', 'super-admin_user_delete']"
-					label="操作"
-					fixed="right"
-					width="260"
-				>
+				<el-table-column v-permission="['update', 'delete']" label="操作" fixed="right" width="260">
 					<template #default="{ row }">
-						<el-button
-							v-permission="['super-admin_user_update']"
-							type="primary"
-							@click="showHandler(row)"
-							size="small"
+						<el-button v-permission="['update']" type="primary" @click="showHandler(row)" size="small"
 							>编辑</el-button
 						>
-						<el-button
-							v-permission="['super-admin_user_delete']"
-							@click="deleteHandler(row.id)"
-							type="danger"
-							size="small"
+						<el-button v-permission="['delete']" @click="deleteHandler(row.id)" type="danger" size="small"
 							>删除</el-button
 						>
 					</template>

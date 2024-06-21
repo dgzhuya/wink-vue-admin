@@ -1,9 +1,7 @@
 <template>
 	<div class="list-container">
-		<el-card v-permission="['super-admin_role_add']" class="list-header">
-			<el-button @click="showHandler()" v-permission="['super-admin_role_add']" type="primary"
-				>添加角色</el-button
-			>
+		<el-card v-permission="['add']" class="list-header">
+			<el-button @click="showHandler()" v-permission="['add']" type="primary">添加角色</el-button>
 		</el-card>
 		<el-card>
 			<el-table :data="tableData" border class="list-table-container">
@@ -20,32 +18,19 @@
 						{{ dateHandler(row.updateTime) }}
 					</template>
 				</el-table-column>
-				<el-table-column
-					v-permission="['super-admin_role_permission', 'super-admin_role_update', 'super-admin_role_delete']"
-					label="操作"
-					fixed="right"
-					width="260"
-				>
+				<el-table-column v-permission="['set', 'update', 'delete']" label="操作" fixed="right" width="260">
 					<template #default="{ row }">
-						<el-button
-							type="primary"
-							v-permission="['super-admin_role_update']"
-							@click="showHandler(row)"
-							size="small"
+						<el-button type="primary" v-permission="['update']" @click="showHandler(row)" size="small"
 							>编辑</el-button
 						>
 						<el-button
 							type="success"
-							v-permission="['super-admin_role_permission']"
+							v-permission="['set']"
 							@click="openPermissionHandler(row.id)"
 							size="small"
 							>设置权限</el-button
 						>
-						<el-button
-							v-permission="['super-admin_role_delete']"
-							type="danger"
-							@click="deleteHandler(row.id)"
-							size="small"
+						<el-button v-permission="['delete']" type="danger" @click="deleteHandler(row.id)" size="small"
 							>删除</el-button
 						>
 					</template>
