@@ -42,7 +42,7 @@ export const useUser = defineStore('userInfo', {
 		async login(formEl: FormInstance | undefined, userInfo: LoginParams) {
 			if (!formEl) return
 			try {
-				const valid = await formEl.validate(v => v)
+				const valid = await formEl.validate((v: any) => v)
 				if (!valid) return
 				this.$state.loading = true
 				const res = await login({
