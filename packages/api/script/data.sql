@@ -20,7 +20,7 @@ INSERT INTO
 	w_user (username, nickname, major, 'password')
 VALUES
 	(
-		'#super_admin',
+		'super-admin',
 		'超级管理员',
 		1,
 		'$2a$10$aSRwOHnesbDdHoeExUy9hOo.vqAdfzspvE9/U4lCX9lI7tbdDIugG'
