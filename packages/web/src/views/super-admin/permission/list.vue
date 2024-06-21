@@ -5,8 +5,6 @@
 	import { showFormEffect } from '@web/effect/show-form'
 	import { PermissionModel } from '@web/types/super-admin/permission'
 	import { dateHandler } from '@web/utils/format'
-	import { toast } from '@web/utils/toast'
-	import { error } from 'console'
 	import PermissionForm from './permission-form.vue'
 
 	const loadChildren = async (
