@@ -3,8 +3,8 @@ PRAGMA foreign_keys = OFF;
 CREATE TABLE
 	IF NOT EXISTS "w_user" (
 		"id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-		"create_time" datetime NOT NULL DEFAULT (datetime ('now', 'localtime')),
-		"update_time" datetime NOT NULL DEFAULT (datetime ('now', 'localtime')),
+		"create_time" datetime NOT NULL DEFAULT (datetime ('now')),
+		"update_time" datetime NOT NULL DEFAULT (datetime ('now')),
 		"delete_time" datetime,
 		"username" varchar(30) NOT NULL,
 		"nickname" varchar(30),
@@ -38,8 +38,8 @@ VALUES
 CREATE TABLE
 	IF NOT EXISTS "w_role" (
 		"id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-		"create_time" datetime NOT NULL DEFAULT (datetime ('now', 'localtime')),
-		"update_time" datetime NOT NULL DEFAULT (datetime ('now', 'localtime')),
+		"create_time" datetime NOT NULL DEFAULT (datetime ('now')),
+		"update_time" datetime NOT NULL DEFAULT (datetime ('now')),
 		"delete_time" datetime,
 		"title" varchar(30) NOT NULL,
 		"description" varchar(200)
@@ -53,8 +53,8 @@ VALUES
 CREATE TABLE
 	IF NOT EXISTS "w_permission" (
 		"id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-		"create_time" datetime NOT NULL DEFAULT (datetime ('now', 'localtime')),
-		"update_time" datetime NOT NULL DEFAULT (datetime ('now', 'localtime')),
+		"create_time" datetime NOT NULL DEFAULT (datetime ('now')),
+		"update_time" datetime NOT NULL DEFAULT (datetime ('now')),
 		"delete_time" datetime,
 		"title" varchar(100) NOT NULL,
 		"key" varchar(100),
