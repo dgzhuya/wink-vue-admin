@@ -1,6 +1,0 @@
-{
-	"$schema": "https://raw.githubusercontent.com/dgzhuya/wink-vue-admin/main/docs/web_module.json",
-	"path": "/test/son",
-	"icon": "plugin",
-	"title": "服务子路由1"
-}
