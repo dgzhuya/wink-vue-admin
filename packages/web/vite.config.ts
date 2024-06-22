@@ -19,19 +19,19 @@ export default defineConfig({
 	server: {
 		port: 8080,
 		proxy: {
-			'/server': {
+			'/api_server': {
 				target: 'http://localhost:3000',
 				changeOrigin: true,
-				rewrite: path => path.replace(/^\/server/, '')
+				rewrite: path => path.replace(/^\/api_server/, '')
 			}
 		}
 	},
 	preview: {
 		proxy: {
-			'/server': {
+			'/api_server': {
 				target: 'http://localhost:3000',
 				changeOrigin: true,
-				rewrite: path => path.replace(/^\/server/, '')
+				rewrite: path => path.replace(/^\/api_server/, '')
 			}
 		}
 	},
