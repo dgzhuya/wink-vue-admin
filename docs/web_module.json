@@ -19,5 +19,5 @@
 			"description": "跳转子路由信息"
 		}
 	},
-	"required": ["path", "icon", "title", "redirect"]
+	"required": ["path", "icon", "title"]
 }
