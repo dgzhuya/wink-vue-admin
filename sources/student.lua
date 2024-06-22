@@ -14,6 +14,6 @@ Nest.render({ name = 'student', path = 'test/' }, {
 		Nest.limit("年龄应该小于100岁", nil, 100)
 	)
 }, {
-	Nest.service('update', nil, true), Nest.service('add', true), Nest.service('get', true, true),
-	Nest.service('all', true)
+	Nest.service('update'), Nest.service('add'), Nest.service('get'),
+	Nest.service('all'), Nest.service('delete')
 })
