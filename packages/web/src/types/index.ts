@@ -33,3 +33,11 @@ export interface TagItem {
 export interface StoreUserInfo extends Partial<UserModel> {
 	permissions?: string[]
 }
+
+export interface MetaStruct {
+	path: string
+	title: string
+	icon: string
+	filePath: string
+	redirect?: string
+}
