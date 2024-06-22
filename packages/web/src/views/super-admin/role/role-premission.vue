@@ -60,6 +60,7 @@
 				ref="treeSelectDom"
 				:props="{ value: 'id', label: 'title', children: 'children' }"
 				:data="premissionTree"
+				:height="600"
 				check-on-click-node
 				show-checkbox
 				check-strictly
