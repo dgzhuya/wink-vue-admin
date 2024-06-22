@@ -17,3 +17,4 @@ wink.*
 .vscode/*.lua
 packages/web/src/modules/*
 packages/api/src/test/*
+packages/api/src/app.module.ts
