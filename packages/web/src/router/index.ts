@@ -63,7 +63,7 @@ for (let i = 0; i < mataList.length; i++) {
 	}
 }
 const pages = import.meta.glob('../modules/**/index.vue')
-const autoRoutes: RouteRecordRaw[] = map['/'].map(({ path, title, filePath, icon, redirect }) => {
+export const autoRoutes: RouteRecordRaw[] = map['/'].map(({ path, title, filePath, icon, redirect }) => {
 	const children = map[path]
 	const baseRoute: RouteRecordRaw = {
 		path: children ? path : '/',
@@ -95,7 +95,5 @@ const router = createRouter({
 	history: createWebHistory(),
 	routes
 })
-autoRoutes.forEach(route => {
-	router.addRoute(route)
-})
+
 export default router

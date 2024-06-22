@@ -1,4 +1,4 @@
-import router from '@web/router'
+import router, { autoRoutes } from '@web/router'
 import { useUser } from '@web/store/module/user'
 import { asyncRoutes } from './router/module'
 import { useApp } from './store/module/app'
@@ -14,7 +14,8 @@ router.beforeEach(async (to, form, next) => {
 			const permissions = user.getPermissions
 			if (permissions.length > 0) {
 				const permissionsRoutes = filterPermissionRouters(asyncRoutes, permissions)
-				permissionsRoutes.forEach(route => router.addRoute(route))
+				permissionsRoutes.forEach(router.addRoute)
+				autoRoutes.forEach(router.addRoute)
 				router.addRoute({
 					path: '/:pathMath(.*)',
 					name: '404',
