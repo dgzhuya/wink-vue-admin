@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 	import { RoleDto, RoleModel } from '@web/types/super-admin/role'
 	import { updateRole, createRole } from '@web/api/super-admin/role'
-	import { toast } from '@web/utils/toast'
+	import { showToast } from '@web/utils/toast'
 	import { pickerKeyVal } from '@web/utils/pickerKeyVal'
 
 	const props = defineProps<{ role: RoleModel | null; showForm: boolean }>()
@@ -28,11 +28,11 @@
 	const updateUser = async () => {
 		if (props.role === null) {
 			if (!roleInfo.value.title) {
-				toast('用户名不能为空')
+				showToast('用户名不能为空')
 				return
 			}
 			if (!roleInfo.value.description) {
-				toast('角色描述不能为空')
+				showToast('角色描述不能为空')
 				return
 			}
 			await createRole(roleInfo.value)

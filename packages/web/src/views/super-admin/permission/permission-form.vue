@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 	import { CreatePermissionDto, PermissionDto, PermissionModel } from '@web/types/super-admin/permission'
 	import { updatePermission, createPermission } from '@web/api/super-admin/permission'
-	import { toast } from '@web/utils/toast'
+	import { showToast } from '@web/utils/toast'
 	import { pickerKeyVal } from '@web/utils/pickerKeyVal'
 
 	const props = defineProps<{ permission: PermissionModel | null; showForm: boolean; parentId: number }>()
@@ -28,15 +28,15 @@
 	const updateUser = async () => {
 		if (props.permission === null) {
 			if (!permissionInfo.value.title) {
-				toast('权限名不能为空')
+				showToast('权限名不能为空')
 				return
 			}
 			if (!permissionInfo.value.description) {
-				toast('权限描述不能为空')
+				showToast('权限描述不能为空')
 				return
 			}
 			if (!permissionInfo.value.key) {
-				toast('权限关键字不能为空')
+				showToast('权限关键字不能为空')
 				return
 			}
 

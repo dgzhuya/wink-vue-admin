@@ -3,7 +3,7 @@
 	import { ResetParams } from '@web/types/super-admin'
 	import { storeToRefs } from 'pinia'
 	import { dateHandler } from '@web/utils/format'
-	import { toast } from '@web/utils/toast'
+	import { showToast } from '@web/utils/toast'
 	import { resetPassword } from '@web/api'
 
 	const user = useUser()
@@ -25,7 +25,7 @@
 			resetParams.value.currentPassword.length === 0 ||
 			resetParams.value.currentPassword.length > 20
 		) {
-			toast('密码长度在6-20位之间')
+			showToast('密码长度在6-20位之间')
 			return
 		}
 		if (
@@ -33,11 +33,11 @@
 			resetParams.value.newPassword.length === 0 ||
 			resetParams.value.newPassword.length > 20
 		) {
-			toast('新密码长度在6-20位之间')
+			showToast('新密码长度在6-20位之间')
 			return
 		}
 		if (resetParams.value.currentPassword === resetParams.value.newPassword) {
-			toast('密码不能重复')
+			showToast('密码不能重复')
 			return
 		}
 		try {
@@ -45,7 +45,7 @@
 			setTimeout(() => {
 				user.loginout()
 			}, 800)
-			toast('修改成功,即将退出登录', 'success')
+			showToast('修改成功,即将退出登录', 'success')
 		} catch (error) {
 			console.log('error:', error)
 		}

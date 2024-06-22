@@ -2,7 +2,7 @@
 	import SvgIcon from '@web/components/SvgIcon/index.vue'
 	import { UserDto, UserModel } from '@web/types/super-admin/user'
 	import { updateUserInfo, createUser, setUserMajorRole } from '@web/api/super-admin/user'
-	import { toast } from '@web/utils/toast'
+	import { showToast } from '@web/utils/toast'
 	import { pickerKeyVal } from '@web/utils/pickerKeyVal'
 
 	const props = defineProps<{ user: UserModel | null; showForm: boolean }>()
@@ -38,15 +38,15 @@
 	const updateUser = async () => {
 		if (props.user === null) {
 			if (!userInfo.value.username) {
-				toast('用户名不能为空')
+				showToast('用户名不能为空')
 				return
 			}
 			if (!createPassword.value) {
-				toast('密码不能为空')
+				showToast('密码不能为空')
 				return
 			}
 			if (!userInfo.value.nickname) {
-				toast('用户昵称不能为空')
+				showToast('用户昵称不能为空')
 				return
 			}
 
