@@ -37,7 +37,6 @@ export const updateUserInfo = (data: Partial<UserDto>, id: number) => {
 }
 
 export const setUserRoles = (uid: number, roles: number[]) => {
-	console.log('uid: number, roles:', uid, roles)
 	return request({
 		method: 'post',
 		url: 'user/roles',
@@ -48,9 +47,9 @@ export const setUserRoles = (uid: number, roles: number[]) => {
 	})
 }
 
-export const deleteUser = (uid: number) => {
+export const deleteUser = (id: number) => {
 	return request({
-		url: `/user/${uid}`,
+		url: `/user/${id}`,
 		method: 'delete'
 	})
 }
