@@ -17,13 +17,22 @@ CREATE TABLE
 	);
 
 INSERT INTO
-	w_user (username, nickname, major, 'password')
+	w_user (
+		username,
+		nickname,
+		major,
+		'password',
+		mobile,
+		gender
+	)
 VALUES
 	(
 		'super-admin',
 		'超级管理员',
 		1,
-		'$2a$10$aSRwOHnesbDdHoeExUy9hOo.vqAdfzspvE9/U4lCX9lI7tbdDIugG'
+		'$2a$10$aSRwOHnesbDdHoeExUy9hOo.vqAdfzspvE9/U4lCX9lI7tbdDIugG',
+		'400-823823',
+		1
 	);
 
 CREATE TABLE
@@ -50,8 +59,8 @@ CREATE TABLE
 		"title" varchar(100) NOT NULL,
 		"key" varchar(100),
 		"description" varchar(200),
-		"parentId" integer,
-		CONSTRAINT "FK_040b9f7aa1f54aee18be64214f6" FOREIGN KEY ("parentId") REFERENCES "w_permission" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+		"pid" integer,
+		CONSTRAINT "FK_040b9f7aa1f54aee18be64214f6" FOREIGN KEY ("pid") REFERENCES "w_permission" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION
 	);
 
 INSERT INTO
@@ -60,7 +69,7 @@ VALUES
 	('系统管理', '#super_admin', '系统管理权限');
 
 INSERT INTO
-	w_permission (title, "key", "description", "parentId")
+	w_permission (title, "key", "description", "pid")
 VALUES
 	('用户管理', '#super_admin_user', '用户信息查看', 1),
 	('角色管理', '#super_admin_role', '角色信息查看', 1),

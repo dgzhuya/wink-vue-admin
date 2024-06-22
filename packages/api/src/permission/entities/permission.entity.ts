@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { BaseEntity } from '@api/common/entities/base.entity'
 import { RoleEntity } from '@api/role/entities/role.entity'
 
@@ -14,6 +14,7 @@ export class PermissionEntity extends BaseEntity {
 	description: string
 
 	@ManyToOne(() => PermissionEntity, p => p.children)
+	@JoinColumn({ name: 'pid' })
 	parent: PermissionEntity
 
 	@OneToMany(() => PermissionEntity, p => p.parent)

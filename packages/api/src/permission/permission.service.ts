@@ -92,7 +92,7 @@ export class PermissionService {
 				.orWhere('permission.key like :search', { search: `%${search}%` })
 				.orWhere('permission.description like :search', { search: `%${search}%` })
 		} else {
-			queryBuilder = queryBuilder.andWhere('permission.parentId Is Null')
+			queryBuilder = queryBuilder.andWhere('permission.pid Is Null')
 		}
 		const [result, total] = await queryBuilder.skip(skip).take(take).getManyAndCount()
 		const list = await this.#hasChildren(result)
@@ -109,9 +109,9 @@ export class PermissionService {
 	async queryChildren(id?: number, isTree = false) {
 		let permissionQuery = this.permissionRepository.createQueryBuilder('permission')
 		if (!id) {
-			permissionQuery = permissionQuery.andWhere('permission.parentId Is Null')
+			permissionQuery = permissionQuery.andWhere('permission.pid Is Null')
 		} else {
-			permissionQuery = permissionQuery.andWhere(`permission.parentId=${id}`)
+			permissionQuery = permissionQuery.andWhere(`permission.pid=${id}`)
 		}
 		const list = await permissionQuery.getMany()
 
@@ -173,7 +173,7 @@ export class PermissionService {
 		for (let i = 0; i < list.length; i++) {
 			const count = await this.permissionRepository
 				.createQueryBuilder('permission')
-				.andWhere(`permission.parentId=${list[i].id}`)
+				.andWhere(`permission.pid=${list[i].id}`)
 				.getCount()
 			list[i]['hasChildren'] = count > 0
 		}
