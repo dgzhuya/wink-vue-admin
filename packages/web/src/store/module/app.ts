@@ -28,7 +28,6 @@ export const useApp = defineStore('app', {
 			}
 		},
 		async removeTagView(index: number, activePath: string, type: 'other' | 'right' | 'index' = 'index') {
-			console.log('type: ', type)
 			const len = this.$state.tagViewList.length
 			if (index >= 0 && index < len) {
 				switch (type) {
