@@ -2,33 +2,22 @@
 	"$schema": "http://json-schema.org/draft-07/schema#",
 	"type": "object",
 	"properties": {
-		"name": {
+		"path": {
 			"type": "string",
-			"description": "模块名"
+			"description": "路由路径"
 		},
-		"description": {
+		"icon": {
 			"type": "string",
-			"description": "模块描述信息"
+			"description": "路由图标"
 		},
-		"router": {
-			"type": "object",
-			"description": "模块路由信息",
-			"properties": {
-				"path": {
-					"type": "string",
-					"description": "路由路径信息"
-				},
-				"title": {
-					"type": "string",
-					"description": "路由名"
-				},
-				"icon": {
-					"type": "string",
-					"description": "路由图标"
-				}
-			},
-			"required": ["path", "title", "icon"]
+		"title": {
+			"type": "string",
+			"description": "路由名"
+		},
+		"redirect": {
+			"type": "string",
+			"description": "跳转子路由信息"
 		}
 	},
-	"required": ["name", "description", "router"]
+	"required": ["path", "icon", "title", "redirect"]
 }
