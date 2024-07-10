@@ -60,7 +60,8 @@ export const filterPermissionRouters = (routes: RouteRecordRaw[], permissions: s
 		if (route.children) {
 			route.children = filterPermissionRouters(route.children, permissions)
 		}
-		if (permissions.includes(formatPermissionKey(route.path))) {
+		const key = formatPermissionKey(route.path)
+		if (route.path === '/' || permissions.includes(key)) {
 			result.push(route)
 		}
 	}
