@@ -5,11 +5,12 @@
 ### 代码生成
 - 安装插件
 	vscode插件中心搜索`codegen-lua`安装即可
-	![图片信息](./docs/code-gen.png){width="10px"}
+	![图片信息](./docs/code-gen.png)
 - 生成代码
   - 修改`.luggenrc`文件设置文件生成目录
-    - [x] apiDir: 后端模块根目录
-    - [ ] webdDir: 前端模块根目录(未完成)
+    - [x] `apiDir`: 后端模块根目录
+    - [x] `webdDir`: 前端模块根目录
+    - [x] `sqliteFile`: 设置数据库文件位置 
   - 打开`sources/student.lua`文件，点击右键即可
     ![图片信息](./docs/gen-ctrl.png) 
   - 点击`生成代码`即可查看已生成的代码(位于`packages/api/src`目录下),同时修改`packages/api/src/app.module.ts`自动导入生成的模块
@@ -20,7 +21,7 @@
     - `.vscode`目录下生成了三个文件
       - [x] `nest-type.lua:`记录了后端生成代码的`lua`函数,通过阅读即可知道各个函数和参数还有返回值信息
       - [x] `base-type.lua`: 实现了基础函数,比如打印
-      - [ ] `vue-type.lua:` 未完成
+      - [x] `vue-type.lua:`: 生成前端代码
 
 
 ### 项目启动
@@ -36,15 +37,15 @@
   
   进入`packages/api`目录下运行
   ```sh
-  pnpm init
+  pnpm run init
   ```
 - 运行后端: 进入`packages/api`目录，运行
   ```sh
-  pnpm start
+  pnpm run start
   ```
 - 运行前端: 进入`packages/web`目录，运行
   ```sh
-  pnpm dev
+  pnpm run dev
   ```
 - 默认信息
   - 用户名: `super-admin`
