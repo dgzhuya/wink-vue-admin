@@ -7,11 +7,11 @@ declare module '*.vue' {
 	export default componnt
 }
 
-type PermissionPageType = 'update' | 'set' | 'delete' | 'add'
+type PagePermissionType = 'update' | 'set' | 'delete' | 'add'
 
 declare module 'vue' {
 	interface ComponentCustomProperties {
-		vPermission: ObjectDirective<HTMLElement, PermissionPageType[]>
+		vPermission: ObjectDirective<HTMLElement, PagePermissionType[]>
 	}
 }
 

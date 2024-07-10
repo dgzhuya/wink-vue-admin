@@ -1,4 +1,4 @@
-import { PermissionPageType } from '@web/env'
+import { PagePermissionType } from '@web/env'
 import { useUser } from '@web/store/module/user'
 import { formatPermissionKey } from '@web/utils/route'
 import { App, DirectiveBinding } from 'vue'
@@ -7,7 +7,7 @@ import router from '@web/router'
 export default (app: App<Element>) => {
 	const user = useUser()
 	app.directive('permission', {
-		mounted: (el: HTMLElement, { value }: DirectiveBinding<PermissionPageType[]>) => {
+		mounted: (el: HTMLElement, { value }: DirectiveBinding<PagePermissionType[]>) => {
 			const { path } = router.currentRoute.value
 			const pKey = formatPermissionKey(path)
 			const permission = user.getPermissions
