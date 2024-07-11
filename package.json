@@ -3,7 +3,8 @@
 	"version": "1.0.0",
 	"description": "vue+nestjs开发的后台管理系统",
 	"scripts": {
-		"init-sql": "tsx script/init-sql.ts"
+		"database": "tsx script/database.ts",
+		"insert": "tsx script/insert.ts"
 	},
 	"keywords": [
 		"vue",
