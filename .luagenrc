@@ -1,4 +1,4 @@
 {
-	"apiDir": "packages/api/src",
-	"webDir": ""
+	"apiDir": "server/src",
+	"webDir": "web/src/modules"
 }
