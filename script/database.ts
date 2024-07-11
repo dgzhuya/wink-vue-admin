@@ -10,3 +10,4 @@ if (type === 'mysql') {
 if (type === 'sqlite') {
 	initSqlite()
 }
+console.log('执行成功')
