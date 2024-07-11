@@ -55,7 +55,9 @@
 				padding-top: 22px;
 				height: 85px;
 				font-family: 'Open Sans', Arial, Helvetica, sans-serif;
-				text-shadow: 0 0 1px #fff, 0 1px 2px rgba($color: #000000, $alpha: 0.3);
+				text-shadow:
+					0 0 1px #fff,
+					0 1px 2px rgba($color: #000000, $alpha: 0.3);
 			}
 
 			p {
@@ -83,7 +85,9 @@
 					margin: 7px auto 0;
 					font-family: 'Open Sans', Arial, sans-serif;
 					opacity: 0;
-					transition: transform 0.3s ease-in-out 0.2s, opacity 0.3s ease-in-out 0.2s,
+					transition:
+						transform 0.3s ease-in-out 0.2s,
+						opacity 0.3s ease-in-out 0.2s,
 						background 0.2s linear 0s;
 					transform: translateX(60px) rotate(90deg);
 				}
