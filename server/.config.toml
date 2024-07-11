@@ -1,1 +1,8 @@
-
+[database]
+type = "sqlite"   # 配置数据库类型 mysql,sqlite
+path = "admin.db" # sqlite数据库文件位置
+# host = ""       # 配置mysql地址
+# port = ""       # 端口
+# username = ""   # 用户名
+# password = ""   # 密码
+# database = ""   # 数据库

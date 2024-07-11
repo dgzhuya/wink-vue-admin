@@ -1,14 +1,16 @@
-import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { getDataType } from '../utils/read-config'
+import { MysqlModule } from './mysql.module'
+import { SQLiteModule } from './sqlite.module'
 
-@Module({
-	imports: [
-		TypeOrmModule.forRoot({
-			type: 'better-sqlite3',
-			database: 'admin.db',
-			autoLoadEntities: true,
-			synchronize: true
-		})
-	]
-})
-export class DbModule {}
+let DBModule = null
+
+const dbType = getDataType()
+
+if (dbType === 'mysql') {
+	DBModule = MysqlModule
+}
+if (dbType === 'sqlite') {
+	DBModule = SQLiteModule
+}
+
+export { DBModule }
