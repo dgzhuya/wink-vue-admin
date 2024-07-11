@@ -4,13 +4,14 @@ import { readFileSync } from 'fs'
 import { getDatabase } from '../data-config'
 
 export function initMySql() {
-	const { host, username, password, database } = getDatabase('mysql')
+	const { host, username: user, password, database, port } = getDatabase('mysql')
 
 	const dataPath = join(__dirname, 'mysql_data.sql')
 
 	const connection = createConnection({
 		host,
-		user: username,
+		user,
+		port,
 		password,
 		database
 	})
