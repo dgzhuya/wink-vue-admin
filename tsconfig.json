@@ -1,6 +1,8 @@
 {
 	"compilerOptions": {
+		"target": "ESNext",
 		"esModuleInterop": true,
+		"moduleResolution": "Node",
 		"baseUrl": ".",
 		"paths": {
 			"@api/*": [
