@@ -1,15 +1,12 @@
-import Database from 'better-sqlite3'
-import { join } from 'path'
-import { existsSync, writeFileSync, rmSync, readFileSync } from 'fs'
+import { initMySql } from 'tools/init-sql/mysql'
+import { getDataType } from '../tools/data-config'
+import { initSqlite } from 'tools/init-sql/sqlite'
 
-const dbPath = join(__dirname, '../packages/api', 'admin.db')
-const dataPath = join(__dirname, 'data.sql')
+const type = getDataType()
 
-if (existsSync(dbPath)) {
-	rmSync(dbPath)
-	writeFileSync(dbPath, '')
+if (type === 'mysql') {
+	initMySql()
 }
-const db = new Database(dbPath, { timeout: 400000, verbose: console.log })
-const initSql = readFileSync(dataPath, 'utf-8')
-db.exec(initSql)
-db.close()
+if (type === 'sqlite') {
+	initSqlite()
+}
