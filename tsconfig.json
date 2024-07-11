@@ -1,9 +1,18 @@
 {
 	"compilerOptions": {
+		"esModuleInterop": true,
 		"baseUrl": ".",
 		"paths": {
-			"@api/*": ["packages/api/src/*"],
-			"@web/*": ["packages/web/src"]
+			"@api/*": [
+				"./server/src/*"
+			],
+			"@web/*": [
+				"./web/src/*"
+			]
 		}
-	}
+	},
+	"include": [
+		"script",
+		"tools"
+	]
 }
