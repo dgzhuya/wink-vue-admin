@@ -83,6 +83,7 @@ export function insertToSqlite(routePath: string, routeTitle: string, isDelete =
 	}
 	try {
 		fn()
+		console.log(`${isDelete ? '删除' : '添加'}权限信息成功`)
 	} catch (error) {
 		console.error(error)
 		db.close()

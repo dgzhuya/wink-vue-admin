@@ -20,5 +20,3 @@ if (type === 'mysql') {
 if (type === 'sqlite') {
 	insertToSqlite(path, title, isDelete)
 }
-
-console.log('执行成功')

@@ -82,6 +82,7 @@ export async function insertToMysql(routePath: string, routeTitle: string, isDel
 			}
 		}
 		await connection.commit()
+		console.log(`${isDelete ? '删除' : '添加'}权限信息成功`)
 	} catch (error) {
 		console.error(error)
 		await connection.rollback()

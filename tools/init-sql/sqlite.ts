@@ -16,5 +16,6 @@ export function initSqlite() {
 	const db = new Database(dbPath, { timeout: 400000, verbose: console.log })
 	const initSql = readFileSync(dataPath, 'utf-8')
 	db.exec(initSql)
+	console.log('初始化数据库成功')
 	db.close()
 }

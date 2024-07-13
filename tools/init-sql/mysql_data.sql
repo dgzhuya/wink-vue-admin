@@ -1,6 +1,17 @@
 SET
 	FOREIGN_KEY_CHECKS = 0;
 
+-- 清空表数据
+DROP TABLE IF EXISTS `w_user`;
+
+DROP TABLE IF EXISTS `w_role`;
+
+DROP TABLE IF EXISTS `w_permission`;
+
+DROP TABLE IF EXISTS `w_user_role`;
+
+DROP TABLE IF EXISTS `w_role_permission`;
+
 -- 创建 w_user 表
 CREATE TABLE
 	IF NOT EXISTS `w_user` (
