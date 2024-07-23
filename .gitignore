@@ -12,5 +12,4 @@ components.d.ts
 static/
 logs/
 *.log
-wink.*
 .vscode/*.lua
